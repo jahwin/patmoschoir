@@ -1,0 +1,355 @@
+// Main container with warm beige background
+.container {
+    min-height: 100vh;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+// Content wrapper
+.content {
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+// Logo container
+.logoContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo {
+    height: 120px;
+    object-fit: cover;
+
+}
+
+// Title
+.title {
+    font-size: 1.75rem;
+    font-weight: bold;
+    color: black;
+    text-align: center;
+    margin: 0;
+    font-family: var(--font-primary);
+    letter-spacing: -0.025em;
+
+    @media (min-width: 640px) {
+        font-size: 2rem;
+    }
+}
+
+// Description
+.description {
+    font-size: 1rem;
+    color: rgb(55, 65, 81);
+    text-align: center;
+    margin: 0;
+    line-height: 1.5;
+    font-family: var(--font-secondary);
+
+    @media (min-width: 640px) {
+        font-size: 1.125rem;
+    }
+}
+
+// Form
+.form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+// Input container
+.inputContainer {
+    width: 100%;
+}
+
+// Input field
+.input {
+    width: 100%;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--color-theme-clr);
+    border-radius: 0.75rem;
+    background-color: white;
+    font-size: 1rem;
+    color: black;
+    outline: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+
+    &::placeholder {
+        color: rgb(156, 163, 175);
+        font-family: var(--font-secondary);
+    }
+
+    &:focus {
+        border-color: var(--color-theme-clr);
+        box-shadow: 0 0 0 3px rgba(238, 151, 11, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    @media (min-width: 640px) {
+        padding: 1.25rem 1.5rem;
+        font-size: 1.125rem;
+    }
+}
+
+// Error message
+.errorMessage {
+    color: rgb(220, 38, 38);
+    font-size: 0.875rem;
+    text-align: center;
+    margin-top: -0.5rem;
+    font-family: var(--font-secondary);
+}
+
+// Submit button
+.submitButton {
+    background-color: #8B7B4E !important;
+    color: white !important;
+    font-weight: 600;
+    font-size: 1.125rem;
+    padding: 1rem 1.5rem;
+    border-radius: 0.75rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+
+    &:hover:not(:disabled) {
+        background-color: #7A6B42 !important;
+        transform: translateY(-1px);
+        box-shadow: 0 8px 12px -2px rgba(0, 0, 0, 0.15);
+    }
+
+    &:active:not(:disabled) {
+        transform: translateY(0);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    @media (min-width: 640px) {
+        font-size: 1.25rem;
+        padding: 1.25rem 2rem;
+    }
+}
+
+// Back button
+.backButton {
+    background: none;
+    border: none;
+    color: rgb(75, 85, 99);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    font-family: var(--font-secondary);
+    text-decoration: underline;
+    padding: 0.5rem;
+
+    &:hover {
+        color: var(--color-theme-clr);
+    }
+
+    &:focus {
+        outline: 2px solid var(--color-theme-clr);
+        outline-offset: 2px;
+        border-radius: 0.25rem;
+    }
+}
+
+// Responsive adjustments
+@media (max-width: 480px) {
+    .content {
+        gap: 1.5rem;
+        padding: 0 0.5rem;
+    }
+
+    .logo {
+        width: 100px;
+        height: 100px;
+    }
+
+    .title {
+        font-size: 1.5rem;
+    }
+
+    .description {
+        font-size: 0.875rem;
+    }
+
+    .input {
+        padding: 0.875rem 1rem;
+        font-size: 0.875rem;
+    }
+
+    .submitButton {
+        font-size: 1rem;
+        padding: 0.875rem 1.25rem;
+    }
+}
+
+// Ticket container styles
+.ticketContainer {
+    width: 100%;
+    // max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    padding: 1rem;
+}
+
+.ticketCardsContainer {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    align-items: center;
+    gap: 1rem;
+
+    @media (max-width: 920px) {
+        grid-template-columns: repeat(1, 1fr);
+    }
+
+    @media (max-width: 768px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 637px) {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+
+// Success message
+.successMessage {
+    text-align: center;
+    margin-bottom: 1rem;
+
+    h2 {
+        font-size: 1.75rem;
+        font-weight: bold;
+        color: #059669;
+        margin: 0 0 0.5rem 0;
+        font-family: var(--font-primary);
+    }
+
+    p {
+        font-size: 1rem;
+        color: rgb(55, 65, 81);
+        margin: 0;
+        font-family: var(--font-secondary);
+    }
+}
+
+// Ticket card wrapper
+.ticketCard {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+// Action buttons container
+.actionButtons {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+    max-width: 400px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.actionButton {
+    flex: 1;
+    min-width: 150px;
+}
+
+// Animation for form elements
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.content>* {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.content>*:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.content>*:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.content>*:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.content>*:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.content>*:nth-child(5) {
+    animation-delay: 0.5s;
+}
+
+// Animation for ticket container
+.ticketContainer>* {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.ticketContainer>*:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.ticketContainer>*:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.ticketContainer>*:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+// Responsive adjustments for ticket view
+@media (max-width: 768px) {
+    .ticketContainer {
+        gap: 1.5rem;
+        padding: 0.5rem;
+    }
+
+    .successMessage h2 {
+        font-size: 1.5rem;
+    }
+
+    .actionButtons {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .actionButton {
+        min-width: auto;
+    }
+}

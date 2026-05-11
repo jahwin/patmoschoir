@@ -1,0 +1,120 @@
+@use "../../../../css/variables" as *;
+
+.subscribe {
+  background: linear-gradient(to bottom, $black, $gray);
+  text-align: center;
+  padding: clamp(3rem, 8vw, 5rem) 8%;
+}
+
+.subscribeForm {
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.subscribeRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  text-align: left;
+}
+
+.subscribeLabel {
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: $white;
+  opacity: 0.9;
+}
+
+.subscribeOptional {
+  font-weight: 400;
+  text-transform: none;
+  opacity: 0.65;
+  font-size: 0.8em;
+}
+
+.subscribeInput {
+  width: 100%;
+  padding: 14px 18px;
+  font-family: $font-sans;
+  font-size: 1rem;
+  color: $white;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  transition: border-color 0.25s ease, background 0.25s ease;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $gold;
+    background: rgba(255, 255, 255, 0.08);
+  }
+}
+
+.subscribeBtn {
+  margin-top: 0.5rem;
+  padding: 14px 32px;
+  background: $gold;
+  color: $black;
+  font-family: $font-sans;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  &:disabled {
+    opacity: 0.75;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+.subscribeError {
+  margin: 0;
+  color: #ff9b9b;
+  font-size: 0.8rem;
+}
+
+.subscribeSuccess {
+  margin: 0;
+  color: #b7f7c9;
+  font-size: 0.9rem;
+}
+
+.subscribeStatus {
+  margin: 0;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  text-align: left;
+  border: 1px solid transparent;
+}
+
+.subscribeStatusSuccess {
+  background: rgba(75, 181, 113, 0.2);
+  border-color: rgba(118, 226, 153, 0.45);
+  color: #d6ffe3;
+}
+
+.subscribeStatusError {
+  background: rgba(183, 67, 67, 0.2);
+  border-color: rgba(255, 124, 124, 0.45);
+  color: #ffd8d8;
+}
+

@@ -1,0 +1,54 @@
+@use "../../../../css/variables" as *;
+
+// Image + quote block (artist likes images + words)
+.imageQuoteSection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 3rem;
+  padding: 2rem 8%;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 4rem 8%;
+  }
+}
+
+.imageQuoteImage {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  aspect-ratio: 4 / 5;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.imageQuoteText {
+  margin: 0;
+}
+
+.imageQuoteQuote {
+  font-family: $font-serif;
+  font-size: clamp(1.2rem, 2.2vw, 1.75rem);
+  font-weight: 600;
+  font-style: italic;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.95);
+  margin: 0 0 1rem 0;
+}
+
+.imageQuoteCite {
+  font-size: 1rem;
+  font-style: normal;
+  letter-spacing: 0.08em;
+  color: $gold;
+  display: block;
+}
+

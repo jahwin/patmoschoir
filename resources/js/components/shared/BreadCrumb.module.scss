@@ -1,0 +1,150 @@
+.aboutHero {
+  position: relative;
+  min-height: 50vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.backgroundImage {
+  position: absolute;
+  inset: 0;
+  // background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4)), url('https://images.unsplash.com/photo-1522158637959-30385a09e0da?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1470');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.backgroundOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.6) 0%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+}
+
+.heroContent {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6rem 2rem 2rem;
+  font-family: 'Jost';
+}
+
+.container {
+  max-width: 1200px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.textContent {
+  text-align: center;
+  max-width: 800px;
+}
+
+.headline {
+  font-size: 3.2rem;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 1rem;
+  text-transform: capitalize;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+
+  @media (max-width: 768px) {
+    font-size: 2.5rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 2rem;
+  }
+}
+
+.subtitle {
+  font-size: 1.5rem;
+  color: var(--color-theme-clr);
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+
+  @media (max-width: 768px) {
+    font-size: 1.25rem;
+  }
+}
+
+.description {
+  font-size: 1.125rem;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 auto;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
+}
+
+.breadcrumb {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  z-index: 10;
+}
+
+.breadcrumbNav {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-radius: 50px;
+  font-size: 1.05rem;
+}
+
+.breadcrumbLink {
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  backdrop-filter: blur(10px);
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  background: #222;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  font-weight: 500;
+
+  &:hover {
+    color: white;
+    background: var(--color-theme-clr);
+    border-color: var(--color-theme-clr);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.breadcrumbSeparator {
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 300;
+  font-size: 1rem;
+}
+
+// .breadcrumbCurrent {
+//   color: white;
+//   font-weight: 600;
+//   padding: 0.5rem 1rem;
+//   border-radius: 25px;
+//   background: var(--color-theme-clr);
+//   border: 1px solid var(--color-theme-clr);
+//   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+// }

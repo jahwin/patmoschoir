@@ -1,0 +1,29 @@
+.galleryPage {
+  background-color: #222;
+  color: white;
+  // min-height: 100vh;
+  font-family: "Jost", sans-serif;
+}
+
+:global(.gallery-page) {
+  padding-top: 0;
+  
+  scroll-behavior: smooth;
+  
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: #333;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-theme-clr);
+    border-radius: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb:hover {
+    background: color-mix(in srgb, var(--color-theme-clr) 50%, transparent);
+  }
+}

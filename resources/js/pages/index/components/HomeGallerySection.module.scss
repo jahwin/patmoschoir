@@ -1,0 +1,72 @@
+@use "../../../../css/variables" as *;
+
+.gallery {
+  background: linear-gradient(to bottom, $gray, $gray);
+  text-align: center;
+  position: relative;
+
+  &::before,
+  &::after {
+    content: "";
+    // position: absolute;
+    height: 70%;
+    bottom: 0;
+    width: 100%;
+    left: 0;
+    background: linear-gradient(to bottom, transparent 20%, $black);
+    z-index: 1;
+
+    @media (max-width: 600px) {
+      background: linear-gradient(to bottom, transparent 80%, $black) !important;
+    }
+  }
+}
+
+.galleryNotify {
+  margin-top: 0;
+  position: absolute;
+  bottom: 50px;
+  left: 0%;
+  z-index: 2;
+  width: 100%;
+  text-align: center;
+}
+
+.galleryImage {
+  border-radius: 4px;
+  border: 1px solid $gold;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  &:hover {
+    img {
+      transform: scale(1.08);
+    }
+  }
+}
+
+.homeGalleryGrid {
+  background: transparent !important;
+  padding: 1.5rem 0 0 !important;
+  position: relative;
+  z-index: 2;
+}
+
+// .galleryGridContainer {
+//   display: grid;
+//   grid-template-columns: repeat(3, 1fr);
+//   gap: 2rem;
+
+//   @media (max-width: 768px) {
+//     grid-template-columns: repeat(2, 1fr);
+//   }
+
+//   @media (max-width: 480px) {
+//     grid-template-columns: repeat(1, 1fr);
+//   }
+// }

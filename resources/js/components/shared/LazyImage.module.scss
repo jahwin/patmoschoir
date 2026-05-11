@@ -1,0 +1,11 @@
+// .lazyImage {
+// }
+
+
+.participantImage {
+  height: 250px;
+
+  @media (max-width: 550px) {
+    height: 270px;
+  }
+}

@@ -1,0 +1,92 @@
+.audioControls {
+    display: flex;
+    gap: 0.5rem;
+
+    @media (min-width: 640px) {
+        gap: 0.75rem;
+    }
+}
+
+.controlButton {
+    width: 3.5rem;
+    height: 3.5rem;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+
+    @media (min-width: 640px) {
+        width: 3rem;
+        height: 3rem;
+    }
+
+    &.prompting {
+        background-color: rgba(238, 151, 11, 0.9);
+        border-color: var(--color-theme-clr);
+        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    &.normal {
+        background-color: rgba(255, 255, 255, 0.2);
+
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        &:active {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+    }
+
+    svg {
+        width: 1.25rem;
+        height: 1.25rem;
+        color: white;
+
+        @media (min-width: 640px) {
+            width: 1rem;
+            height: 1rem;
+        }
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.playPrompt {
+    background-color: rgba(238, 151, 11, 0.95);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid rgba(238, 151, 11, 0.5);
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+
+    @media (min-width: 640px) {
+        padding: 0.75rem 1rem;
+    }
+}
+
+.promptText {
+    color: black;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+
+    @media (min-width: 640px) {
+        font-size: 0.875rem;
+    }
+}

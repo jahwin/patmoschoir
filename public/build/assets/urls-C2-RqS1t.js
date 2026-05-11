@@ -1,0 +1,1 @@
+const s="https://api-watch.wecodefy.com/api/v1",t=`${s}/events/get/past`,_=`${s}/event/item`,o=`${s}/voting/get/voting/sessions`,e=`${s}/voting/get/past/voting/sessions`,n=`${s}/voting/get/session/prices`,T=`${s}/vote/participant/pay`;export{n as G,T as a,_ as b,t as c,e as d,o as e};

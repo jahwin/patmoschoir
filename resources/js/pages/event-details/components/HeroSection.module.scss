@@ -1,0 +1,253 @@
+.heroSection {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+.backgroundImage {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.backgroundOverlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(0, 0, 0, 0.8) 0%,
+        rgba(0, 0, 0, 0.6) 50%,
+        rgba(0, 0, 0, 0.7) 100%
+    );
+
+    @media (min-width: 640px) {
+        background: linear-gradient(
+            135deg,
+            rgba(0, 0, 0, 0.7) 0%,
+            rgba(0, 0, 0, 0.5) 50%,
+            rgba(0, 0, 0, 0.6) 100%
+        );
+    }
+
+    @media (min-width: 768px) {
+        background: linear-gradient(
+            135deg,
+            rgba(0, 0, 0, 0.6) 0%,
+            rgba(0, 0, 0, 0.4) 50%,
+            rgba(0, 0, 0, 0.5) 100%
+        );
+    }
+
+    @media (min-width: 1024px) {
+        background: linear-gradient(
+            135deg,
+            rgba(0, 0, 0, 0.5) 0%,
+            rgba(0, 0, 0, 0.3) 50%,
+            rgba(0, 0, 0, 0.4) 100%
+        );
+    }
+}
+
+.container {
+    position: relative;
+    max-width: none;
+    margin: 0 auto;
+    padding: 6rem 1.5rem;
+    width: 100%;
+
+    @media (min-width: 640px) {
+        padding: 6rem 2rem;
+    }
+
+    @media (min-width: 1024px) {
+        padding: 6rem 3rem;
+    }
+
+    @media (min-width: 1280px) {
+        padding: 6rem 4rem;
+    }
+}
+
+.logo {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 20;
+
+    @media (min-width: 640px) {
+        top: 0.9rem;
+        left: 3.8rem;
+    }
+
+    .logoImage {
+        height: 3rem;
+        width: auto;
+        opacity: 0.9;
+        transition: opacity 0.3s ease;
+
+        @media (min-width: 640px) {
+            height: 3.5rem;
+        }
+
+        @media (min-width: 768px) {
+            height: 4rem;
+        }
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+}
+
+.audioControls {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 20;
+
+    @media (min-width: 640px) {
+        top: 1.5rem;
+        right: 1.5rem;
+    }
+}
+
+.mainLayout {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 4rem;
+    width: 100%;
+
+    @media (min-width: 1024px) {
+        flex-direction: row;
+        align-items: center;
+        gap: 5rem;
+    }
+
+    @media (min-width: 1280px) {
+        gap: 5rem;
+    }
+}
+
+.leftSection {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 28rem;
+
+
+    @media (min-width: 1024px) {
+        gap: 2rem;
+    }
+
+    @media (max-width: 600px) {
+        padding: 0 45px;
+    }
+}
+
+.albumCarouselWrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+
+    @media (min-width: 1024px) {
+        justify-content: flex-start;
+    }
+}
+
+.mobileTicketButtonWrapper {
+    display: none;
+
+    @media (max-width: 768px) {
+        display: flex;
+    }
+}
+
+.mobileTicketButton {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background-color: var(--color-theme-clr);
+    font-family: var(--font-secondary);
+    color: black;
+    margin: 0 auto;
+    width: fit-content;
+    padding: 0.5rem 1.25rem;
+    transition: all 0.3s ease;
+    font-size: 1.125rem;
+    border-radius: 0.25rem;
+
+    &:hover {
+        box-shadow: 0 10px 15px -3px rgba(238, 151, 11, 0.25);
+        background-color: color-mix(in srgb, var(--color-theme-clr) 50%, transparent);
+    }
+
+    @media (max-width: 768px) {
+        display: flex;
+    }
+}
+
+.countdownTimer {
+    position: relative;
+    z-index: 20;
+
+    @media (min-width: 640px) {
+        position: relative;
+    }
+
+    @media (min-width: 1024px) {
+        position: fixed;
+        bottom: 20px;
+        left: 0;
+        transform: translateX(-50%);
+    }
+
+    @media (min-width: 1024px) {
+        left: 50%;
+    }
+}
+
+.mainHeading {
+    font-size: 1.7rem;
+    font-family: var(--font-primary);
+    font-weight: bold;
+    color: white;
+    margin-bottom: 10px;
+    letter-spacing: -0.025em;
+
+    @media (min-width: 768px) {
+        font-size: 3rem;
+    }
+
+    @media (min-width: 1024px) {
+        font-size: 3rem;
+    }
+
+    .highlight {
+        color: var(--color-theme-clr);
+    }
+}
+
+.description {
+    font-size: 1rem;
+    font-family: var(--font-tertiary);
+    color: rgb(209, 213, 219);
+    // margin-bottom: 2rem;
+    line-height: 1.625;
+
+    @media (min-width: 768px) {
+        font-size: 1.125rem;
+    }
+}
+
+.eventDetails {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}

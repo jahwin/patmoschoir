@@ -1,0 +1,25 @@
+.contactInfo {
+    text-align: center;
+
+    @media (min-width: 1024px) {
+        text-align: left;
+    }
+}
+
+.contactText {
+    color: rgb(156, 163, 175);
+    font-size: 0.875rem;
+    font-family: var(--font-tertiary);
+    margin: 0 auto;
+    text-align: center;
+}
+
+.emailLink {
+    color: var(--color-theme-clr);
+    font-family: var(--font-secondary);
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}

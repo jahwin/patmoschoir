@@ -1,0 +1,153 @@
+@use "../../../../css/variables" as *;
+
+// Hero – 4 vertical images (full-height, overlapping) + "About" text
+.hero {
+  position: relative;
+  min-height: 90vh;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  align-items: stretch;
+  gap: 0;
+  overflow: hidden;
+  background: $black;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+}
+
+.heroImages {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-end;
+  min-height: 90vh;
+  padding-right: 0;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 40%;
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(0, 0, 0, 0.4) 70%,
+      rgba(0, 0, 0, 0.85) 100%
+    );
+    pointer-events: none;
+  }
+
+  @media (max-width: 900px) {
+    min-height: 65vh;
+    justify-content: center;
+
+    &::after {
+      width: 30%;
+    }
+  }
+
+  @media (max-width: 500px) {
+    min-height: 55vh;
+  }
+}
+
+.heroImageWrap {
+  position: relative;
+  flex: 0 0 26%;
+  height: 100%;
+  min-height: 90vh;
+  overflow: hidden;
+  margin-left: -8%;
+
+  &:first-child {
+    margin-left: 0;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+  }
+
+  @media (max-width: 900px) {
+    flex: 0 0 28%;
+    min-height: 65vh;
+    margin-left: -6%;
+  }
+
+  @media (max-width: 500px) {
+    flex: 0 0 48%;
+    min-height: 55vh;
+    margin-left: -4%;
+  }
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 3rem 3.5rem 3rem 3rem;
+  background: $black;
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 15%;
+    bottom: 15%;
+    width: 3px;
+    background: linear-gradient(to bottom, transparent, $gold, transparent);
+    opacity: 0.7;
+  }
+
+  @media (max-width: 900px) {
+    padding: 3rem 8%;
+    text-align: center;
+
+    &::before {
+      display: none;
+    }
+  }
+}
+
+.heroTitle {
+  font-family: $font-serif;
+  font-size: clamp(3rem, 7vw, 2rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: 0.02em;
+  margin: 0 0 0.5rem 0;
+  color: $white;
+}
+
+.heroName {
+  font-family: $font-bulgatti;
+  font-size: clamp(1.25rem, 2vw, 2.5rem);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: $gold;
+  margin: 0 0 1.5rem 0;
+}
+
+.heroTagline {
+  font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+  line-height: 1.65;
+  opacity: 0.9;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  margin: 0;
+  max-width: 420px;
+
+  @media (max-width: 900px) {
+    max-width: none;
+  }
+}
+

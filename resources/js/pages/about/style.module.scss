@@ -1,0 +1,568 @@
+// About page – artistic layout, reusing home design tokens
+// @import "../../app/_variables.scss";
+@use "../../../css/variables" as *;
+
+.page {
+  min-height: 100vh;
+  background: $black;
+  color: $white;
+}
+
+// // Minimal nav
+// .nav {
+//   position: fixed;
+//   top: 0;
+//   left: 0;
+//   right: 0;
+//   z-index: 100;
+//   display: flex;
+//   align-items: center;
+//   justify-content: space-between;
+//   padding: 1.25rem 8%;
+//   mix-blend-mode: difference;
+//   pointer-events: none;
+
+//   > * {
+//     pointer-events: auto;
+//   }
+// }
+
+// .logo {
+//   font-family: $font-serif;
+//   font-weight: 600;
+//   font-size: 1.25rem;
+//   letter-spacing: 0.06em;
+//   color: $white;
+//   text-decoration: none;
+//   transition: opacity 0.2s;
+
+//   &:hover {
+//     opacity: 0.85;
+//   }
+// }
+
+// .navLabel {
+//   font-size: 0.7rem;
+//   font-weight: 500;
+//   letter-spacing: 0.25em;
+//   text-transform: uppercase;
+//   color: rgba(255, 255, 255, 0.6);
+// }
+
+// .back {
+//   font-size: 0.8rem;
+//   font-weight: 500;
+//   letter-spacing: 0.1em;
+//   text-transform: uppercase;
+//   color: $white;
+//   text-decoration: none;
+//   padding: 0.5rem 0;
+//   border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+//   transition: color 0.2s, border-color 0.2s;
+
+//   &:hover {
+//     color: $gold;
+//     border-color: $gold;
+//   }
+// }
+
+// // Hero – 4 vertical images (full-height, overlapping) + "About" text
+// .hero {
+//   position: relative;
+//   min-height: 90vh;
+//   display: grid;
+//   grid-template-columns: 1.1fr 1fr;
+//   align-items: stretch;
+//   gap: 0;
+//   overflow: hidden;
+//   background: $black;
+
+//   @media (max-width: 900px) {
+//     grid-template-columns: 1fr;
+//     min-height: auto;
+//   }
+// }
+
+// .heroImages {
+//   position: relative;
+//   display: flex;
+//   align-items: stretch;
+//   justify-content: flex-end;
+//   min-height: 90vh;
+//   padding-right: 0;
+
+//   &::after {
+//     content: "";
+//     position: absolute;
+//     top: 0;
+//     right: 0;
+//     bottom: 0;
+//     width: 40%;
+//     background: linear-gradient(
+//       to right,
+//       transparent 0%,
+//       rgba(0, 0, 0, 0.4) 70%,
+//       rgba(0, 0, 0, 0.85) 100%
+//     );
+//     pointer-events: none;
+//   }
+
+//   @media (max-width: 900px) {
+//     min-height: 65vh;
+//     justify-content: center;
+
+//     &::after {
+//       width: 30%;
+//     }
+//   }
+
+//   @media (max-width: 500px) {
+//     min-height: 55vh;
+//   }
+// }
+
+// .heroImageWrap {
+//   position: relative;
+//   flex: 0 0 26%;
+//   height: 100%;
+//   min-height: 90vh;
+//   overflow: hidden;
+//   margin-left: -8%;
+
+//   &:first-child {
+//     margin-left: 0;
+//   }
+
+//   img {
+//     width: 100%;
+//     height: 100%;
+//     object-fit: cover;
+//     object-position: center top;
+//     display: block;
+//   }
+
+//   @media (max-width: 900px) {
+//     flex: 0 0 28%;
+//     min-height: 65vh;
+//     margin-left: -6%;
+//   }
+
+//   @media (max-width: 500px) {
+//     flex: 0 0 48%;
+//     min-height: 55vh;
+//     margin-left: -4%;
+//   }
+// }
+
+// .heroContent {
+//   position: relative;
+//   z-index: 1;
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: center;
+//   padding: 3rem 3.5rem 3rem 3rem;
+//   background: $black;
+
+//   &::before {
+//     content: "";
+//     position: absolute;
+//     left: 0;
+//     top: 15%;
+//     bottom: 15%;
+//     width: 3px;
+//     background: linear-gradient(to bottom, transparent, $gold, transparent);
+//     opacity: 0.7;
+//   }
+
+//   @media (max-width: 900px) {
+//     padding: 3rem 8%;
+//     text-align: center;
+
+//     &::before {
+//       display: none;
+//     }
+//   }
+// }
+
+// .heroKicker {
+//   display: block;
+//   font-size: 0.7rem;
+//   font-weight: 500;
+//   letter-spacing: 0.35em;
+//   text-transform: uppercase;
+//   color: $gold;
+//   margin-bottom: 0.5rem;
+// }
+
+// .heroTitle {
+//   font-family: $font-serif;
+//   font-size: clamp(3rem, 7vw, 2rem);
+//   font-weight: 600;
+//   line-height: 1.05;
+//   letter-spacing: 0.02em;
+//   margin: 0 0 0.5rem 0;
+//   color: $white;
+// }
+
+// .heroName {
+//   font-family: $font-bulgatti;
+//   font-size: clamp(1.25rem, 2vw, 2.5rem);
+//   font-weight: 600;
+//   letter-spacing: 0.08em;
+//   color: $gold;
+//   margin: 0 0 1.5rem 0;
+// }
+
+// .heroTagline {
+//   font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+//   line-height: 1.65;
+//   opacity: 0.9;
+//   font-weight: 400;
+//   letter-spacing: 0.04em;
+//   margin: 0;
+//   max-width: 420px;
+
+//   @media (max-width: 900px) {
+//     max-width: none;
+//   }
+// }
+
+// // Story – split: image left (tickets-img), text right, overlapping
+// .story {
+//   position: relative;
+//   display: grid;
+//   grid-template-columns: 1.2fr 1fr;
+//   min-height: 85vh;
+//   align-items: center;
+//   padding: 6rem 0 6rem 0;
+
+//   @media (max-width: 900px) {
+//     grid-template-columns: 1fr;
+//     min-height: auto;
+//     padding: 4rem 8%;
+//   }
+// }
+
+// .storyImageWrap {
+//   position: relative;
+//   height: 1000px;
+//   min-height: 480px;
+//   margin-right: -8%;
+//   z-index: 0;
+
+//   @media (max-width: 900px) {
+//     margin-right: 0;
+//     margin-bottom: 2rem;
+//     min-height: 360px;
+//     height: 480px;
+//   }
+
+//   @media (max-width: 500px) {
+//     height: 360px;
+//   }
+// }
+
+// .storyImage {
+//   width: 100%;
+//   height: 100%;
+//   object-fit: cover;
+//   object-position: center 20%;
+// }
+
+// .storyImageOverlay {
+//   position: absolute;
+//   inset: 0;
+//   background: linear-gradient(
+//     90deg,
+//     rgba(0, 0, 0, 0.7) 0%,
+//     rgba(0, 0, 0, 0.3) 45%,
+//     transparent 70%
+//   );
+//   pointer-events: none;
+
+//   @media (max-width: 900px) {
+//     background: linear-gradient(
+//       to top,
+//       rgba(0, 0, 0, 0.85) 0%,
+//       transparent 50%
+//     );
+//   }
+// }
+
+// .storyText {
+//   position: relative;
+//   z-index: 1;
+//   padding: 2rem 8% 2rem 4rem;
+//   max-width: 520px;
+
+//   @media (max-width: 900px) {
+//     padding: 0 0 2rem 0;
+//     max-width: none;
+//   }
+// }
+
+// .storyTitle {
+//   font-family: $font-serif;
+//   font-size: clamp(1.75rem, 3vw, 3.25rem);
+//   font-weight: 900;
+//   letter-spacing: 0.03em;
+//   color: $gold;
+//   margin: 0 0 1rem 0;
+//   text-transform: capitalize;
+//   line-height: 1.2;
+// }
+
+// .storyLead {
+//   font-size: 1.25rem;
+//   line-height: 1.65;
+//   color: rgba(255, 255, 255, 0.95);
+//   margin: 0 0 1.25rem 0;
+//   font-weight: 500;
+// }
+
+// .storyBody {
+//   font-size: 1.15rem;
+//   line-height: 1.7;
+//   color: rgba(255, 255, 255, 0.8);
+//   margin: 0;
+// }
+
+// // Image + quote block (artist likes images + words)
+// .imageQuoteSection {
+//   display: grid;
+//   grid-template-columns: 1fr 1fr;
+//   align-items: center;
+//   gap: 3rem;
+//   padding: 2rem 8%;
+//   max-width: 1200px;
+//   margin: 0 auto;
+
+//   @media (max-width: 768px) {
+//     grid-template-columns: 1fr;
+//     gap: 2rem;
+//     padding: 4rem 8%;
+//   }
+// }
+
+// .imageQuoteImage {
+//   position: relative;
+//   border-radius: 8px;
+//   overflow: hidden;
+//   aspect-ratio: 4 / 5;
+
+//   img {
+//     width: 100%;
+//     height: 100%;
+//     object-fit: cover;
+//   }
+// }
+
+// .imageQuoteText {
+//   margin: 0;
+// }
+
+// .imageQuoteQuote {
+//   font-family: $font-serif;
+//   font-size: clamp(1.2rem, 2.2vw, 1.75rem);
+//   font-weight: 600;
+//   font-style: italic;
+//   line-height: 1.6;
+//   color: rgba(255, 255, 255, 0.95);
+//   margin: 0 0 1rem 0;
+// }
+
+// .imageQuoteCite {
+//   font-size: 1rem;
+//   font-style: normal;
+//   letter-spacing: 0.08em;
+//   color: $gold;
+//   display: block;
+// }
+
+// // Story reversed: text left, image right
+// .storyReverse {
+//   position: relative;
+//   display: grid;
+//   grid-template-columns: 1fr 1.2fr;
+//   min-height: 70vh;
+//   align-items: center;
+//   padding: 6rem 8%;
+//   gap: 3rem;
+
+//   @media (max-width: 900px) {
+//     grid-template-columns: 1fr;
+//     min-height: auto;
+//     padding: 4rem 8%;
+//   }
+// }
+
+// .storyImageWrapReverse {
+//   position: relative;
+//   height: 1000px;
+//   min-height: 400px;
+//   margin-left: -4%;
+//   z-index: 0;
+
+//   @media (max-width: 900px) {
+//     margin-left: 0;
+//     margin-top: 1rem;
+//     height: 480px;
+//     min-height: 480px;
+//     order: -1;
+//   }
+
+//   @media (max-width: 500px) {
+//     height: 360px;
+//     min-height: 360px;
+//   }
+// }
+
+// .storyImageOverlayReverse {
+//   position: absolute;
+//   inset: 0;
+//   background: linear-gradient(
+//     270deg,
+//     rgba(0, 0, 0, 0.7) 0%,
+//     rgba(0, 0, 0, 0.3) 55%,
+//     transparent 85%
+//   );
+//   pointer-events: none;
+
+//   @media (max-width: 900px) {
+//     background: linear-gradient(
+//       to top,
+//       rgba(0, 0, 0, 0.85) 0%,
+//       transparent 45%
+//     );
+//   }
+// }
+
+// // Gallery – bento-style grid, artistic overlap
+// .gallerySection {
+//   padding: 6rem 8% 5rem;
+//   max-width: 1400px;
+//   margin: 0 auto;
+// }
+
+// .galleryKicker {
+//   font-size: 0.7rem;
+//   font-weight: 500;
+//   letter-spacing: 0.3em;
+//   text-transform: uppercase;
+//   color: $gold;
+//   margin: 0 0 0.5rem 0;
+// }
+
+// .galleryTitle {
+//   font-family: $font-serif;
+//   font-size: clamp(2rem, 4vw, 3rem);
+//   font-weight: 600;
+//   letter-spacing: 0.04em;
+//   margin: 0 0 0.5rem 0;
+//   color: $white;
+// }
+
+// .galleryIntro {
+//   font-size: 0.95rem;
+//   line-height: 1.6;
+//   color: rgba(255, 255, 255, 0.75);
+//   margin: 0 0 2.5rem 0;
+//   max-width: 420px;
+// }
+
+// .galleryMasonryItem {
+//   border-radius: 6px;
+//   border: 1px solid rgba($gold, 0.25);
+
+//   img {
+//     width: 100%;
+//     height: 100%;
+//     object-fit: cover;
+//     transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+//   }
+
+//   &:hover img {
+//     transform: scale(1.05);
+//   }
+// }
+
+// // Quote block with image
+// .quoteSection {
+//   padding: 5rem 8%;
+//   max-width: 1000px;
+//   margin: 0 auto;
+// }
+
+// .quoteWithImage {
+//   display: grid;
+//   grid-template-columns: 200px 1fr;
+//   align-items: center;
+//   gap: 2.5rem;
+
+//   @media (max-width: 600px) {
+//     grid-template-columns: 1fr;
+//     text-align: center;
+//   }
+// }
+
+// .quoteImageWrap {
+//   border-radius: 8px;
+//   overflow: hidden;
+//   aspect-ratio: 1;
+
+//   img {
+//     width: 100%;
+//     height: 100%;
+//     object-fit: cover;
+//   }
+
+//   @media (max-width: 600px) {
+//     max-width: 160px;
+//     margin: 0 auto;
+//   }
+// }
+
+// .quote {
+//   max-width: 560px;
+//   margin: 0;
+// }
+
+// .quoteText {
+//   font-family: $font-serif;
+//   font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+//   font-weight: 500;
+//   font-style: italic;
+//   line-height: 1.5;
+//   color: rgba(255, 255, 255, 0.92);
+//   margin: 0;
+// }
+
+// .quoteCite {
+//   display: block;
+//   font-size: 0.85rem;
+//   font-style: normal;
+//   margin-top: 0.75rem;
+//   letter-spacing: 0.08em;
+//   color: $gold;
+// }
+
+// // Footer
+// .footer {
+//   padding: 3rem 8%;
+//   text-align: center;
+//   border-top: 1px solid rgba(255, 255, 255, 0.08);
+// }
+
+// .footerLink {
+//   font-size: 0.85rem;
+//   font-weight: 500;
+//   letter-spacing: 0.12em;
+//   text-transform: uppercase;
+//   color: rgba(255, 255, 255, 0.7);
+//   text-decoration: none;
+//   transition: color 0.2s;
+
+//   &:hover {
+//     color: $gold;
+//   }
+// }

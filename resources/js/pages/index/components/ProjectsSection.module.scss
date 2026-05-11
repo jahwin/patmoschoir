@@ -1,0 +1,175 @@
+.projectsSection {
+  background-color: #222;
+  padding: 1rem 0;
+  color: white;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+
+  @media (max-width: 768px) {
+    padding: 0 1rem;
+  }
+}
+
+.sectionTitle {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #444;
+  margin-bottom: 4rem;
+  text-align: left;
+  letter-spacing: -0.02em;
+
+  @media (max-width: 768px) {
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 2rem;
+  }
+}
+
+.projectsSwiper {
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+}
+
+.projectSlide {
+  height: auto;
+}
+
+.projectCard {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+}
+
+.projectImageContainer {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+
+  @media (max-width: 768px) {
+    height: 250px;
+  }
+}
+
+.projectImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.3s ease;
+
+  .projectCard:hover & {
+    transform: scale(1.05);
+  }
+}
+
+.projectOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0.4) 50%,
+    transparent 100%
+  );
+  padding: 2rem 1.5rem 1.5rem;
+  display: flex;
+  align-items: flex-end;
+}
+
+.projectTitle {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  margin: 0;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+
+  @media (max-width: 768px) {
+    font-size: 1.25rem;
+  }
+}
+
+.navigationControls {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.navButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: var(--color-theme-clr);
+    transform: scale(1.1);
+  }
+
+  svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}
+
+// Swiper button states
+.swiperButtonPrev,
+.swiperButtonNext {
+  &.swiper-button-disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+// Custom pagination styling
+.customPagination {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+
+  :global(.swiper-pagination-bullet) {
+    width: 0.75rem;
+    height: 0.75rem;
+    background-color: #444;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: #666;
+      transform: scale(1.2);
+    }
+
+    &.swiper-pagination-bullet-active {
+      background-color: var(--color-theme-clr);
+      transform: scale(1.2);
+    }
+  }
+}

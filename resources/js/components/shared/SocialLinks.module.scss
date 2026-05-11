@@ -1,0 +1,32 @@
+.socialLinks {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.socialLink {
+    color: black;
+    background-color: var(--color-theme-clr);
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: color 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+        color: white;
+    }
+
+    svg {
+        width: 1.5rem;
+        height: 1.5rem;
+
+        @media (min-width: 768px) {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+    }
+}

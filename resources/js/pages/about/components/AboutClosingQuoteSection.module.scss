@@ -1,0 +1,62 @@
+@use "../../../../css/variables" as *;
+
+// Quote block with image
+.quoteSection {
+  padding: 5rem 8%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.quoteWithImage {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  align-items: center;
+  gap: 2.5rem;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+}
+
+.quoteImageWrap {
+  border-radius: 8px;
+  overflow: hidden;
+  aspect-ratio: 1;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @media (max-width: 600px) {
+    max-width: 160px;
+    margin: 0 auto;
+  }
+}
+
+.quote {
+  max-width: 560px;
+  margin: 0;
+}
+
+.quoteText {
+  font-family: $font-serif;
+  font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+  font-weight: 500;
+  font-style: italic;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.92);
+  margin: 0;
+}
+
+.quoteCite {
+  display: block;
+  font-size: 0.85rem;
+  font-style: normal;
+  margin-top: 0.75rem;
+  letter-spacing: 0.08em;
+  color: $gold;
+}
+
