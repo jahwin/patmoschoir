@@ -1,102 +1,77 @@
-@use "../../../css//variables" as *;
+@use "../../../css/variables" as *;
 
 .footer {
   position: relative;
-  background-image: url('../../../assets/footer-img.png');
+  background-image: url('../../../assets/patmos/7.JPG');
   background-size: cover;
-  background-position: center -200px;
+  background-position: center;
   background-repeat: no-repeat;
-  // padding: clamp(3rem, 8vw, 5rem) 8%;
-  padding: 2rem 0;
+  padding: 4rem 8%;
   text-align: center;
-  border-top: 1px solid rgba(255, 255, 255, 0.233);
-
-  @media (max-width: 768px) {
-    background-position: center 0px;
-  }
+  overflow: hidden;
 
   &::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.88);
     z-index: 1;
   }
 
-  .section-title {
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
-
-    @media (max-width: 768px) {
-      font-size: 1.25rem !important;
-    }
-
-    @media (max-width: 480px) {
-      font-size: 1rem !important;
-    }
-
-    @media (max-width: 320px) {
-      font-size: 0.8rem !important;
-    }
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(201, 169, 98, 0.4), transparent);
+    z-index: 2;
   }
 }
 
-.footer-content {
+.inner {
   position: relative;
-  z-index: 2;
-  margin: 0 auto;
-  padding: 0 2rem;
-}
-
-.socials {
+  z-index: 3;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: .5rem 2rem;
-  margin-bottom: 2rem;
-  width: 100%;
-
-  a {
-    color: $white;
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    opacity: 0.8;
-    transition: color 0.3s ease, opacity 0.3s ease;
-
-    @media (max-width: 768px) {
-      font-size: 0.8rem !important;
-    }
-
-    @media (max-width: 480px) {
-      font-size: 0.6rem !important;
-    }
-
-    @media (max-width: 320px) {
-      font-size: 0.4rem !important;
-    }
-  }
-
-  a:hover {
-    color: $gold;
-    opacity: 1;
-  }
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
 }
 
-.copyright {
-  font-size: 1.1rem;
-  color: $white;
-  opacity: 0.6;
+.wordmark {
+  font-family: $font-bulgatti;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
   font-weight: 700;
+  letter-spacing: 0.06em;
+  color: $white;
+  margin: 0;
+}
 
-  @media (max-width: 768px) {
-    font-size: 1rem !important;
-  }
+.verse {
+  font-family: $font-serif;
+  font-size: 0.85rem;
+  font-style: italic;
+  letter-spacing: 0.18em;
+  color: $gold;
+  opacity: 0.85;
+  margin: 0;
+  text-transform: uppercase;
+}
 
-  @media (max-width: 480px) {
-    font-size: 0.8rem !important;
-  }
+.line {
+  width: 40px;
+  height: 1px;
+  background: rgba(201, 169, 98, 0.35);
+  margin: 0.75rem 0;
+  transform-origin: center;
+}
 
+.copy {
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.28);
+  margin: 0;
 }

@@ -1,0 +1,290 @@
+@use "../../../../css/variables" as *;
+
+.section {
+  background: $black;
+  padding: 6rem 8%;
+  overflow: hidden;
+
+  @media (max-width: 768px) {
+    padding: 4rem 6%;
+  }
+}
+
+.inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ── two-column layout ── */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: center;
+  margin-bottom: 5rem;
+
+  @media (max-width: 960px) {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+}
+
+/* ── image stack ── */
+.imageStack {
+  position: relative;
+  min-height: 480px;
+
+  @media (max-width: 960px) {
+    min-height: 320px;
+  }
+}
+
+.imgFrame {
+  overflow: hidden;
+  border: 1px solid rgba(201, 169, 98, 0.15);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s ease;
+  }
+
+  &:hover img {
+    transform: scale(1.04);
+  }
+}
+
+.imgMain {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 72%;
+  height: 380px;
+  z-index: 1;
+
+  @media (max-width: 960px) {
+    position: relative;
+    width: 100%;
+    height: 260px;
+  }
+}
+
+.imgSecondary {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 52%;
+  height: 260px;
+  z-index: 2;
+  border: 3px solid $black;
+
+  @media (max-width: 960px) {
+    display: none;
+  }
+}
+
+.yearBadge {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  z-index: 3;
+  background: $gold;
+  color: $black;
+  padding: 0.75rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1;
+
+  @media (max-width: 960px) {
+    top: 1rem;
+    bottom: auto;
+    left: 1rem;
+  }
+}
+
+.yearBadgeYear {
+  font-family: $font-bulgatti;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.yearBadgeLabel {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-top: 0.15rem;
+}
+
+/* ── content ── */
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.eyebrow {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: $gold;
+  margin-bottom: 0.75rem;
+}
+
+.title {
+  font-family: $font-bulgatti;
+  font-size: clamp(1.8rem, 4vw, 2.8rem) !important;
+  font-weight: 700;
+  color: $white;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  text-transform: none;
+}
+
+.body {
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.65);
+  font-weight: 300;
+  margin-bottom: 1.2rem;
+}
+
+.pullQuote {
+  border-left: 3px solid $gold;
+  padding: 0.6rem 0 0.6rem 1.25rem;
+  font-family: $font-serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: $gold;
+  margin: 1.5rem 0 2rem;
+  line-height: 1.6;
+}
+
+/* ── timeline ── */
+.timeline {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 4rem;
+  padding-top: 0;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.milestone {
+  padding: 2rem 1.5rem 2rem 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  position: relative;
+
+  &:last-child {
+    border-right: none;
+    padding-right: 0;
+  }
+
+  @media (max-width: 768px) {
+    &:nth-child(2) {
+      border-right: none;
+    }
+    &:nth-child(3) {
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    &:nth-child(4) {
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      border-right: none;
+    }
+  }
+}
+
+.milestoneDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: $gold;
+  margin-bottom: 0.85rem;
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 1px solid rgba(201, 169, 98, 0.25);
+  }
+}
+
+.milestoneYear {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: $gold;
+  margin-bottom: 0.5rem;
+}
+
+.milestoneText {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: 300;
+}
+
+/* ── accent wide image ── */
+.accentImg {
+  position: relative;
+  overflow: hidden;
+  height: 320px;
+  border: 1px solid rgba(201, 169, 98, 0.1);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+    display: block;
+  }
+
+  @media (max-width: 480px) {
+    height: 220px;
+  }
+}
+
+.accentImgOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.7) 0%,
+    rgba(0, 0, 0, 0.2) 60%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+}
+
+.accentCaption {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 2rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+}

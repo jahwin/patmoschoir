@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import styles from './GalleryModal.module.scss';
 import { DownloadIcon } from 'lucide-react';
 
@@ -23,6 +24,12 @@ interface GalleryModalProps {
   className?: string;
 }
 
+function formatDate(dateStr: string): string {
+  return new Date(dateStr).toLocaleDateString('en-GB', {
+    day: '2-digit', month: 'short', year: 'numeric',
+  });
+}
+
 export default function GalleryModal({
   isOpen,
   item,
@@ -31,231 +38,196 @@ export default function GalleryModal({
   onNext,
   hasPrevious,
   hasNext,
-  className = ""
+  className = '',
 }: GalleryModalProps) {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isCopyToastVisible, setIsCopyToastVisible] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState(0);
+  const [toastVisible, setToastVisible] = useState(false);
 
-  // Reset image index when item changes
+  // Reset slide index when album changes
+  useEffect(() => { setCurrentIndex(0); setDirection(0); }, [item]);
+
   useEffect(() => {
-    setCurrentImageIndex(0);
-  }, [item]);
+    if (!toastVisible) return;
+    const t = window.setTimeout(() => setToastVisible(false), 2200);
+    return () => window.clearTimeout(t);
+  }, [toastVisible]);
 
+  const allImages = item ? [item.image, ...(item.images ?? [])] : [];
+  const currentImage = allImages[currentIndex] ?? '';
+  const hasImgPrev = currentIndex > 0;
+  const hasImgNext = currentIndex < allImages.length - 1;
+
+  const goTo = (idx: number) => {
+    setDirection(idx > currentIndex ? 1 : -1);
+    setCurrentIndex(idx);
+  };
+
+  const imgPrev = () => { if (hasImgPrev) goTo(currentIndex - 1); else if (hasPrevious) onPrevious(); };
+  const imgNext = () => { if (hasImgNext) goTo(currentIndex + 1); else if (hasNext)    onNext(); };
+
+  // Keyboard navigation
   useEffect(() => {
-    if (!isCopyToastVisible) return;
-
-    const timeoutId = window.setTimeout(() => {
-      setIsCopyToastVisible(false);
-    }, 2200);
-
-    return () => {
-      window.clearTimeout(timeoutId);
+    if (!isOpen) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft')  imgPrev();
+      if (e.key === 'ArrowRight') imgNext();
+      if (e.key === 'Escape')     onClose();
     };
-  }, [isCopyToastVisible]);
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [isOpen, currentIndex, hasImgPrev, hasImgNext, hasPrevious, hasNext]);
+
+  const getFilename = (url: string) => {
+    try {
+      const parts = new URL(url, window.location.origin).pathname.split('/').filter(Boolean);
+      return parts[parts.length - 1] || `${item?.title ?? 'photo'}.jpg`;
+    } catch { return `${item?.title ?? 'photo'}.jpg`; }
+  };
+
+  const handleDownload = async () => {
+    const filename = getFilename(currentImage);
+    try {
+      const res = await fetch(currentImage);
+      if (!res.ok) throw new Error();
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click();
+      document.body.removeChild(a); URL.revokeObjectURL(url);
+    } catch {
+      const a = document.createElement('a');
+      a.href = currentImage; a.download = filename;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    }
+  };
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      try { await navigator.share({ title: item?.title, url: currentImage }); return; } catch {}
+    }
+    if (navigator.clipboard?.writeText) {
+      try { await navigator.clipboard.writeText(currentImage); setToastVisible(true); return; } catch {}
+    }
+    window.prompt('Copy image link:', currentImage);
+  };
 
   if (!isOpen || !item) return null;
 
-  // Combine featured image with gallery images
-  const allImages = [item.image, ...(item.images || [])];
-  const currentImage = allImages[currentImageIndex];
-
-  const handleImagePrevious = () => {
-    if (currentImageIndex > 0) {
-      setCurrentImageIndex(currentImageIndex - 1);
-    }
-  };
-
-  const handleImageNext = () => {
-    if (currentImageIndex < allImages.length - 1) {
-      setCurrentImageIndex(currentImageIndex + 1);
-    }
-  };
-
-  const hasImagePrevious = currentImageIndex > 0;
-  const hasImageNext = currentImageIndex < allImages.length - 1;
-
-  const getDownloadFilename = (imageUrl: string) => {
-    try {
-      const url = new URL(imageUrl, window.location.origin);
-      const pathnameParts = url.pathname.split('/').filter(Boolean);
-      const lastPart = pathnameParts[pathnameParts.length - 1];
-      return lastPart || `${item.title.replace(/\s+/g, '-').toLowerCase()}.jpg`;
-    } catch {
-      return `${item.title.replace(/\s+/g, '-').toLowerCase()}.jpg`;
-    }
-  };
-
-  const handleDownloadCurrentImage = async () => {
-    const filename = getDownloadFilename(currentImage);
-
-    try {
-      const response = await fetch(currentImage);
-      if (!response.ok) throw new Error('Failed to fetch image');
-
-      const blob = await response.blob();
-      const blobUrl = window.URL.createObjectURL(blob);
-
-      const link = document.createElement('a');
-      link.href = blobUrl;
-      link.download = filename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      window.URL.revokeObjectURL(blobUrl);
-    } catch {
-      // Fallback for cases where fetch is blocked by CORS.
-      const link = document.createElement('a');
-      link.href = currentImage;
-      link.download = filename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
-  };
-
-  const handleShareCurrentImage = async () => {
-    const shareUrl = currentImage;
-    const shareTitle = item.title;
-    const shareText = `${item.title} - Gallery Image`;
-
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: shareTitle,
-          text: shareText,
-          url: shareUrl,
-        });
-        return;
-      } catch {
-        // User cancelled or share failed; continue to clipboard fallback.
-      }
-    }
-
-    if (navigator.clipboard?.writeText) {
-      try {
-        await navigator.clipboard.writeText(shareUrl);
-        setIsCopyToastVisible(true);
-        return;
-      } catch {
-        // Fall back to prompt below.
-      }
-    }
-
-    window.prompt('Copy this image link:', shareUrl);
-  };
-
-  // Global navigation handlers
-  const handleGlobalPrevious = () => {
-    // If there's a previous image in current gallery, go to it
-    if (hasImagePrevious) {
-      handleImagePrevious();
-    } else {
-      // Otherwise, go to previous gallery
-      onPrevious();
-    }
-  };
-
-  const handleGlobalNext = () => {
-    // If there's a next image in current gallery, go to it
-    if (hasImageNext) {
-      handleImageNext();
-    } else {
-      // Otherwise, go to next gallery
-      onNext();
-    }
+  const variants = {
+    enter: (d: number) => ({ x: d > 0 ? 60 : -60, opacity: 0 }),
+    center: { x: 0, opacity: 1 },
+    exit:  (d: number) => ({ x: d > 0 ? -60 : 60, opacity: 0 }),
   };
 
   return (
-    <div className={`${styles.modalOverlay} ${className}`} onClick={onClose}>
-      <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-        {isCopyToastVisible && (
-          <div className={styles.copyToast} role="status" aria-live="polite">
-            Image link has been copied
-          </div>
-        )}
-        {/* Close Button */}
-        <button className={styles.closeButton} onClick={onClose} aria-label="Close">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <line x1="18" y1="6" x2="6" y2="18"/>
-            <line x1="6" y1="6" x2="18" y2="18"/>
-          </svg>
-        </button>
+    <div
+      className={`${styles.overlay} ${className}`}
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label={item.title}
+    >
+      {/* Toast */}
+      {toastVisible && (
+        <div className={styles.toast} role="status" aria-live="polite">
+          Image link copied
+        </div>
+      )}
 
-        {/* Global Navigation Buttons */}
-        {(hasImagePrevious || hasPrevious) && (
-          <button className={`${styles.navButton} ${styles.prevButton}`} onClick={handleGlobalPrevious} aria-label="Previous">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <polyline points="15,18 9,12 15,6"/>
-            </svg>
-          </button>
-        )}
+      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
 
-        {(hasImageNext || hasNext) && (
-          <button className={`${styles.navButton} ${styles.nextButton}`} onClick={handleGlobalNext} aria-label="Next">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <polyline points="9,18 15,12 9,6"/>
-            </svg>
-          </button>
-        )}
-
-        {/* Modal Body */}
-        <div className={styles.modalBody}>
-          <div className={styles.imageSection}>
-            <img
+        {/* ── Image (full area) ── */}
+        <div className={styles.imageWrap}>
+          <AnimatePresence initial={false} custom={direction} mode="popLayout">
+            <motion.img
+              key={currentImage}
               src={currentImage}
               alt={item.title}
-              className={styles.modalImage}
+              className={styles.image}
+              custom={direction}
+              variants={variants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ duration: 0.28, ease: 'easeInOut' }}
+              draggable={false}
             />
-            
-            {/* Image Counter */}
-            {allImages.length > 1 && (
-              <div className={styles.imageCounter}>
-                {currentImageIndex + 1} / {allImages.length}
-              </div>
-            )}
+          </AnimatePresence>
 
-            {/* Image Thumbnails */}
+          {/* ── Top overlay: title + description ── */}
+          <div className={styles.topOverlay}>
+            <div className={styles.topOverlayContent}>
+              <div className={styles.topMeta}>
+                <span className={styles.topDate}>{formatDate(item.created_at)}</span>
+                {allImages.length > 1 && (
+                  <span className={styles.topCounter}>
+                    {currentIndex + 1} / {allImages.length}
+                  </span>
+                )}
+              </div>
+              <h2 className={styles.topTitle}>{item.title}</h2>
+              {item.description && (
+                <p className={styles.topDesc}>{item.description}</p>
+              )}
+            </div>
+          </div>
+
+          {/* ── Bottom overlay: thumbnails + actions ── */}
+          <div className={styles.bottomOverlay}>
+            {/* Thumbnails */}
             {allImages.length > 1 && (
-              <div className={styles.imageThumbnails}>
-                {allImages.map((image, index) => (
+              <div className={styles.thumbsRow}>
+                {allImages.map((img, idx) => (
                   <button
-                    key={index}
-                    className={`${styles.thumbnail} ${index === currentImageIndex ? styles.activeThumbnail : ''}`}
-                    onClick={() => setCurrentImageIndex(index)}
+                    key={idx}
+                    type="button"
+                    className={`${styles.thumb} ${idx === currentIndex ? styles.thumbActive : ''}`}
+                    onClick={() => goTo(idx)}
+                    aria-label={`Go to image ${idx + 1}`}
+                    aria-current={idx === currentIndex}
                   >
-                    <img src={image} alt={`${item.title} ${index + 1}`} />
+                    <img src={img} alt="" loading="lazy" />
                   </button>
                 ))}
               </div>
             )}
-          </div>
 
-          <div className={styles.contentSection}>
-            <div className={styles.projectHeader}>
-              <h2 className={styles.projectTitle}>{item.title}</h2>
-            </div>
-
-            <div className={styles.projectDescription}>
-              <p>{item.description}</p>
-            </div>
-
-            <div className={styles.projectActions}>
-              <button className={styles.actionButton} onClick={handleDownloadCurrentImage}>
-                <DownloadIcon size={16}  />
-                Download
+            {/* Actions */}
+            <div className={styles.actions}>
+              <button type="button" className={styles.actionBtn} onClick={handleDownload} aria-label="Download">
+                <DownloadIcon size={15} />
+                <span>Download</span>
               </button>
-              <button className={styles.actionButton} onClick={handleShareCurrentImage}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <button type="button" className={styles.actionBtn} onClick={handleShare} aria-label="Share">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
-                  <polyline points="16,6 12,2 8,6"/>
-                  <line x1="12" y1="2" x2="12" y2="15"/>
+                  <polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/>
                 </svg>
-                Share
+                <span>Share</span>
               </button>
             </div>
           </div>
+
+          {/* ── Prev / Next arrows ── */}
+          {(hasImgPrev || hasPrevious) && (
+            <button type="button" className={`${styles.arrow} ${styles.arrowPrev}`} onClick={imgPrev} aria-label="Previous image">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+          )}
+          {(hasImgNext || hasNext) && (
+            <button type="button" className={`${styles.arrow} ${styles.arrowNext}`} onClick={imgNext} aria-label="Next image">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          )}
+
+          {/* ── Close button ── */}
+          <button type="button" className={styles.closeBtn} onClick={onClose} aria-label="Close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
         </div>
+
       </div>
     </div>
   );

@@ -1,11 +1,12 @@
-@use "../../../css/variables" as *;
+@use "../../../../css/variables" as *;
 
 .section {
-  background: $black;
-  padding: 8rem 8% 6rem;
+  background: $deep-gray;
+  padding: 6rem 8%;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
 
   @media (max-width: 768px) {
-    padding: 6rem 6% 4rem;
+    padding: 4rem 6%;
   }
 }
 
@@ -14,12 +15,12 @@
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 3.5rem;
+  gap: 3rem;
 }
 
 /* Header */
 .header {
-  max-width: 540px;
+  max-width: 520px;
 }
 
 .eyebrow {
@@ -29,44 +30,41 @@
   letter-spacing: 0.35em;
   text-transform: uppercase;
   color: $gold;
-  margin-bottom: 0.65rem;
+  margin-bottom: 0.6rem;
 }
 
 .title {
   font-family: $font-bulgatti;
-  font-size: clamp(2.2rem, 5vw, 3.5rem);
+  font-size: clamp(1.8rem, 4vw, 2.8rem) !important;
   font-weight: 700;
   color: $white;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  line-height: 1.0;
-  margin-bottom: 0.85rem;
+  line-height: 1.05;
+  margin-bottom: 0.75rem;
 }
 
 .subtitle {
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   line-height: 1.75;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.4);
   font-weight: 300;
 }
 
 /* Two-column body */
 .body {
   display: grid;
-  grid-template-columns: 380px 1fr;
+  grid-template-columns: 360px 1fr;
   gap: 4rem;
   align-items: start;
 
-  @media (max-width: 960px) {
+  @media (max-width: 900px) {
     grid-template-columns: 1fr;
-    gap: 3rem;
+    gap: 2.5rem;
   }
 }
 
-.infoCol {
-  /* ContactInfo sits here */
-}
-
+.infoCol,
 .formCol {
-  /* ContactForm sits here — no extra wrapper styles needed */
+  /* ContactInfo and ContactForm already carry their own styles */
 }

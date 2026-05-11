@@ -1,0 +1,402 @@
+@use "../../../../css/variables" as *;
+
+/* ════════════════════════════════════
+   SECTION
+════════════════════════════════════ */
+.section {
+  background: $black;
+  padding: 6rem 0;
+  position: relative;
+  overflow: hidden;
+
+  @media (max-width: 768px) {
+    padding: 4rem 0;
+  }
+}
+
+.inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 8%;
+}
+
+/* Giant background quote mark */
+.bgDeco {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.bgQuote {
+  position: absolute;
+  top: -0.15em;
+  left: -0.05em;
+  font-family: $font-serif;
+  font-size: clamp(280px, 35vw, 480px);
+  font-weight: 700;
+  color: rgba(201, 169, 98, 0.04);
+  line-height: 1;
+  user-select: none;
+}
+
+/* ════════════════════════════════════
+   HEADER
+════════════════════════════════════ */
+.header {
+  text-align: center;
+  margin-bottom: 3.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.eyebrow {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: $gold;
+  margin-bottom: 0.75rem;
+}
+
+.title {
+  font-family: $font-bulgatti;
+  font-size: clamp(2rem, 5vw, 3.2rem) !important;
+  font-weight: 700;
+  color: $white;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.05;
+  margin-bottom: 0.85rem;
+}
+
+.subtitle {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.4);
+  font-style: italic;
+  font-family: $font-serif;
+  margin-bottom: 1.75rem;
+}
+
+/* Platform pills */
+.platformPills {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.03);
+
+  svg {
+    color: var(--c, #{$gold});
+    opacity: 0.85;
+  }
+}
+
+/* ════════════════════════════════════
+   MARQUEE
+════════════════════════════════════ */
+.marqueeWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin: 0 0 3.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.marqueeRow {
+  overflow: hidden;
+  width: 100%;
+}
+
+.marqueeTrack {
+  display: flex;
+  gap: 1.25rem;
+  width: max-content;
+  animation: scrollLeft 55s linear infinite;
+
+  &:hover { /* handled via class below */ }
+}
+
+.marqueeReverse {
+  animation-name: scrollRight;
+  animation-duration: 65s;
+}
+
+.marqueePaused {
+  animation-play-state: paused;
+}
+
+@keyframes scrollLeft {
+  from { transform: translateX(0); }
+  to   { transform: translateX(calc(-50% - 0.625rem)); }
+}
+
+@keyframes scrollRight {
+  from { transform: translateX(calc(-50% - 0.625rem)); }
+  to   { transform: translateX(0); }
+}
+
+/* Edge fade overlays */
+.fadeLeft,
+.fadeRight {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 160px;
+  z-index: 2;
+  pointer-events: none;
+
+  @media (max-width: 768px) {
+    width: 60px;
+  }
+}
+
+.fadeLeft {
+  left: 0;
+  background: linear-gradient(to right, $black, transparent);
+}
+
+.fadeRight {
+  right: 0;
+  background: linear-gradient(to left, $black, transparent);
+}
+
+/* ════════════════════════════════════
+   CARD
+════════════════════════════════════ */
+.card {
+  width: 320px;
+  flex-shrink: 0;
+  background: $deep-gray;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.25s ease, transform 0.25s ease;
+  cursor: default;
+
+  &:hover {
+    border-color: rgba(201, 169, 98, 0.2);
+    transform: translateY(-3px);
+  }
+
+  @media (max-width: 480px) {
+    width: 280px;
+    padding: 1.1rem;
+  }
+}
+
+/* Bottom-left platform color accent line */
+.cardAccent {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  opacity: 0.6;
+}
+
+/* Top row: platform badge + date */
+.cardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.platformBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.cardDate {
+  font-size: 0.62rem;
+  color: rgba(255, 255, 255, 0.25);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Quote text */
+.cardText {
+  font-size: 0.84rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.72);
+  font-weight: 300;
+  font-style: normal;
+  flex: 1;
+  margin: 0;
+  position: relative;
+
+  /* clamp long testimonials */
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.openQuote,
+.closeQuote {
+  font-family: $font-serif;
+  font-size: 1.1em;
+  color: $gold;
+  opacity: 0.5;
+  font-style: italic;
+}
+
+.openQuote { margin-right: 1px; }
+.closeQuote { margin-left: 1px; }
+
+/* Footer: author + likes */
+.cardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.cardAuthor {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 0;
+}
+
+.avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: $white;
+  flex-shrink: 0;
+  letter-spacing: 0.05em;
+}
+
+.authorInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.authorName {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: $white;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.verifiedIcon {
+  flex-shrink: 0;
+  opacity: 0.9;
+}
+
+.authorHandle {
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cardLikes {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.3);
+  white-space: nowrap;
+  flex-shrink: 0;
+
+  svg {
+    color: #e53e3e;
+    opacity: 0.7;
+  }
+}
+
+/* ════════════════════════════════════
+   FOOTER CTA
+════════════════════════════════════ */
+.footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.1rem;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.footerText {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.4);
+  font-style: italic;
+  font-family: $font-serif;
+}
+
+.footerLinks {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.footerLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1.1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.55);
+  text-decoration: none;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+
+  svg { flex-shrink: 0; transition: color 0.2s ease; }
+
+  &:hover {
+    border-color: var(--c, #{$gold});
+    color: $white;
+    background: color-mix(in srgb, var(--c, #{$gold}) 10%, transparent);
+    transform: translateY(-2px);
+
+    svg { color: var(--c, #{$gold}); }
+  }
+}

@@ -1,52 +1,53 @@
 import { motion } from "motion/react";
 import Styles from "./Footer.module.scss";
 
-const SOCIALS = [
-  {
-    name: "YouTube",
-    link: "https://www.youtube.com/@Mbonyi",
-  },
-  {
-    name: "Spotify",
-    link: "https://open.spotify.com/artist/6E6bGyrGJM33jnVivvn3kH",
-  },
-  {
-    name: "Instagram",
-    link: "https://www.instagram.com/israelmbonyi",
-  },
-  {
-    name: "Facebook",
-    link: "https://www.facebook.com/imbonyi",
-  },
-  {
-    name: "X (Twitter)",
-    link: "https://x.com/IsraeMbonyi",
-  },
-  {
-    name: "TikTok",
-    link: "https://www.tiktok.com/@israelmbonyi",
-  },
-]
-
 export default function Footer() {
   return (
     <motion.footer
-      className={Styles['footer']}
+      className={Styles.footer}
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.6 }}
     >
-      <div className={Styles['footer-content']}>
-        <h2 className={Styles['section-title']}>Follow On Socials</h2>
-        <nav className={Styles['socials']} aria-label="Social links">
-          {SOCIALS.map((social) => (
-            <a href={social.link} key={social.name} target="_blank" rel="noopener noreferrer">
-              {social.name}
-            </a>
-          ))}
-        </nav>
-        <p className={Styles['copyright']}>© {new Date().getFullYear()} Israel Mbonyi</p>
+      <div className={Styles.inner}>
+        <motion.p
+          className={Styles.wordmark}
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+        >
+          Patmos Choir
+        </motion.p>
+
+        <motion.p
+          className={Styles.verse}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          Worship. Community. Purpose.
+        </motion.p>
+
+        <motion.div
+          className={Styles.line}
+          initial={{ scaleX: 0 }}
+          whileInView={{ scaleX: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+        />
+
+        <motion.p
+          className={Styles.copy}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+        >
+          &copy; {new Date().getFullYear()} Patmos Choir. All rights reserved.
+        </motion.p>
       </div>
     </motion.footer>
   );

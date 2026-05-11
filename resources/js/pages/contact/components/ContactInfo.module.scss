@@ -1,138 +1,143 @@
-.contactInfo {
-  background-color: #222;
-  padding: 6rem 0;
-  color: white;
-}
+@use "../../../../css/variables" as *;
 
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 2rem;
-
-  @media (max-width: 768px) {
-    padding: 0 1rem;
-  }
-}
-
-.sectionHeader {
-  text-align: center;
-  margin-bottom: 4rem;
-}
-
-.sectionTitle {
-  font-size: 2.5rem;
-  font-weight: bold;
-  color: white;
-  margin-bottom: 1rem;
-  letter-spacing: -0.02em;
-
-  @media (max-width: 768px) {
-    font-size: 2rem;
-  }
-}
-
-.sectionDescription {
-  font-size: 1.125rem;
-  color: #ccc;
-  line-height: 1.6;
-  max-width: 600px;
-  margin: 0 auto;
-
-  @media (max-width: 768px) {
-    font-size: 1rem;
-  }
-}
-
-.contactGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-}
-
-.contactCard {
+.info {
   display: flex;
-  align-items: flex-start;
-  gap: 1.5rem;
-  padding: 2rem;
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 1rem;
-  transition: all 0.3s ease;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+/* ── Block label ── */
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.blockLabel {
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: $gold;
+}
+
+/* ── Email list ── */
+.emailList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.emailRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.85rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+  &:last-child { border-bottom: none; }
 
   &:hover {
-    border-color: var(--color-theme-clr);
-    background-color: rgba(255, 255, 255, 0.08);
-    transform: translateY(-5px);
-  }
-
-  @media (max-width: 768px) {
-    padding: 1.5rem;
-    gap: 1rem;
+    background: rgba(255, 255, 255, 0.02);
   }
 }
 
-.cardIcon {
+.emailRole {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+  width: 90px;
+  flex-shrink: 0;
+
+  @media (max-width: 480px) {
+    display: none;
+  }
+}
+
+.emailAddress {
+  flex: 1;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: $white;
+  text-decoration: none;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.2s ease;
+
+  &:hover { color: $gold; }
+}
+
+.copyBtn {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 3.5rem;
-  height: 3.5rem;
-  background-color: var(--color-theme-clr);
-  border-radius: 0.75rem;
-  color: black;
-  flex-shrink: 0;
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
 
-  svg {
-    width: 1.75rem;
-    height: 1.75rem;
-  }
-
-  @media (max-width: 768px) {
-    width: 3rem;
-    height: 3rem;
-
-    svg {
-      width: 1.5rem;
-      height: 1.5rem;
-    }
+  &:hover {
+    border-color: rgba(201, 169, 98, 0.4);
+    color: $gold;
   }
 }
 
-.cardContent {
+.copied {
+  border-color: rgba(74, 222, 128, 0.35) !important;
+  color: #4ade80 !important;
+}
+
+/* ── Meta row (location + socials side by side) ── */
+.metaRow {
   display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  flex: 1;
+  gap: 2.5rem;
+  flex-wrap: wrap;
 }
 
-.cardTitle {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: white;
-  margin: 0;
-}
-
-.cardDetails {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.detailItem {
-  font-size: 1rem;
-  color: var(--color-theme-clr);
-  margin: 0;
+/* ── Location ── */
+.location {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
   font-weight: 500;
+  color: rgba(255, 255, 255, 0.65);
+
+  svg { color: $gold; flex-shrink: 0; }
 }
 
-.cardDescription {
-  font-size: 0.875rem;
-  color: #ccc;
-  margin: 0;
-  line-height: 1.4;
+/* ── Social icons ── */
+.socialIcons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.socialIcon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: none;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    border-color: $gold;
+    color: $gold;
+    background: rgba(201, 169, 98, 0.08);
+    transform: translateY(-2px);
+  }
 }

@@ -1,0 +1,603 @@
+@use "../../../../css/variables" as *;
+
+/* ════════════════════════════════════
+   SECTION
+════════════════════════════════════ */
+.section {
+  background: $black;
+  padding: 6rem 8%;
+  overflow: hidden;
+
+  @media (max-width: 768px) {
+    padding: 4rem 6%;
+  }
+}
+
+.inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 5rem;
+}
+
+/* ════════════════════════════════════
+   LIVE / STREAM BLOCK
+════════════════════════════════════ */
+.streamBlock {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 2.5rem;
+  align-items: stretch;
+  border: 1px solid rgba(201, 169, 98, 0.12);
+  background: $deep-gray;
+  overflow: hidden;
+
+  @media (max-width: 960px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── player side ── */
+.streamPlayer {
+  aspect-ratio: 16 / 9;
+  background: $black;
+  position: relative;
+  overflow: hidden;
+
+  @media (max-width: 960px) {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+.streamIframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+.streamOffline {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #0d0d0d 0%, #1a1208 100%);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 60%, rgba(201, 169, 98, 0.06) 0%, transparent 70%);
+  }
+}
+
+.streamOfflinePulse {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+
+  span {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(201, 169, 98, 0.1);
+    animation: ripple 3s ease-out infinite;
+
+    &:nth-child(1) { width: 120px; height: 120px; animation-delay: 0s; }
+    &:nth-child(2) { width: 220px; height: 220px; animation-delay: 1s; }
+    &:nth-child(3) { width: 340px; height: 340px; animation-delay: 2s; }
+  }
+}
+
+@keyframes ripple {
+  0%   { opacity: 0.5; transform: scale(0.8); }
+  100% { opacity: 0;   transform: scale(1); }
+}
+
+.streamOfflineIcon {
+  color: rgba(201, 169, 98, 0.3);
+  position: relative;
+  z-index: 1;
+  margin-bottom: 0.5rem;
+}
+
+.streamOfflineLabel {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.35);
+  position: relative;
+  z-index: 1;
+}
+
+.streamOfflineDate {
+  font-family: $font-bulgatti;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: $white;
+  position: relative;
+  z-index: 1;
+}
+
+.streamOfflineTime {
+  font-size: 0.8rem;
+  color: $gold;
+  position: relative;
+  z-index: 1;
+  letter-spacing: 0.1em;
+}
+
+/* ── info side ── */
+.streamInfo {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  justify-content: center;
+
+  @media (max-width: 960px) {
+    padding: 1.5rem;
+  }
+}
+
+.streamBadgeRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.liveBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #e53e3e;
+  color: $white;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  padding: 0.25rem 0.65rem;
+  border-radius: 2px;
+}
+
+.liveDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: $white;
+  animation: blink 1.2s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.2; }
+}
+
+.upcomingBadge {
+  display: inline-flex;
+  align-items: center;
+  background: transparent;
+  color: $gold;
+  border: 1px solid rgba(201, 169, 98, 0.4);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  padding: 0.25rem 0.65rem;
+}
+
+.viewerCount {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.4);
+
+  svg { color: $gold; }
+}
+
+.streamTitle {
+  font-family: $font-bulgatti;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: $white;
+  letter-spacing: 0.03em;
+  line-height: 1.3;
+  text-transform: none;
+}
+
+.streamMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+
+  span {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.4);
+
+    svg { color: $gold; opacity: 0.7; flex-shrink: 0; }
+  }
+}
+
+.streamDesc {
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 300;
+}
+
+.streamChannels {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.streamChannelsLabel {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.streamChannelBtns {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.channelBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: $white;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.channelBtnYt:hover {
+  background: rgba(255, 0, 0, 0.12);
+  border-color: rgba(255, 0, 0, 0.4);
+}
+
+.channelBtnFb:hover {
+  background: rgba(24, 119, 242, 0.12);
+  border-color: rgba(24, 119, 242, 0.4);
+}
+
+.reminderRow {
+  margin-top: 0.25rem;
+}
+
+.reminderBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.4rem;
+  background: $gold;
+  color: $black;
+  text-decoration: none;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: background 0.25s ease, transform 0.2s ease;
+
+  &:hover {
+    background: $gold-dark;
+    transform: translateY(-2px);
+  }
+}
+
+/* ════════════════════════════════════
+   DISCOGRAPHY
+════════════════════════════════════ */
+.discography {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.discographyHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+
+  @media (max-width: 700px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.25rem;
+  }
+}
+
+.discographyTitle {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.eyebrow {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: $gold;
+}
+
+.title {
+  font-family: $font-bulgatti;
+  font-size: clamp(1.8rem, 4vw, 2.8rem) !important;
+  font-weight: 700;
+  color: $white;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.05;
+}
+
+/* Year tabs */
+.yearTabs {
+  display: flex;
+  gap: 0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar { display: none; }
+}
+
+.yearTab {
+  padding: 0.6rem 1.2rem;
+  background: none;
+  border: none;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.2s ease, background 0.2s ease;
+
+  &:last-child {
+    border-right: none;
+  }
+
+  &:hover:not(.yearTabActive) {
+    color: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.04);
+  }
+}
+
+.yearTabActive {
+  background: $gold;
+  color: $black;
+  font-weight: 700;
+}
+
+/* ── Album panel ── */
+.albumPanel {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 3rem;
+  align-items: start;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 220px 1fr;
+    gap: 2rem;
+  }
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+/* Cover */
+.albumCoverWrap {
+  position: relative;
+  aspect-ratio: 1;
+}
+
+.albumCoverShadow {
+  position: absolute;
+  bottom: -12px;
+  left: 12px;
+  right: -12px;
+  top: 12px;
+  background: rgba(201, 169, 98, 0.08);
+  border: 1px solid rgba(201, 169, 98, 0.12);
+  z-index: 0;
+}
+
+.albumCover {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.albumCoverOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  padding: 1rem;
+  background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 50%);
+}
+
+.albumYear {
+  font-family: $font-bulgatti;
+  font-size: 1rem;
+  font-weight: 700;
+  color: $gold;
+  letter-spacing: 0.12em;
+}
+
+/* Info column */
+.albumInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.albumInfoTop {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.albumLabel {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: $gold;
+  margin-bottom: 0.35rem;
+}
+
+.albumTitle {
+  font-family: $font-bulgatti;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 700;
+  color: $white;
+  letter-spacing: 0.04em;
+  line-height: 1.15;
+  margin-bottom: 0.35rem;
+  text-transform: none;
+}
+
+.albumMeta {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* Platform links */
+.platformLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.platformBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease, transform 0.2s ease;
+
+  svg { flex-shrink: 0; transition: color 0.25s ease; }
+
+  &:hover {
+    border-color: var(--platform-color, #{$gold});
+    color: $white;
+    background: color-mix(in srgb, var(--platform-color, #{$gold}) 12%, transparent);
+    transform: translateY(-2px);
+
+    svg { color: var(--platform-color, #{$gold}); }
+  }
+}
+
+/* Track list */
+.trackList {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.trackRow {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.65rem 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+  transition: background 0.2s ease;
+  border-radius: 2px;
+
+  &:hover, &.trackRowActive {
+    background: rgba(201, 169, 98, 0.05);
+
+    .trackNum { opacity: 0; }
+    .trackPlay { opacity: 1; }
+    .trackTitle { color: $white; }
+  }
+}
+
+.trackNum {
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.25);
+  width: 20px;
+  text-align: right;
+  flex-shrink: 0;
+  font-weight: 500;
+  transition: opacity 0.2s ease;
+  font-variant-numeric: tabular-nums;
+}
+
+.trackPlay {
+  width: 20px;
+  flex-shrink: 0;
+  color: $gold;
+  opacity: 0;
+  position: absolute;
+  transition: opacity 0.2s ease;
+
+  .trackRow:hover &,
+  .trackRowActive & {
+    position: relative;
+  }
+}
+
+.trackTitle {
+  flex: 1;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.65);
+  font-weight: 400;
+  transition: color 0.2s ease;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.trackDuration {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.25);
+  font-weight: 500;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.trackRowActive .trackTitle {
+  color: $gold;
+}

@@ -1,12 +1,17 @@
-import React from 'react';
-import styles from './ContactForm.module.scss';
 import { useForm } from '@inertiajs/react';
+import styles from './ContactForm.module.scss';
 
-interface ContactFormProps {
-  className?: string;
-}
+const SUBJECTS = [
+  { value: '', label: 'Select a subject…' },
+  { value: 'booking', label: 'Choir Booking / Performance' },
+  { value: 'outreach', label: 'Outreach Collaboration' },
+  { value: 'media', label: 'Media & Press Enquiry' },
+  { value: 'donation', label: 'Donation / Financial Support' },
+  { value: 'prayer', label: 'Prayer Request' },
+  { value: 'other', label: 'Other' },
+];
 
-export default function ContactForm({ className = "" }: ContactFormProps) {
+export default function ContactForm() {
   const { data, setData, post, processing, errors, reset, recentlySuccessful } = useForm({
     name: '',
     email: '',
@@ -15,142 +20,132 @@ export default function ContactForm({ className = "" }: ContactFormProps) {
     message: '',
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setData(name as keyof typeof data, value);
-  };
+  const set = (field: keyof typeof data) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
+      setData(field, e.target.value);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    post('/contact', {
-      onSuccess: () => reset(),
-    });
+    post('/contact', { onSuccess: () => reset() });
   };
 
   return (
-    <section className={`${styles.contactForm} ${className}`}>
-      <div className={styles.container}>
-        <div className={styles.formHeader}>
-          <h2 className={styles.formTitle}>Send Us a Message</h2>
-          <p className={styles.formDescription}>
-            Fill out the form below and we'll get back to you within 24 hours. 
-            We're excited to hear about your project!
-          </p>
-        </div>
+    <div className={styles.wrap}>
 
-        <div className={styles.formCard}>
-          <form onSubmit={handleSubmit} className={styles.form}>
-            <div className={styles.formRow}>
-              <div className={styles.formGroup}>
-                <label htmlFor="name" className={styles.formLabel}>Full Name *</label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={data.name}
-                  onChange={handleInputChange}
-                  className={styles.formInput}
-                  placeholder="Your full name"
-                  required
-                />
-                {errors.name && <p className={styles.errorText}>{errors.name}</p>}
-              </div>
+        {recentlySuccessful && (
+          <div className={styles.successBanner} role="status">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            <span>Message sent! Thank you — we'll be in touch soon.</span>
+          </div>
+        )}
 
-              <div className={styles.formGroup}>
-                <label htmlFor="email" className={styles.formLabel}>Email Address *</label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={data.email}
-                  onChange={handleInputChange}
-                  className={styles.formInput}
-                  placeholder="your.email@example.com"
-                  required
-                />
-                {errors.email && <p className={styles.errorText}>{errors.email}</p>}
-              </div>
-            </div>
+        <form onSubmit={handleSubmit} className={styles.form} noValidate>
 
-            <div className={styles.formRow}>
-              <div className={styles.formGroup}>
-                <label htmlFor="phone" className={styles.formLabel}>Phone Number</label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={data.phone}
-                  onChange={handleInputChange}
-                  className={styles.formInput}
-                  placeholder="+1 (555) 123-4567"
-                />
-                {errors.phone && <p className={styles.errorText}>{errors.phone}</p>}
-              </div>
-
-              <div className={styles.formGroup}>
-                <label htmlFor="subject" className={styles.formLabel}>Subject *</label>
-                <input
-                  type="text"
-                  id="subject"
-                  name="subject"
-                  value={data.subject}
-                  onChange={handleInputChange}
-                  className={styles.formInput}
-                  placeholder="Enter your subject"
-                  required
-                />
-                {errors.subject && <p className={styles.errorText}>{errors.subject}</p>}
-              </div>
-            </div>
-
-            <div className={styles.formGroup}>
-              <label htmlFor="message" className={styles.formLabel}>Message *</label>
-              <textarea
-                id="message"
-                name="message"
-                value={data.message}
-                onChange={handleInputChange}
-                className={styles.formTextarea}
-                placeholder="Tell us about your project, timeline, budget, and any specific requirements..."
-                rows={6}
+          {/* Row 1: Name + Email */}
+          <div className={styles.row}>
+            <div className={styles.field}>
+              <label htmlFor="name" className={styles.label}>Full Name <span aria-hidden="true">*</span></label>
+              <input
+                id="name" name="name" type="text"
+                className={`${styles.input} ${errors.name ? styles.inputError : ''}`}
+                value={data.name}
+                onChange={set('name')}
+                placeholder="Your full name"
                 required
-              ></textarea>
-              {errors.message && <p className={styles.errorText}>{errors.message}</p>}
+              />
+              {errors.name && <p className={styles.fieldError}>{errors.name}</p>}
             </div>
+            <div className={styles.field}>
+              <label htmlFor="email" className={styles.label}>Email Address <span aria-hidden="true">*</span></label>
+              <input
+                id="email" name="email" type="email"
+                className={`${styles.input} ${errors.email ? styles.inputError : ''}`}
+                value={data.email}
+                onChange={set('email')}
+                placeholder="your@email.com"
+                required
+              />
+              {errors.email && <p className={styles.fieldError}>{errors.email}</p>}
+            </div>
+          </div>
 
-            {recentlySuccessful && (
-              <div className={styles.successMessage}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M9 12l2 2 4-4"/>
-                  <circle cx="12" cy="12" r="10"/>
+          {/* Row 2: Phone + Subject */}
+          <div className={styles.row}>
+            <div className={styles.field}>
+              <label htmlFor="phone" className={styles.label}>Phone <span className={styles.optional}>(optional)</span></label>
+              <input
+                id="phone" name="phone" type="tel"
+                className={styles.input}
+                value={data.phone}
+                onChange={set('phone')}
+                placeholder="+250 700 000 000"
+              />
+            </div>
+            <div className={styles.field}>
+              <label htmlFor="subject" className={styles.label}>Subject <span aria-hidden="true">*</span></label>
+              <div className={styles.selectWrap}>
+                <select
+                  id="subject" name="subject"
+                  className={`${styles.select} ${errors.subject ? styles.inputError : ''}`}
+                  value={data.subject}
+                  onChange={set('subject')}
+                  required
+                >
+                  {SUBJECTS.map((s) => (
+                    <option key={s.value} value={s.value} disabled={s.value === ''}>
+                      {s.label}
+                    </option>
+                  ))}
+                </select>
+                <svg className={styles.selectChevron} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <polyline points="6 9 12 15 18 9"/>
                 </svg>
-                Thank you! Your message has been sent successfully. We'll get back to you soon.
               </div>
-            )}
+              {errors.subject && <p className={styles.fieldError}>{errors.subject}</p>}
+            </div>
+          </div>
 
-            <button 
-              type="submit" 
-              className={styles.submitButton}
-              disabled={processing}
-            >
-              {processing ? (
-                <>
-                  <div className={styles.spinner}></div>
-                  Sending...
-                </>
-              ) : (
-                <>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <line x1="22" y1="2" x2="11" y2="13"/>
-                    <polygon points="22,2 15,22 11,13 2,9 22,2"/>
-                  </svg>
-                  Send Message
-                </>
-              )}
-            </button>
-          </form>
-        </div>
-      </div>
-    </section>
+          {/* Message */}
+          <div className={styles.field}>
+            <label htmlFor="message" className={styles.label}>Message <span aria-hidden="true">*</span></label>
+            <textarea
+              id="message" name="message"
+              className={`${styles.textarea} ${errors.message ? styles.inputError : ''}`}
+              value={data.message}
+              onChange={set('message')}
+              placeholder="Tell us how we can help, or what's on your heart…"
+              rows={6}
+              required
+            />
+            {errors.message && <p className={styles.fieldError}>{errors.message}</p>}
+            <span className={styles.charCount}>{data.message.length} characters</span>
+          </div>
+
+          <button type="submit" className={styles.submitBtn} disabled={processing}>
+            {processing ? (
+              <>
+                <span className={styles.spinner} aria-hidden="true" />
+                Sending…
+              </>
+            ) : (
+              <>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <line x1="22" y1="2" x2="11" y2="13"/>
+                  <polygon points="22,2 15,22 11,13 2,9 22,2"/>
+                </svg>
+                Send Message
+              </>
+            )}
+          </button>
+
+          <p className={styles.formNote}>
+            By sending this message you agree to our{' '}
+            <a href="/privacy-policy" className={styles.formNoteLink}>Privacy Policy</a>.
+          </p>
+
+        </form>
+    </div>
   );
 }

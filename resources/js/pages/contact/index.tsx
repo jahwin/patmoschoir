@@ -1,21 +1,39 @@
-import React from 'react';
-import ContactInfo from "./components/ContactInfo";
-import ContactForm from "./components/ContactForm";
-import ContactMap from "./components/ContactMap";
-import styles from "./style.module.scss";
 import PublicLayout from '@/components/layouts/public-layout';
 import { Head } from '@inertiajs/react';
+import ContactInfo from './components/ContactInfo';
+import ContactForm from './components/ContactForm';
+import styles from './style.module.scss';
 
 export default function Contact() {
   return (
     <>
-      <Head title="Contact Us" />
-      <PublicLayout title="Contact Us" subtitle="Reach Out to Our Expert Team" description="Reach out to us for any questions, project inquiries, or collaboration opportunities. Our dedicated team is here to assist you every step of the way.">
-        <div className={styles.contactPage}>
-          <ContactInfo />
-          <ContactForm />
-          {/* <ContactMap /> */}
-        </div>
+      <Head title="Contact — Patmos Choir" />
+      <PublicLayout>
+        <section className={styles.section}>
+          <div className={styles.inner}>
+
+            {/* Header */}
+            <div className={styles.header}>
+              <span className={styles.eyebrow}>Get in Touch</span>
+              <h1 className={styles.title}>Contact Us</h1>
+              <p className={styles.subtitle}>
+                Whether you want to book us, partner with the ministry, or simply say hello —
+                we'd love to hear from you.
+              </p>
+            </div>
+
+            {/* Merged body: info left, form right */}
+            <div className={styles.body}>
+              <div className={styles.infoCol}>
+                <ContactInfo />
+              </div>
+              <div className={styles.formCol}>
+                <ContactForm />
+              </div>
+            </div>
+
+          </div>
+        </section>
       </PublicLayout>
     </>
   );

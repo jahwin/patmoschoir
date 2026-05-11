@@ -1,0 +1,725 @@
+@use "../../../../css/variables" as *;
+
+/* ══════════════════════════════════════
+   SECTION
+══════════════════════════════════════ */
+.section {
+  background: $gray;
+  padding: 6rem 8%;
+  position: relative;
+  overflow: hidden;
+
+  @media (max-width: 768px) {
+    padding: 4rem 6%;
+  }
+}
+
+.bgDeco {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.bgDecoCircle {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  border: 1px solid rgba(201, 169, 98, 0.06);
+  top: -200px;
+  right: -200px;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 60px;
+    border-radius: 50%;
+    border: 1px solid rgba(201, 169, 98, 0.04);
+  }
+}
+
+.bgDecoLine {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(201, 169, 98, 0.12), transparent);
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ══════════════════════════════════════
+   HEADER
+══════════════════════════════════════ */
+.header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.eyebrow {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: $gold;
+  margin-bottom: 0.75rem;
+}
+
+.title {
+  font-family: $font-bulgatti;
+  font-size: clamp(2rem, 5vw, 3.2rem) !important;
+  font-weight: 700;
+  color: $white;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.05;
+  margin-bottom: 0.85rem;
+}
+
+.subtitle {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.45);
+  font-style: italic;
+  font-family: $font-serif;
+}
+
+/* ══════════════════════════════════════
+   BLOCK LABEL
+══════════════════════════════════════ */
+.blockHeader {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.blockLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: $gold;
+  white-space: nowrap;
+
+  svg {
+    opacity: 0.85;
+  }
+}
+
+.blockLine {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, rgba(201, 169, 98, 0.25), transparent);
+}
+
+/* ══════════════════════════════════════
+   CONCERT CARDS
+══════════════════════════════════════ */
+.concertGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.concertCard {
+  background: $deep-gray;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s ease, transform 0.3s ease;
+
+  &:hover {
+    border-color: rgba(201, 169, 98, 0.25);
+    transform: translateY(-3px);
+
+    .concertCardAccent {
+      opacity: 1;
+    }
+  }
+}
+
+.concertCardAccent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(to right, $gold, $gold-dark);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.concertCardNoise {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+.concertCardBody {
+  display: flex;
+  gap: 1.5rem;
+  padding: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.concertDateBadge {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border: 1px solid rgba(201, 169, 98, 0.3);
+  background: rgba(201, 169, 98, 0.06);
+}
+
+.concertMonth {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: $gold;
+}
+
+.concertDay {
+  font-family: $font-bulgatti;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $white;
+  line-height: 1;
+}
+
+.concertInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.concertName {
+  font-family: $font-bulgatti;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: $white;
+  letter-spacing: 0.03em;
+  margin-bottom: 0.6rem;
+  text-transform: none;
+  line-height: 1.3;
+}
+
+.concertMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-bottom: 0.85rem;
+
+  span {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.45);
+    font-weight: 400;
+
+    svg {
+      flex-shrink: 0;
+      color: $gold;
+      opacity: 0.7;
+    }
+  }
+}
+
+.concertDesc {
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: 1.25rem;
+  font-weight: 300;
+}
+
+.concertBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.4rem;
+  background: $gold;
+  color: $black;
+  border: none;
+  cursor: pointer;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: background 0.25s ease, transform 0.2s ease;
+
+  &:hover {
+    background: $gold-dark;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  svg {
+    transition: transform 0.2s ease;
+  }
+
+  &:hover svg {
+    transform: translateX(3px);
+  }
+}
+
+/* ══════════════════════════════════════
+   OUTREACH CARDS
+══════════════════════════════════════ */
+.outreachGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.outreachCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+  padding: 1.75rem 2rem;
+  background: $deep-gray;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  position: relative;
+  transition: background 0.25s ease;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.02);
+
+    .outreachIndex {
+      color: $gold;
+    }
+  }
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+.outreachIndex {
+  font-family: $font-bulgatti;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.06);
+  line-height: 1;
+  flex-shrink: 0;
+  width: 52px;
+  transition: color 0.3s ease;
+  user-select: none;
+}
+
+.outreachBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.outreachName {
+  font-family: $font-bulgatti;
+  font-size: 1rem;
+  font-weight: 600;
+  color: $white;
+  letter-spacing: 0.03em;
+  margin-bottom: 0.5rem;
+  text-transform: none;
+}
+
+.outreachMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  margin-bottom: 0.65rem;
+
+  span {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.4);
+
+    svg {
+      color: $gold;
+      opacity: 0.6;
+      flex-shrink: 0;
+    }
+  }
+}
+
+.outreachDesc {
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 300;
+}
+
+.outreachTag {
+  flex-shrink: 0;
+  align-self: flex-start;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(201, 169, 98, 0.6);
+  border: 1px solid rgba(201, 169, 98, 0.2);
+  padding: 0.25rem 0.6rem;
+
+  @media (max-width: 600px) {
+    align-self: flex-end;
+  }
+}
+
+/* ══════════════════════════════════════
+   MODAL OVERLAY
+══════════════════════════════════════ */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20000;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.modal {
+  background: $deep-gray;
+  border: 1px solid rgba(201, 169, 98, 0.15);
+  width: 100%;
+  max-width: 780px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+
+  /* custom scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(201, 169, 98, 0.3) transparent;
+
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { background: rgba(201, 169, 98, 0.3); }
+}
+
+/* ── Modal header ── */
+.modalHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 2rem 2rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  position: sticky;
+  top: 0;
+  background: $deep-gray;
+  z-index: 1;
+}
+
+.modalEyebrow {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: $gold;
+  margin-bottom: 0.4rem;
+}
+
+.modalTitle {
+  font-family: $font-bulgatti;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: $white;
+  letter-spacing: 0.03em;
+  margin-bottom: 0.3rem;
+  text-transform: none;
+  line-height: 1.3;
+}
+
+.modalMeta {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.modalClose {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: $white;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.2s ease, border-color 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+}
+
+/* ── Ticket grid ── */
+.ticketGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+  padding: 1.75rem 2rem;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ══════════════════════════════════════
+   TICKET CARD
+══════════════════════════════════════ */
+.ticketCard {
+  background: $gray;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.25s ease, transform 0.25s ease;
+
+  &:not(.ticketSoldOut):hover {
+    border-color: rgba(201, 169, 98, 0.3);
+    transform: translateY(-2px);
+  }
+}
+
+.ticketSoldOut {
+  opacity: 0.5;
+  filter: grayscale(0.6);
+}
+
+/* Colored top strip */
+.ticketStrip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.55rem 1rem;
+}
+
+.ticketTier {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: $black;
+  opacity: 0.85;
+}
+
+.soldOutBadge {
+  font-size: 0.55rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: $black;
+  opacity: 0.7;
+  background: rgba(0, 0, 0, 0.15);
+  padding: 0.15rem 0.45rem;
+}
+
+/* Main body — horizontal split */
+.ticketBody {
+  display: flex;
+  flex: 1;
+}
+
+.ticketLeft {
+  flex: 1;
+  padding: 1.1rem 1rem;
+  min-width: 0;
+}
+
+.ticketSection {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: $white;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.3rem;
+}
+
+.ticketDesc {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.5;
+  margin-bottom: 0.9rem;
+  font-weight: 300;
+}
+
+/* Perforated divider */
+.perfDivider {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 0.85rem;
+  height: 12px;
+  position: relative;
+}
+
+.perfHoleLeft,
+.perfHoleRight {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: $deep-gray;
+  flex-shrink: 0;
+}
+
+.perfLine {
+  flex: 1;
+  border-top: 1.5px dashed rgba(255, 255, 255, 0.1);
+}
+
+.ticketEventRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.ticketEventName {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ticketEventDate {
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* Right price stub */
+.ticketStub {
+  width: 68px;
+  flex-shrink: 0;
+  border-left: 1.5px dashed rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 0.5rem;
+  position: relative;
+}
+
+.stubHoleTop,
+.stubHoleBottom {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: $deep-gray;
+  left: -7px;
+}
+
+.stubHoleTop  { top: -7px; }
+.stubHoleBottom { bottom: -7px; }
+
+.stubContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.stubPrice {
+  font-family: $font-bulgatti;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: $gold;
+  line-height: 1;
+}
+
+.stubPriceLabel {
+  font-size: 0.55rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* Footer / buy button */
+.ticketFooter {
+  padding: 0.75rem 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.buyBtn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1rem;
+  background: $gold;
+  color: $black;
+  border: none;
+  cursor: pointer;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: background 0.25s ease, transform 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background: $gold-dark;
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.3);
+    cursor: not-allowed;
+  }
+
+  svg {
+    transition: transform 0.2s ease;
+  }
+
+  &:hover:not(:disabled) svg {
+    transform: translateX(3px);
+  }
+}
+
+.modalNote {
+  padding: 0 2rem 1.5rem;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.25);
+  text-align: center;
+  font-style: italic;
+}

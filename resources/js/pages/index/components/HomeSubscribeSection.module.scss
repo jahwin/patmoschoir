@@ -1,120 +1,264 @@
 @use "../../../../css/variables" as *;
 
-.subscribe {
-  background: linear-gradient(to bottom, $black, $gray);
-  text-align: center;
-  padding: clamp(3rem, 8vw, 5rem) 8%;
+.section {
+  background: $black;
+  padding: clamp(4rem, 9vw, 7rem) 8%;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 10% 50%, rgba(201, 169, 98, 0.04) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 90% 20%, rgba(201, 169, 98, 0.03) 0%, transparent 70%);
+    pointer-events: none;
+  }
 }
 
-.subscribeForm {
-  max-width: 480px;
+.inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
   margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 5rem;
+  align-items: start;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
 }
 
-.subscribeRow {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  text-align: left;
+/* ─── Left ─── */
+
+.left {
+  position: sticky;
+  top: 120px;
+
+  @media (max-width: 900px) {
+    position: static;
+    text-align: center;
+  }
 }
 
-.subscribeLabel {
-  font-size: 0.85rem;
-  font-weight: 500;
-  letter-spacing: 0.06em;
+.eyebrow {
+  display: block;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.4em;
   text-transform: uppercase;
+  color: $gold;
+  margin-bottom: 0.9rem;
+}
+
+.title {
+  font-family: $font-bulgatti;
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  font-weight: 700;
   color: $white;
-  opacity: 0.9;
+  line-height: 1.05;
+  letter-spacing: 0.02em;
+  margin: 0 0 1.25rem;
 }
 
-.subscribeOptional {
-  font-weight: 400;
-  text-transform: none;
-  opacity: 0.65;
-  font-size: 0.8em;
+.description {
+  font-size: 0.95rem;
+  line-height: 1.85;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 300;
+  margin: 0;
+  max-width: 380px;
+
+  @media (max-width: 900px) {
+    max-width: 100%;
+    margin: 0 auto;
+  }
 }
 
-.subscribeInput {
+.dividerLine {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(to right, $gold, transparent);
+  margin: 2rem 0;
+
+  @media (max-width: 900px) {
+    margin: 2rem auto;
+  }
+}
+
+.quote {
+  margin: 0;
+  padding: 0 0 0 1.25rem;
+  border-left: 2px solid rgba(201, 169, 98, 0.35);
+  font-family: $font-serif;
+  font-size: 0.98rem;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.38);
+  line-height: 1.7;
+
+  cite {
+    display: block;
+    margin-top: 0.65rem;
+    font-size: 0.75rem;
+    font-style: normal;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(201, 169, 98, 0.55);
+  }
+
+  @media (max-width: 900px) {
+    border-left: none;
+    border-top: 1px solid rgba(201, 169, 98, 0.2);
+    padding: 1.25rem 0 0;
+    text-align: center;
+  }
+}
+
+/* ─── Right / Form ─── */
+
+.right {
+  background: $deep-gray;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 2.75rem;
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(to right, transparent, $gold, transparent);
+  }
+
+  @media (max-width: 540px) {
+    padding: 2rem 1.4rem;
+  }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.fieldRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+
+  @media (max-width: 540px) {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.label {
+  font-size: 0.63rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.required {
+  color: $gold;
+  font-weight: 700;
+}
+
+.input {
   width: 100%;
-  padding: 14px 18px;
+  padding: 0.85rem 1rem;
   font-family: $font-sans;
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: $white;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 6px;
-  transition: border-color 0.25s ease, background 0.25s ease;
+  background: $gray;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  transition: border-color 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
 
   &::placeholder {
-    color: rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 0.2);
   }
 
   &:focus {
     outline: none;
     border-color: $gold;
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(201, 169, 98, 0.04);
+    box-shadow: 0 0 0 3px rgba(201, 169, 98, 0.08);
   }
 }
 
-.subscribeBtn {
-  margin-top: 0.5rem;
-  padding: 14px 32px;
-  background: $gold;
-  color: $black;
-  font-family: $font-sans;
-  font-size: 0.95rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: background 0.25s ease, transform 0.2s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-  }
-
-  &:disabled {
-    opacity: 0.75;
-    cursor: not-allowed;
-    transform: none;
-  }
+.error {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #f87171;
+  font-weight: 500;
 }
 
-.subscribeError {
-  margin: 0;
-  color: #ff9b9b;
-  font-size: 0.8rem;
-}
-
-.subscribeSuccess {
-  margin: 0;
-  color: #b7f7c9;
-  font-size: 0.9rem;
-}
-
-.subscribeStatus {
-  margin: 0;
-  padding: 0.8rem 1rem;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  text-align: left;
+.status {
+  padding: 0.9rem 1.1rem;
+  font-size: 0.88rem;
   border: 1px solid transparent;
+  line-height: 1.5;
 }
 
-.subscribeStatusSuccess {
-  background: rgba(75, 181, 113, 0.2);
-  border-color: rgba(118, 226, 153, 0.45);
+.statusSuccess {
+  background: rgba(75, 181, 113, 0.12);
+  border-color: rgba(118, 226, 153, 0.3);
   color: #d6ffe3;
 }
 
-.subscribeStatusError {
-  background: rgba(183, 67, 67, 0.2);
-  border-color: rgba(255, 124, 124, 0.45);
+.statusError {
+  background: rgba(183, 67, 67, 0.12);
+  border-color: rgba(255, 124, 124, 0.3);
   color: #ffd8d8;
 }
 
+.btn {
+  margin-top: 0.5rem;
+  padding: 1rem 2rem;
+  background: $gold;
+  color: $black;
+  font-family: $font-sans;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.2s ease;
+  align-self: flex-start;
+  min-width: 220px;
+  text-align: center;
+
+  &:hover {
+    background: $gold-dark;
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  @media (max-width: 540px) {
+    align-self: stretch;
+  }
+}
