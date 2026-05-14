@@ -215,7 +215,7 @@ export default function HomeGallerySection({ items }: { items?: HomeGalleryItem[
 
   return (
     <>
-      <section className={styles.section}>
+      <section id="gallery" className={styles.section}>
         <div className={styles.inner}>
 
           {/* Header */}

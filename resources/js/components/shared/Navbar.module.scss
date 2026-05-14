@@ -101,6 +101,7 @@
   flex-wrap: wrap;
 
   > a,
+  > button,
   .nav-has-dropdown {
     color: $white;
     text-decoration: none;
@@ -112,9 +113,16 @@
     transition: color 0.25s ease, opacity 0.25s ease;
     padding-bottom: 4px;
     border-bottom: 2px solid transparent;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    cursor: pointer;
+    font-family: inherit;
   }
 
   > a:hover,
+  > button:hover,
   .nav-has-dropdown:hover {
     opacity: 1;
   }
@@ -427,7 +435,8 @@
     }
   }
 
-  a {
+  a,
+  button:not(.nav-has-dropdown) {
     color: $white;
     text-decoration: none;
     font-size: 1rem;
@@ -439,6 +448,12 @@
     text-align: center;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     transition: color 0.2s ease, background 0.2s ease;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    cursor: pointer;
+    font-family: inherit;
 
     &:hover {
       color: $accent;

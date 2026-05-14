@@ -1,7 +1,7 @@
 import { motion } from "motion/react";
 import Styles from "./Navbar.module.scss";
-import { Link, usePage } from "@inertiajs/react";
-import { useEffect, useState } from "react";
+import { Link, router, usePage } from "@inertiajs/react";
+import { useEffect, useRef, useState } from "react";
 
 const LANGS = ["EN", "FR", "KN"] as const;
 type Lang = (typeof LANGS)[number];
@@ -45,18 +45,63 @@ export default function Navbar({ setJoinMinistryOpen }: NavbarProps) {
   }, [mobileMenuOpen]);
 
   const location = usePage();
-
   const currentPath = location.url === "/" ? "/" : location.url.split("?")[0];
+  const isHome = currentPath === "/";
 
-  // const currentPath = location.pathname + location.search + location.hash;
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+  const ratiosRef = useRef<Record<string, number>>({});
+
+  useEffect(() => {
+    if (!isHome) {
+      setActiveSection(null);
+      return;
+    }
+
+    const SECTION_IDS = ["about", "events", "gallery"];
+    ratiosRef.current = {};
+
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          ratiosRef.current[e.target.id] = e.intersectionRatio;
+        });
+        const best = Object.entries(ratiosRef.current).reduce<{ id: string | null; ratio: number }>(
+          (acc, [id, ratio]) => (ratio > acc.ratio ? { id, ratio } : acc),
+          { id: null, ratio: 0 }
+        );
+        setActiveSection(best.ratio > 0.1 ? best.id : null);
+      },
+      { threshold: [0, 0.1, 0.3, 0.5] }
+    );
+
+    SECTION_IDS.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) obs.observe(el);
+    });
+
+    return () => obs.disconnect();
+  }, [isHome]);
+
+  const scrollToSection = (id: string) => {
+    closeMobileMenu();
+    if (isHome) {
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    } else {
+      router.visit("/", {
+        onSuccess: () => {
+          setTimeout(() => {
+            document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+          }, 100);
+        },
+      });
+    }
+  };
 
   const TOP_LINKS = [
-    { label: "HOME", to: "/", active: currentPath === "/" },
-    { label: "ABOUT", to: "/about", active: currentPath === "/about" },
+    { label: "HOME", to: "/", active: currentPath === "/" && activeSection === null },
   ];
 
   const BOTTOM_LINKS = [
-    { label: "GALLERY", to: "/gallery", active: currentPath === "/gallery" },
     { label: "CONTACT", to: "/contact", active: currentPath === "/contact" },
   ];
 
@@ -81,6 +126,9 @@ export default function Navbar({ setJoinMinistryOpen }: NavbarProps) {
               {link.label}
             </Link>
           ))}
+          <button type="button" className={activeSection === "about" ? Styles["nav-link-active"] : ""} onClick={() => scrollToSection("about")}>ABOUT</button>
+          <button type="button" className={activeSection === "events" ? Styles["nav-link-active"] : ""} onClick={() => scrollToSection("events")}>EVENTS</button>
+          <button type="button" className={activeSection === "gallery" ? Styles["nav-link-active"] : ""} onClick={() => scrollToSection("gallery")}>GALLERY</button>
           {BOTTOM_LINKS.map((link, index) => (
             <Link
               href={link.to}
@@ -134,6 +182,9 @@ export default function Navbar({ setJoinMinistryOpen }: NavbarProps) {
               {link.label}
             </Link>
           ))}
+          <button type="button" className={activeSection === "about" ? Styles["nav-link-active"] : ""} onClick={() => scrollToSection("about")}>ABOUT</button>
+          <button type="button" className={activeSection === "events" ? Styles["nav-link-active"] : ""} onClick={() => scrollToSection("events")}>EVENTS</button>
+          <button type="button" className={activeSection === "gallery" ? Styles["nav-link-active"] : ""} onClick={() => scrollToSection("gallery")}>GALLERY</button>
           {BOTTOM_LINKS.map((link, index) => (
             <Link
               href={link.to}

@@ -14,7 +14,7 @@ const MILESTONES = [
 
 export default function HomeAboutSection() {
   return (
-    <section className={styles.section}>
+    <section id="about" className={styles.section}>
       <div className={styles.inner}>
 
         <div className={styles.layout}>

@@ -723,3 +723,35 @@
   text-align: center;
   font-style: italic;
 }
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 3rem;
+}
+
+.viewAllBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.75rem 1.75rem;
+  background: $gold;
+  color: $black;
+  text-decoration: none;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: background 0.25s ease, transform 0.2s ease;
+
+  svg {
+    transition: transform 0.25s ease;
+  }
+
+  &:hover {
+    background: $gold-dark;
+    transform: translateY(-2px);
+    svg { transform: translateX(4px); }
+  }
+}

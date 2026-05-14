@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { Link, usePage } from "@inertiajs/react";
 import styles from "./HomeEventsSection.module.scss";
 
 interface Ticket {
@@ -99,7 +100,7 @@ export default function HomeEventsSection() {
 
   return (
     <>
-      <section className={styles.section}>
+      <section id="events" className={styles.section}>
         {/* Decorative background elements */}
         <div className={styles.bgDeco} aria-hidden="true">
           <span className={styles.bgDecoCircle} />
@@ -233,6 +234,23 @@ export default function HomeEventsSection() {
               </motion.article>
             ))}
           </div>
+
+          {/* View All link — hidden on the dedicated /events page */}
+          {usePage().url.split("?")[0] === "/" && (
+            <motion.div
+              className={styles.footer}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              <Link href="/events" className={styles.viewAllBtn}>
+                View All Events
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </Link>
+            </motion.div>
+          )}
+
         </div>
       </section>
 
