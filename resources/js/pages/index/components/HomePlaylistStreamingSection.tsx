@@ -205,7 +205,6 @@ const PLATFORM_META: Record<string, { label: string; icon: () => JSX.Element; co
 ══════════════════════════════════════ */
 export default function HomePlaylistStreamingSection() {
   const [selectedYear, setSelectedYear] = useState<number>(YEARS[0]);
-  const [expandedTrack, setExpandedTrack] = useState<string | null>(null);
 
   const selectedAlbum = ALBUMS.find((a) => a.year === selectedYear)!;
 
@@ -419,31 +418,6 @@ export default function HomePlaylistStreamingSection() {
                   </div>
                 </div>
 
-                {/* Track list */}
-                <div className={styles.trackList} role="list">
-                  {selectedAlbum.tracks.map((track, i) => (
-                    <motion.div
-                      key={track.title}
-                      role="listitem"
-                      className={`${styles.trackRow} ${expandedTrack === track.title ? styles.trackRowActive : ""}`}
-                      onClick={() => setExpandedTrack(expandedTrack === track.title ? null : track.title)}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.04, duration: 0.25 }}
-                    >
-                      <span className={styles.trackNum}>{String(i + 1).padStart(2, "0")}</span>
-                      <span className={styles.trackPlay} aria-hidden="true">
-                        {expandedTrack === track.title ? (
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
-                        ) : (
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                        )}
-                      </span>
-                      <span className={styles.trackTitle}>{track.title}</span>
-                      <span className={styles.trackDuration}>{track.duration}</span>
-                    </motion.div>
-                  ))}
-                </div>
               </div>
             </motion.div>
           </AnimatePresence>
