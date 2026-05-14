@@ -2,11 +2,11 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import styles from "./HomePlaylistStreamingSection.module.scss";
 
-import cover2024 from "../../../../assets/images/16.jpg";
-import cover2021 from "../../../../assets/images/10.jpg";
-import cover2018 from "../../../../assets/images/7.jpg";
-import cover2015 from "../../../../assets/images/4.jpg";
-import cover2010 from "../../../../assets/images/13.jpg";
+import cover2024 from "../../../../assets/patmos/1.JPG";
+import cover2021 from "../../../../assets/patmos/3.JPG";
+import cover2018 from "../../../../assets/patmos/6.JPG";
+import cover2015 from "../../../../assets/patmos/8.jpeg";
+import cover2010 from "../../../../assets/patmos/11.jpeg";
 
 /* ── Types ── */
 interface Track { title: string; duration: string }

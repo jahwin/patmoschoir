@@ -146,7 +146,7 @@ export default function HomeAboutSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.65, delay: 0.1 }}
         >
-          <img src={img6} alt="Patmos Choir together" loading="lazy" />
+          <img src={img6} alt="Patmos Choir together" style={{ objectPosition: 'center' }} loading="lazy" />
           <div className={styles.accentImgOverlay} />
           <p className={styles.accentCaption}>
             Patmos Choir — Kigali, Rwanda
