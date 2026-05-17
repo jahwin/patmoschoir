@@ -93,20 +93,6 @@ export default function HomeVisionMissionSection() {
             </motion.article>
           ))}
         </div>
-
-        <motion.div
-          className={styles.taglineRow}
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, delay: 0.3 }}
-        >
-          <span className={styles.taglineDivider} aria-hidden="true" />
-          <p className={styles.tagline}>
-            &ldquo;Where worship speaks, hearts are healed, and hope is restored.&rdquo;
-          </p>
-          <span className={styles.taglineDivider} aria-hidden="true" />
-        </motion.div>
       </div>
     </section>
   );

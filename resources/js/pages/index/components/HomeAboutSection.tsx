@@ -7,9 +7,9 @@ import img6 from "../../../../assets/patmos/9.jpeg";
 
 const MILESTONES = [
   { year: "1996", text: "Friends reunited in Kigali sing at a wedding — the spark that started it all." },
-  { year: "Early Days", text: "More voices join. A singing group grows into a full choir." },
-  { year: "The Name", text: "A member brings the name \"Patmos\" — from the island in Scripture — and all agree." },
-  { year: "Today", text: "29 years of ministry: churches, crusades, schools, homes, and wherever God calls." },
+  { year: "1997", text: "More voices join. A singing group grows into a full choir." },
+  { year: "1998", text: "A member brings the name \"Patmos\" — from the island in Scripture — and all agree." },
+  { year: "2025", text: "29 years of ministry: churches, crusades, schools, homes, and wherever God calls." },
 ];
 
 export default function HomeAboutSection() {
@@ -100,7 +100,7 @@ export default function HomeAboutSection() {
               need is, their voices follow.
             </motion.p>
 
-            <motion.blockquote
+            {/* <motion.blockquote
               className={styles.pullQuote}
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
@@ -108,7 +108,7 @@ export default function HomeAboutSection() {
               transition={{ duration: 0.6, delay: 0.25 }}
             >
               &ldquo;Well done, faithful servants&rdquo; — the words they live toward. Matthew&nbsp;25:23
-            </motion.blockquote>
+            </motion.blockquote> */}
 
             <motion.div
               initial={{ opacity: 0, y: 12 }}

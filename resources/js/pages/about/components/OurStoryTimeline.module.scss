@@ -1,0 +1,189 @@
+@use "../../../../css/variables" as *;
+
+.section {
+  background: $deep-gray;
+  padding: 7rem 8%;
+  overflow: hidden;
+
+  @media (max-width: 768px) {
+    padding: 5rem 6%;
+  }
+}
+
+.inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 5rem;
+}
+
+.eyebrow {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: $gold;
+  margin-bottom: 0.75rem;
+}
+
+.title {
+  font-family: $font-bulgatti;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 700;
+  color: $white;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+}
+
+/* ── vertical timeline ── */
+.timeline {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(201, 169, 98, 0.4) 10%,
+    rgba(201, 169, 98, 0.4) 90%,
+    transparent
+  );
+  transform: translateX(-50%);
+
+  @media (max-width: 768px) {
+    left: 1.5rem;
+  }
+}
+
+.entry {
+  position: relative;
+  width: 50%;
+  padding-bottom: 3rem;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    padding-left: 3.5rem;
+    padding-right: 0;
+  }
+}
+
+.entryLeft {
+  align-self: flex-start;
+  padding-right: 3.5rem;
+  text-align: right;
+
+  .entryDot {
+    left: auto;
+    right: -9px;
+  }
+
+  .entryCard {
+    align-items: flex-end;
+  }
+
+  @media (max-width: 768px) {
+    text-align: left;
+    padding-right: 0;
+
+    .entryDot {
+      right: auto;
+      left: -1.5rem;
+      transform: translate(-50%, 0.35rem);
+    }
+
+    .entryCard {
+      align-items: flex-start;
+    }
+  }
+}
+
+.entryRight {
+  align-self: flex-end;
+  padding-left: 3.5rem;
+  text-align: left;
+
+  .entryDot {
+    left: -9px;
+  }
+
+  @media (max-width: 768px) {
+    padding-left: 3.5rem;
+
+    .entryDot {
+      left: -1.5rem;
+      transform: translate(-50%, 0.35rem);
+    }
+  }
+}
+
+.entryDot {
+  position: absolute;
+  top: 0.35rem;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: $gold;
+  border: 3px solid $deep-gray;
+  z-index: 1;
+  transform: translateX(0);
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: -5px;
+    border-radius: 50%;
+    border: 1px solid rgba(201, 169, 98, 0.25);
+  }
+}
+
+.entryCard {
+  display: flex;
+  flex-direction: column;
+}
+
+.entryYear {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: $gold;
+  margin-bottom: 0.4rem;
+}
+
+.entryTitle {
+  font-family: $font-bulgatti;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: $white;
+  letter-spacing: 0.03em;
+  margin-bottom: 0.5rem;
+}
+
+.entryBody {
+  font-size: 0.88rem;
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: 300;
+  max-width: 380px;
+
+  @media (max-width: 768px) {
+    max-width: 100%;
+  }
+}
+
+.entryLeft .entryBody {
+  margin-left: auto;
+}

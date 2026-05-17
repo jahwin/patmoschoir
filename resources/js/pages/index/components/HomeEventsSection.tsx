@@ -2,6 +2,10 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Link, usePage } from "@inertiajs/react";
 import styles from "./HomeEventsSection.module.scss";
+import img8 from "../../../../assets/patmos/8.jpeg";
+import img9 from "../../../../assets/patmos/9.jpeg";
+import img10 from "../../../../assets/patmos/10.jpeg";
+import img11 from "../../../../assets/patmos/11.jpeg";
 
 interface Ticket {
   tier: string;
@@ -19,6 +23,7 @@ interface Event {
   time?: string;
   location: string;
   description: string;
+  coverImage?: string;
   tickets?: Ticket[];
 }
 
@@ -30,6 +35,7 @@ const EVENTS: Event[] = [
     date: "Saturday, May 30, 2026",
     time: "6:00 PM",
     location: "Kigali Convention Center, Rwanda",
+    coverImage: img8,
     description:
       "An unforgettable evening of heartfelt worship as Patmos Choir lifts voices in praise. Come experience the transforming presence of God through music, prayer, and community.",
     tickets: [
@@ -46,6 +52,7 @@ const EVENTS: Event[] = [
     date: "Saturday, June 14, 2026",
     time: "7:00 PM",
     location: "SDA Church, Remera, Kigali",
+    coverImage: img9,
     description:
       "A sacred night dedicated to prayer and worship. Patmos Choir leads the congregation in a powerful encounter with God — expect healing, hope, and the glory of His presence.",
     tickets: [
@@ -60,6 +67,7 @@ const EVENTS: Event[] = [
     date: "Saturday, March 15, 2026",
     time: "10:00 AM",
     location: "CHUK Hospital, Kigali",
+    coverImage: img10,
     description:
       "Bringing music and hope to patients who cannot attend worship services. We visit wards, sing, pray, and carry the peace of God to those who need it most.",
   },
@@ -80,6 +88,7 @@ const EVENTS: Event[] = [
     date: "Sunday, April 27, 2026",
     time: "2:00 PM",
     location: "Maison des Aînés, Nyamirambo",
+    coverImage: img11,
     description:
       "Visiting the elderly who can no longer attend church — bringing worship, fellowship, and the warmth of community to those who have given so much.",
   },
@@ -108,19 +117,18 @@ export default function HomeEventsSection() {
         </div>
 
         <div className={styles.inner}>
-          {/* Header */}
+
+          {/* ── SECTION TITLE ── */}
           <motion.div
             className={styles.header}
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.55 }}
+            transition={{ duration: 0.6 }}
           >
-            <span className={styles.eyebrow}>What&apos;s Coming</span>
-            <h2 className={styles.title}>Events & Outreach</h2>
-            <p className={styles.subtitle}>
-              Wherever we are called, our voices follow — concert halls and hospital wards alike.
-            </p>
+            <span className={styles.eyebrow}>Our Schedule</span>
+            <h2 className={styles.title}>Events & Ministry</h2>
+            <p className={styles.subtitle}>Join us in worship, outreach, and community</p>
           </motion.div>
 
           {/* ── CONCERTS ── */}
@@ -145,6 +153,13 @@ export default function HomeEventsSection() {
                 transition={{ duration: 0.55, delay: i * 0.1 }}
               >
                 <div className={styles.concertCardAccent} />
+                {event.coverImage && (
+                  <div
+                    className={styles.concertCardCover}
+                    style={{ backgroundImage: `url(${event.coverImage})` }}
+                    aria-hidden="true"
+                  />
+                )}
                 <div className={styles.concertCardBody}>
                   <div className={styles.concertDateBadge}>
                     <span className={styles.concertMonth}>
@@ -207,6 +222,13 @@ export default function HomeEventsSection() {
                 viewport={{ once: true, margin: "-30px" }}
                 transition={{ duration: 0.5, delay: i * 0.08 }}
               >
+                {event.coverImage && (
+                  <div
+                    className={styles.outreachCardCover}
+                    style={{ backgroundImage: `url(${event.coverImage})` }}
+                    aria-hidden="true"
+                  />
+                )}
                 <div className={styles.outreachIndex} aria-hidden="true">
                   {String(i + 1).padStart(2, "0")}
                 </div>
@@ -301,76 +323,33 @@ export default function HomeEventsSection() {
                   <motion.div
                     key={ticket.tier}
                     className={`${styles.ticketCard} ${!ticket.available ? styles.ticketSoldOut : ""}`}
+                    style={{ "--tier-color": TIER_COLORS[ticket.tier] ?? "#555" } as React.CSSProperties}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.07, duration: 0.3 }}
                   >
-                    {/* Top colored strip */}
-                    <div
-                      className={styles.ticketStrip}
-                      style={{ background: TIER_COLORS[ticket.tier] ?? "#555" }}
-                    >
+                    {/* Watermark letter */}
+                    <span className={styles.ticketWatermark} aria-hidden="true">
+                      {ticket.tier[0]}
+                    </span>
+
+                    <div className={styles.ticketInner}>
                       <span className={styles.ticketTier}>{ticket.tier}</span>
-                      {!ticket.available && (
-                        <span className={styles.soldOutBadge}>Sold Out</span>
-                      )}
+                      <span className={styles.ticketPrice}>${ticket.price}</span>
+                      <span className={styles.ticketSection}>{ticket.section}</span>
                     </div>
 
-                    {/* Main ticket body */}
-                    <div className={styles.ticketBody}>
-                      <div className={styles.ticketLeft}>
-                        <span className={styles.ticketSection}>{ticket.section}</span>
-                        <p className={styles.ticketDesc}>{ticket.description}</p>
-
-                        {/* Perforated divider */}
-                        <div className={styles.perfDivider} aria-hidden="true">
-                          <span className={styles.perfHoleLeft} />
-                          <span className={styles.perfLine} />
-                          <span className={styles.perfHoleRight} />
-                        </div>
-
-                        <div className={styles.ticketEventRow}>
-                          <span className={styles.ticketEventName}>{activeEvent.name}</span>
-                          <span className={styles.ticketEventDate}>{activeEvent.date}</span>
-                        </div>
-                      </div>
-
-                      {/* Right stub */}
-                      <div className={styles.ticketStub}>
-                        <div className={styles.stubHoleTop} aria-hidden="true" />
-                        <div className={styles.stubContent}>
-                          <span className={styles.stubPrice}>${ticket.price}</span>
-                          <span className={styles.stubPriceLabel}>per seat</span>
-                        </div>
-                        <div className={styles.stubHoleBottom} aria-hidden="true" />
-                      </div>
-                    </div>
-
-                    {/* Buy button */}
-                    <div className={styles.ticketFooter}>
-                      <button
-                        type="button"
-                        className={styles.buyBtn}
-                        disabled={!ticket.available}
-                        aria-disabled={!ticket.available}
-                      >
-                        {ticket.available ? (
-                          <>
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                            Buy Now — ${ticket.price}
-                          </>
-                        ) : (
-                          "Sold Out"
-                        )}
-                      </button>
-                    </div>
+                    <button
+                      type="button"
+                      className={styles.buyBtn}
+                      disabled={!ticket.available}
+                      aria-disabled={!ticket.available}
+                    >
+                      {ticket.available ? "Buy Now" : "Sold Out"}
+                    </button>
                   </motion.div>
                 ))}
               </div>
-
-              <p className={styles.modalNote}>
-                * All ticket purchases are final. Doors open 30 minutes before the event.
-              </p>
             </motion.div>
           </motion.div>
         )}

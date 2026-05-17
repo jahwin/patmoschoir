@@ -46,13 +46,15 @@ export default function HomeHeroSection() {
 
         <motion.div className={styles.heroCta} variants={fadeUp} transition={{ duration: 0.5 }}>
           <Link href="/about" className="btn">Our Story</Link>
-          <Link href="/music" className="tickets-notify-btn">Listen to Music</Link>
+          <button
+            type="button"
+            className="btn tickets-notify-btn"
+            onClick={() => document.getElementById("music")?.scrollIntoView({ behavior: "smooth" })}
+          >
+            Listen to Music
+          </button>
         </motion.div>
       </motion.div>
-
-      <div className={styles.heroScroll} aria-hidden="true">
-        <span />
-      </div>
     </section>
   );
 }

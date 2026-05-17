@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Head } from "@inertiajs/react";
-import HeroSection from "./components/HeroSection";
 import TicketModal from "@/components/modal/TicketModal";
 import PaymentModal from "@/components/modal/PaymentModal";
 
@@ -195,18 +194,6 @@ export default function Home() {
     <>
       <Head title="Home" />
       <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
-        <HeroSection
-          eventDate={EVENT_DATE_TIME}
-          pricingData={pricingData}
-          pricingLoading={pricingLoading}
-          pricingError={pricingError}
-          onBuyNow={(pricingId: number) => {
-            setSelectedTicket(pricingId);
-            setShowModal(true);
-          }}
-          onRetryPricing={fetchPricingData}
-        />
-
         {/* Ticket Modal */}
         <TicketModal
           showModal={showModal}

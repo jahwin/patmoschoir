@@ -57,7 +57,7 @@ export default function Navbar({ setJoinMinistryOpen }: NavbarProps) {
       return;
     }
 
-    const SECTION_IDS = ["about", "events", "gallery"];
+    const SECTION_IDS = ["events", "gallery"];
     ratiosRef.current = {};
 
     const obs = new IntersectionObserver(
@@ -99,6 +99,7 @@ export default function Navbar({ setJoinMinistryOpen }: NavbarProps) {
 
   const TOP_LINKS = [
     { label: "HOME", to: "/", active: currentPath === "/" && activeSection === null },
+    { label: "OUR STORY", to: "/about", active: currentPath === "/about" },
   ];
 
   const BOTTOM_LINKS = [
@@ -126,7 +127,6 @@ export default function Navbar({ setJoinMinistryOpen }: NavbarProps) {
               {link.label}
             </Link>
           ))}
-          <button type="button" className={activeSection === "about" ? Styles["nav-link-active"] : ""} onClick={() => scrollToSection("about")}>ABOUT</button>
           <button type="button" className={activeSection === "events" ? Styles["nav-link-active"] : ""} onClick={() => scrollToSection("events")}>EVENTS</button>
           <button type="button" className={activeSection === "gallery" ? Styles["nav-link-active"] : ""} onClick={() => scrollToSection("gallery")}>GALLERY</button>
           {BOTTOM_LINKS.map((link, index) => (
@@ -182,7 +182,6 @@ export default function Navbar({ setJoinMinistryOpen }: NavbarProps) {
               {link.label}
             </Link>
           ))}
-          <button type="button" className={activeSection === "about" ? Styles["nav-link-active"] : ""} onClick={() => scrollToSection("about")}>ABOUT</button>
           <button type="button" className={activeSection === "events" ? Styles["nav-link-active"] : ""} onClick={() => scrollToSection("events")}>EVENTS</button>
           <button type="button" className={activeSection === "gallery" ? Styles["nav-link-active"] : ""} onClick={() => scrollToSection("gallery")}>GALLERY</button>
           {BOTTOM_LINKS.map((link, index) => (

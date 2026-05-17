@@ -209,7 +209,7 @@ export default function HomePlaylistStreamingSection() {
   const selectedAlbum = ALBUMS.find((a) => a.year === selectedYear)!;
 
   return (
-    <section className={styles.section}>
+    <section id="music" className={styles.section}>
       <div className={styles.inner}>
 
         {/* ═══════════════════════════

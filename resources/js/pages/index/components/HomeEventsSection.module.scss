@@ -163,6 +163,26 @@
   background: linear-gradient(to right, $gold, $gold-dark);
   opacity: 0;
   transition: opacity 0.3s ease;
+  z-index: 3;
+}
+
+.concertCardCover {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.72) 0%,
+      rgba(0, 0, 0, 0.82) 100%
+    );
+  }
 }
 
 .concertCardNoise {
@@ -170,7 +190,7 @@
   inset: 0;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E");
   pointer-events: none;
-  z-index: 0;
+  z-index: 1;
 }
 
 .concertCardBody {
@@ -178,7 +198,7 @@
   gap: 1.5rem;
   padding: 2rem;
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 .concertDateBadge {
@@ -326,6 +346,25 @@
   }
 }
 
+.outreachCardCover {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0.88) 0%,
+      rgba(0, 0, 0, 0.75) 100%
+    );
+  }
+}
+
 .outreachIndex {
   font-family: $font-bulgatti;
   font-size: 2.5rem;
@@ -336,11 +375,15 @@
   width: 52px;
   transition: color 0.3s ease;
   user-select: none;
+  position: relative;
+  z-index: 1;
 }
 
 .outreachBody {
   flex: 1;
   min-width: 0;
+  position: relative;
+  z-index: 1;
 }
 
 .outreachName {
@@ -384,6 +427,8 @@
 .outreachTag {
   flex-shrink: 0;
   align-self: flex-start;
+  position: relative;
+  z-index: 1;
   font-size: 0.6rem;
   font-weight: 700;
   letter-spacing: 0.2em;
@@ -493,11 +538,16 @@
 /* ── Ticket grid ── */
 .ticketGrid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.25rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
   padding: 1.75rem 2rem;
+  background: rgba(255, 255, 255, 0.05);
 
-  @media (max-width: 600px) {
+  @media (max-width: 700px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 420px) {
     grid-template-columns: 1fr;
   }
 }
@@ -506,213 +556,125 @@
    TICKET CARD
 ══════════════════════════════════════ */
 .ticketCard {
-  background: $gray;
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: $deep-gray;
   display: flex;
   flex-direction: column;
-  transition: border-color 0.25s ease, transform 0.25s ease;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem 1.25rem 1.25rem;
+  position: relative;
+  overflow: hidden;
+  min-height: 220px;
+  transition: background 0.3s ease;
+
+  /* top spotlight glow from tier color */
+  &::before {
+    content: "";
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: var(--tier-color, #555);
+    opacity: 0.12;
+    filter: blur(32px);
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
 
   &:not(.ticketSoldOut):hover {
-    border-color: rgba(201, 169, 98, 0.3);
-    transform: translateY(-2px);
+    background: lighten(#1a1a1a, 3%);
+
+    &::before {
+      opacity: 0.22;
+    }
+
+    .buyBtn {
+      background: var(--tier-color, $gold);
+      color: $black;
+      border-color: var(--tier-color, $gold);
+    }
   }
 }
 
 .ticketSoldOut {
-  opacity: 0.5;
-  filter: grayscale(0.6);
+  opacity: 0.4;
+  filter: grayscale(0.8);
 }
 
-/* Colored top strip */
-.ticketStrip {
+/* Large background watermark letter */
+.ticketWatermark {
+  position: absolute;
+  bottom: -0.15em;
+  right: -0.05em;
+  font-family: $font-bulgatti;
+  font-size: 7rem;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--tier-color, #555);
+  opacity: 0.06;
+  pointer-events: none;
+  user-select: none;
+  letter-spacing: -0.05em;
+}
+
+.ticketInner {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  padding: 0.55rem 1rem;
+  gap: 0.5rem;
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  flex: 1;
+  justify-content: center;
 }
 
 .ticketTier {
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   font-weight: 800;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: $black;
-  opacity: 0.85;
+  color: var(--tier-color, #aaa);
 }
 
-.soldOutBadge {
-  font-size: 0.55rem;
-  font-weight: 800;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: $black;
-  opacity: 0.7;
-  background: rgba(0, 0, 0, 0.15);
-  padding: 0.15rem 0.45rem;
-}
-
-/* Main body — horizontal split */
-.ticketBody {
-  display: flex;
-  flex: 1;
-}
-
-.ticketLeft {
-  flex: 1;
-  padding: 1.1rem 1rem;
-  min-width: 0;
+.ticketPrice {
+  font-family: $font-bulgatti;
+  font-size: 3rem;
+  font-weight: 700;
+  color: $white;
+  line-height: 1;
+  letter-spacing: -0.02em;
 }
 
 .ticketSection {
-  display: block;
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: $white;
-  letter-spacing: 0.05em;
-  margin-bottom: 0.3rem;
-}
-
-.ticketDesc {
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.45);
-  line-height: 1.5;
-  margin-bottom: 0.9rem;
-  font-weight: 300;
-}
-
-/* Perforated divider */
-.perfDivider {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  margin-bottom: 0.85rem;
-  height: 12px;
-  position: relative;
-}
-
-.perfHoleLeft,
-.perfHoleRight {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: $deep-gray;
-  flex-shrink: 0;
-}
-
-.perfLine {
-  flex: 1;
-  border-top: 1.5px dashed rgba(255, 255, 255, 0.1);
-}
-
-.ticketEventRow {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-}
-
-.ticketEventName {
-  font-size: 0.7rem;
-  color: rgba(255, 255, 255, 0.5);
-  font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.ticketEventDate {
   font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
   color: rgba(255, 255, 255, 0.3);
-}
-
-/* Right price stub */
-.ticketStub {
-  width: 68px;
-  flex-shrink: 0;
-  border-left: 1.5px dashed rgba(255, 255, 255, 0.1);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 0.75rem 0.5rem;
-  position: relative;
-}
-
-.stubHoleTop,
-.stubHoleBottom {
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: $deep-gray;
-  left: -7px;
-}
-
-.stubHoleTop  { top: -7px; }
-.stubHoleBottom { bottom: -7px; }
-
-.stubContent {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.15rem;
-}
-
-.stubPrice {
-  font-family: $font-bulgatti;
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: $gold;
-  line-height: 1;
-}
-
-.stubPriceLabel {
-  font-size: 0.55rem;
-  font-weight: 600;
-  letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.3);
-}
-
-/* Footer / buy button */
-.ticketFooter {
-  padding: 0.75rem 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .buyBtn {
   width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
   padding: 0.7rem 1rem;
-  background: $gold;
-  color: $black;
-  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   cursor: pointer;
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  transition: background 0.25s ease, transform 0.2s ease;
-
-  &:hover:not(:disabled) {
-    background: $gold-dark;
-    transform: translateY(-1px);
-  }
+  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+  position: relative;
+  z-index: 1;
 
   &:disabled {
-    background: rgba(255, 255, 255, 0.08);
-    color: rgba(255, 255, 255, 0.3);
+    opacity: 0.35;
     cursor: not-allowed;
-  }
-
-  svg {
-    transition: transform 0.2s ease;
-  }
-
-  &:hover:not(:disabled) svg {
-    transform: translateX(3px);
   }
 }
 

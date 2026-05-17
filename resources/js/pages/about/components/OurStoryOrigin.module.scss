@@ -1,0 +1,191 @@
+@use "../../../../css/variables" as *;
+
+.section {
+  background: $black;
+  padding: 6rem 8%;
+  overflow: hidden;
+
+  @media (max-width: 768px) {
+    padding: 4rem 6%;
+  }
+}
+
+.inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 7rem;
+
+  @media (max-width: 768px) {
+    gap: 5rem;
+  }
+}
+
+/* ── two-column layout ── */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: center;
+
+  @media (max-width: 960px) {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+}
+
+.layoutReverse {
+  @media (min-width: 961px) {
+    .content {
+      order: 1;
+    }
+  }
+}
+
+/* ── image stack ── */
+.imageStack {
+  position: relative;
+  min-height: 480px;
+
+  @media (max-width: 960px) {
+    min-height: 320px;
+  }
+}
+
+.imgFrame {
+  overflow: hidden;
+  border: 1px solid rgba(201, 169, 98, 0.15);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s ease;
+  }
+
+  &:hover img {
+    transform: scale(1.04);
+  }
+}
+
+.imgMain {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 72%;
+  height: 380px;
+  z-index: 1;
+
+  @media (max-width: 960px) {
+    position: relative;
+    width: 100%;
+    height: 260px;
+  }
+}
+
+.imgSecondary {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 52%;
+  height: 260px;
+  z-index: 2;
+  border: 3px solid $black;
+
+  @media (max-width: 960px) {
+    display: none;
+  }
+}
+
+.imgFull {
+  height: 440px;
+  width: 100%;
+
+  @media (max-width: 960px) {
+    height: 280px;
+  }
+}
+
+.yearBadge {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  z-index: 3;
+  background: $gold;
+  color: $black;
+  padding: 0.75rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1;
+
+  @media (max-width: 960px) {
+    top: 1rem;
+    bottom: auto;
+    left: 1rem;
+  }
+}
+
+.yearBadgeYear {
+  font-family: $font-bulgatti;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.yearBadgeLabel {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-top: 0.15rem;
+}
+
+/* ── content ── */
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.eyebrow {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: $gold;
+  margin-bottom: 0.75rem;
+}
+
+.title {
+  font-family: $font-bulgatti;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 700;
+  color: $white;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  text-transform: none;
+}
+
+.body {
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.65);
+  font-weight: 300;
+  margin-bottom: 1.2rem;
+}
+
+.pullQuote {
+  border-left: 3px solid $gold;
+  padding: 0.6rem 0 0.6rem 1.25rem;
+  font-family: $font-serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: $gold;
+  margin: 1.5rem 0 0;
+  line-height: 1.6;
+}
