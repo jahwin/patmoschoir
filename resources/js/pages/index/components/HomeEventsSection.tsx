@@ -129,18 +129,20 @@ export default function HomeEventsSection() {
 
         <div className={styles.inner}>
 
-          {/* ── SECTION TITLE ── */}
-          <motion.div
-            className={styles.header}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <span className={styles.eyebrow}>Our Schedule</span>
-            <h2 className={styles.title}>Events & Ministry</h2>
-            <p className={styles.subtitle}>Join us in worship, outreach, and community</p>
-          </motion.div>
+          {/* ── SECTION TITLE (home page only) ── */}
+          {isHomePage && (
+            <motion.div
+              className={styles.header}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <span className={styles.eyebrow}>Our Schedule</span>
+              <h1 className={styles.title}>Events & Ministry</h1>
+              <p className={styles.subtitle}>Join us in worship, outreach, and community</p>
+            </motion.div>
+          )}
 
           {/* ── CONCERTS ── */}
           {CONCERTS.length > 0 && (

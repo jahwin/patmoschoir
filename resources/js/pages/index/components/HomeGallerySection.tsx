@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Link } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 import styles from "./HomeGallerySection.module.scss";
 import GalleryModal from "@/pages/gallery/components/GalleryModal";
 
@@ -177,6 +177,7 @@ export default function HomeGallerySection({ items }: { items?: HomeGalleryItem[
   const [limit, setLimit] = useState(INITIAL_LIMIT);
   const [selectedItem, setSelectedItem] = useState<HomeGalleryItem | null>(null);
   const [modalIndex, setModalIndex] = useState(0);
+  const isHomePage = usePage().url.split("?")[0] === "/";
 
   // Use real data when available, otherwise fall back to mock
   const source = items && items.length > 0 ? items : MOCK_ITEMS;
@@ -218,20 +219,22 @@ export default function HomeGallerySection({ items }: { items?: HomeGalleryItem[
       <section id="gallery" className={styles.section}>
         <div className={styles.inner}>
 
-          {/* Header */}
-          <motion.div
-            className={styles.header}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.55 }}
-          >
-            <span className={styles.eyebrow}>Captured Moments</span>
-            <h2 className={styles.title}>Gallery</h2>
-            <p className={styles.subtitle}>
-              Memories from worship nights, outreaches, concerts, and community.
-            </p>
-          </motion.div>
+          {/* Header (home page only) */}
+          {isHomePage && (
+            <motion.div
+              className={styles.header}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.55 }}
+            >
+              <span className={styles.eyebrow}>Captured Moments</span>
+              <h2 className={styles.title}>Gallery</h2>
+              <p className={styles.subtitle}>
+                Memories from worship nights, outreaches, concerts, and community.
+              </p>
+            </motion.div>
+          )}
 
           {/* Year groups */}
           {years.map((year) => (
