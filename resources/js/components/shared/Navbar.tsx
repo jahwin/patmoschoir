@@ -114,7 +114,9 @@ export default function Navbar({ setJoinMinistryOpen }: NavbarProps) {
       transition={{ duration: 0.4 }}
     >
       <header className={Styles['nav-main']}>
-        <Link href="/" className={Styles['nav-logo']} onClick={closeMobileMenu}>Patmos Choir</Link>
+        <Link href="/" className={Styles['nav-logo']} onClick={closeMobileMenu}>
+          <img src="/logo-w.png" alt="Patmos Choir" className={Styles['nav-logo-img']} />
+        </Link>
 
         <nav className={Styles['nav-links']} aria-label="Main navigation">
           {TOP_LINKS.map((link, index) => (
