@@ -57,11 +57,12 @@ export default function Home({ galleries }: IndexProps) {
 
       <HomeGallerySection items={homeGalleryItems} />
 
+      <HomeSubscribeSection />
+      
       <HomeTestimonialsSection />
 
       <HomeContactSection />
 
-      <HomeSubscribeSection />
     </PublicLayout>
   );
 }

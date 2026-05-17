@@ -63,9 +63,6 @@ export default function HomeSubscribeSection() {
           viewport={{ once: true, margin: "-60px" }}
           variants={staggerContainer}
         >
-          <motion.span className={styles.eyebrow} variants={fadeUp}>
-            Section 9
-          </motion.span>
           <motion.h2 className={styles.title} variants={fadeUp}>
             Join Us
           </motion.h2>
@@ -77,10 +74,10 @@ export default function HomeSubscribeSection() {
 
           <motion.div className={styles.dividerLine} variants={fadeUp} />
 
-          <motion.blockquote className={styles.quote} variants={fadeUp}>
+          {/* <motion.blockquote className={styles.quote} variants={fadeUp}>
             "Where two or three gather in my name, there am I with them."
             <cite>— Matthew 18:20</cite>
-          </motion.blockquote>
+          </motion.blockquote> */}
         </motion.div>
 
         {/* Right — form */}

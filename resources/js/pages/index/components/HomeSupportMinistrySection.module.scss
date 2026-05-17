@@ -1,170 +1,249 @@
 @use "../../../../css/variables" as *;
 
-/* ─── Section wrapper ─────────────────────────────────────── */
-
-.supportMinistryWrap {
-  padding: clamp(4rem, 9vw, 7rem) 8%;
+/* ════════════════════════════════════════
+   SECTION
+════════════════════════════════════════ */
+.section {
   background: $black;
+  padding: clamp(5rem, 10vw, 8rem) 8%;
+  position: relative;
+  overflow: hidden;
+}
+
+.bgGlow {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 70% at 15% 50%, rgba(201, 169, 98, 0.055) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 50% at 90% 20%, rgba(201, 169, 98, 0.03) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.bgOrb {
+  position: absolute;
+  bottom: -120px;
+  right: 5%;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201, 169, 98, 0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  gap: 4rem;
+}
+
+/* ── Section header ── */
+.header {
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  text-align: center;
+  gap: 0.75rem;
+}
+
+.eyebrow {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: $gold;
+}
+
+.title {
+  font-family: $font-bulgatti;
+  font-size: clamp(2.2rem, 5vw, 3.6rem);
+  font-weight: 700;
+  color: $white;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.05;
+  margin: 0;
+}
+
+.titleRule {
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, $gold, transparent);
+  margin-top: 0.5rem;
+}
+
+/* ── Body grid ── */
+.body {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 4rem;
+  align-items: center;
+
+  @media (max-width: 960px) {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+}
+
+/* ── Left column ── */
+.leftCol {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.pullQuote {
+  font-family: $font-serif;
+  font-size: clamp(1.15rem, 2.5vw, 1.45rem);
+  font-style: italic;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.75);
+  border-left: 2px solid rgba(201, 169, 98, 0.5);
+  padding-left: 1.5rem;
+  margin: 0;
+}
+
+.bodyText {
+  font-size: 0.9rem;
+  line-height: 1.9;
+  color: rgba(255, 255, 255, 0.42);
+  font-weight: 300;
+  margin: 0;
+}
+
+/* ── Giving card ── */
+.givingCard {
+  background: $deep-gray;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.25rem;
   position: relative;
   overflow: hidden;
 
-  &::before {
+  &::after {
     content: "";
     position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(ellipse 55% 60% at 20% 50%, rgba(201, 169, 98, 0.05) 0%, transparent 70%),
-      radial-gradient(ellipse 35% 45% at 85% 30%, rgba(201, 169, 98, 0.03) 0%, transparent 70%);
+    bottom: -60px;
+    right: -60px;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201, 169, 98, 0.05) 0%, transparent 70%);
     pointer-events: none;
   }
-}
 
-/* ─── Card ────────────────────────────────────────────────── */
-
-.supportMinistry {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  max-width: 980px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 300px;
-  gap: 0;
-  background: $deep-gray;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(to right, transparent, $gold, transparent);
-  }
-
-  @media (max-width: 800px) {
-    grid-template-columns: 1fr;
+  @media (max-width: 960px) {
+    max-width: 480px;
+    margin: 0 auto;
+    width: 100%;
   }
 }
 
-/* ─── Left — content ──────────────────────────────────────── */
-
-.supportMinistryContent {
-  padding: 3rem;
-  min-width: 0;
-  border-right: 1px solid rgba(255, 255, 255, 0.06);
-
-  @media (max-width: 800px) {
-    border-right: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    padding: 2.25rem 2rem;
-  }
+.cardTopBar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(to right, transparent, $gold, transparent);
 }
 
-.supportMinistryLabel {
-  display: block;
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.38em;
-  text-transform: uppercase;
-  color: $gold;
-  margin: 0 0 0.85rem;
-}
-
-.supportMinistryTitle {
+.cardTitle {
   font-family: $font-bulgatti;
-  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  font-size: clamp(1.2rem, 2.5vw, 1.55rem);
   font-weight: 700;
-  letter-spacing: 0.03em;
   color: $white;
-  margin: 0 0 1.25rem;
-  line-height: 1.1;
+  letter-spacing: 0.04em;
+  margin: 0;
+  line-height: 1.15;
 }
 
-.supportMinistryText {
-  font-size: 0.9rem;
-  line-height: 1.85;
-  font-weight: 300;
-  color: rgba(255, 255, 255, 0.48);
+.cardText {
+  font-size: 0.84rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.4);
   margin: 0;
 }
 
-/* ─── Right — CTA panel ───────────────────────────────────── */
+.cardDivider {
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+}
 
-.supportMinistryCta {
-  padding: 3rem 2rem;
-  background: $black;
+.cardQuickAmounts {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 1.5rem;
-  position: relative;
-
-  &::before {
-    content: "";
-    position: absolute;
-    left: 0; top: 2.5rem; bottom: 2.5rem;
-    width: 2px;
-    background: linear-gradient(to bottom, transparent, $gold, transparent);
-    opacity: 0.4;
-
-    @media (max-width: 800px) {
-      display: none;
-    }
-  }
-
-  @media (max-width: 800px) {
-    padding: 2.25rem 2rem;
-  }
-}
-
-.supportMinistryCtaText {
-  font-family: $font-serif;
-  font-size: 0.92rem;
-  font-style: italic;
-  line-height: 1.7;
-  color: rgba(255, 255, 255, 0.38);
-  margin: 0;
-}
-
-.supportMinistryBtn {
-  display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.cardAmount {
+  padding: 0.3rem 0.7rem;
+  border: 1px solid rgba(201, 169, 98, 0.2);
+  color: rgba(201, 169, 98, 0.65);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  font-family: $font-sans;
+}
+
+.donateBtn {
   width: 100%;
-  padding: 0.9rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 0.95rem 1.5rem;
+  background: $gold;
+  color: $black;
+  border: none;
+  font-family: $font-sans;
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  text-align: center;
-  color: $black;
-  background: $gold;
-  border: none;
   cursor: pointer;
-  text-decoration: none;
   transition: background 0.25s ease, transform 0.2s ease;
+
+  svg { flex-shrink: 0; }
 
   &:hover {
     background: $gold-dark;
     transform: translateY(-2px);
   }
 
-  &:active {
-    transform: translateY(0);
-  }
+  &:active { transform: translateY(0); }
 }
 
-/* ─── Modal overlay ───────────────────────────────────────── */
+.cardNote {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  font-size: 0.62rem;
+  color: rgba(255, 255, 255, 0.2);
+  margin: 0;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  svg { flex-shrink: 0; }
+}
 
-.modalOverlay {
+/* ════════════════════════════════════════
+   MODAL OVERLAY
+════════════════════════════════════════ */
+.overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.82);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -172,99 +251,218 @@
   z-index: 20000;
 }
 
-/* ─── Modal card ──────────────────────────────────────────── */
-
-.modalContent {
+/* ── Modal card ── */
+.modal {
   background: $deep-gray;
   border: 1px solid rgba(255, 255, 255, 0.07);
-  padding: 2.75rem;
-  width: min(640px, 100%);
-  max-height: 90vh;
-  position: relative;
+  width: min(600px, 100%);
+  max-height: 92vh;
   overflow-y: auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
   scrollbar-width: thin;
-  scrollbar-color: rgba(201, 169, 98, 0.25) transparent;
+  scrollbar-color: rgba(201, 169, 98, 0.2) transparent;
 
   &::-webkit-scrollbar { width: 3px; }
-  &::-webkit-scrollbar-thumb { background: rgba(201, 169, 98, 0.25); }
-
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(to right, transparent, $gold, transparent);
-  }
+  &::-webkit-scrollbar-thumb { background: rgba(201, 169, 98, 0.2); }
 
   @media (max-width: 480px) {
-    padding: 2rem 1.4rem;
+    max-height: 96vh;
   }
 }
 
-.modalContentIframe {
-  padding: 0;
-  width: min(900px, 100%);
-  height: 90vh;
-  display: flex;
-  border: none;
-  background: transparent;
-  &::before { display: none; }
+.modalTopBar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(to right, transparent, $gold, transparent);
+  flex-shrink: 0;
 }
 
-/* ─── Modal header ────────────────────────────────────────── */
-
-.modalHeader {
+/* ── Modal head ── */
+.modalHead {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  margin-bottom: 0.25rem;
+  padding: 2rem 2rem 1.5rem;
+  padding-top: 2.25rem;
+
+  @media (max-width: 480px) {
+    padding: 1.75rem 1.25rem 1.25rem;
+  }
 }
 
 .modalTitle {
   font-family: $font-bulgatti;
-  font-size: clamp(1.3rem, 3vw, 1.65rem);
+  font-size: clamp(1.1rem, 2.5vw, 1.35rem);
   font-weight: 700;
   color: $white;
   letter-spacing: 0.03em;
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.2rem;
   line-height: 1.15;
+}
+
+.modalSubtitle {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+  margin: 0;
 }
 
 .modalClose {
   flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: transparent;
-  color: rgba(255, 255, 255, 0.4);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 0.3rem 0.85rem;
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
   cursor: pointer;
-  font-family: $font-sans;
-  transition: color 0.2s ease, border-color 0.2s ease;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
 
   &:hover {
     color: $white;
-    border-color: rgba(255, 255, 255, 0.28);
+    border-color: rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.04);
   }
 }
 
-/* ─── Form layout ─────────────────────────────────────────── */
-
-.formStack {
-  display: flex;
-  flex-direction: column;
-  gap: 1.4rem;
+.modalSep {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
 }
 
+/* ── Modal sections ── */
+.modalSection {
+  padding: 1.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+
+  @media (max-width: 480px) {
+    padding: 1.25rem;
+  }
+}
+
+.fieldLabel {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.35);
+  font-family: $font-sans;
+
+  em {
+    font-style: normal;
+    color: rgba(255, 255, 255, 0.2);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+  }
+}
+
+/* ── Amount picker ── */
+.amountGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.6rem;
+
+  @media (max-width: 400px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.amountTile {
+  position: relative;
+  background: $gray;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.55);
+  padding: 1rem 0.5rem;
+  cursor: pointer;
+  font-family: $font-sans;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+
+  &:hover:not(.amountTileActive) {
+    border-color: rgba(201, 169, 98, 0.3);
+    color: rgba(255, 255, 255, 0.8);
+  }
+}
+
+.amountTileActive {
+  border-color: $gold;
+  background: rgba(201, 169, 98, 0.08);
+  color: $gold;
+}
+
+.amountTileValue {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+
+.amountCheck {
+  font-size: 0.62rem;
+  color: $gold;
+  font-weight: 700;
+}
+
+.customRow {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.8rem 1rem;
+  background: $gray;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: border-color 0.22s ease, box-shadow 0.22s ease;
+
+  &:focus-within,
+  &.customRowActive {
+    border-color: $gold;
+    box-shadow: 0 0 0 3px rgba(201, 169, 98, 0.08);
+  }
+}
+
+.currencySign {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.3);
+  font-family: $font-sans;
+  flex-shrink: 0;
+}
+
+.customInput {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: $white;
+  font-family: $font-sans;
+  font-size: 0.9rem;
+  min-width: 0;
+
+  &::placeholder { color: rgba(255, 255, 255, 0.2); }
+  &:focus { outline: none; }
+}
+
+/* ── Form fields ── */
 .fieldGroup {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.25rem;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
 
-  @media (max-width: 520px) {
+  @media (max-width: 480px) {
     grid-template-columns: 1fr;
   }
 }
@@ -272,144 +470,195 @@
 .field {
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
+  gap: 0.4rem;
 }
 
 .label {
-  font-size: 0.62rem;
+  font-size: 0.6rem;
   font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.42);
+  color: rgba(255, 255, 255, 0.38);
   font-family: $font-sans;
+}
+
+.optional {
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  text-transform: none;
+  color: rgba(255, 255, 255, 0.2);
 }
 
 .input {
   width: 100%;
   background: $gray;
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  padding: 0.82rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.78rem 0.9rem;
   color: $white;
   font-family: $font-sans;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   transition: border-color 0.22s ease, box-shadow 0.22s ease;
 
-  &::placeholder { color: rgba(255, 255, 255, 0.2); }
+  &::placeholder { color: rgba(255, 255, 255, 0.18); }
 
   &:focus {
     outline: none;
     border-color: $gold;
-    box-shadow: 0 0 0 3px rgba(201, 169, 98, 0.09);
+    box-shadow: 0 0 0 3px rgba(201, 169, 98, 0.08);
   }
 }
 
-/* ─── Amount picker ───────────────────────────────────────── */
+/* ── Error ── */
+.error {
+  margin: 0 2rem;
+  padding: 0.75rem 1rem;
+  background: rgba(248, 113, 113, 0.08);
+  border: 1px solid rgba(248, 113, 113, 0.25);
+  border-left: 3px solid #f87171;
+  font-size: 0.78rem;
+  color: #fca5a5;
+  font-weight: 500;
+  overflow: hidden;
 
-.amountGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  @media (max-width: 480px) {
+    margin: 0 1.25rem;
+  }
+}
+
+/* ── Modal footer ── */
+.modalFoot {
+  padding: 1.25rem 2rem 1rem;
+  display: flex;
+  flex-direction: column;
   gap: 0.65rem;
 
-  @media (max-width: 520px) {
-    grid-template-columns: repeat(2, 1fr);
+  @media (max-width: 480px) {
+    padding: 1rem 1.25rem;
   }
 }
 
-.amountButton {
-  background: $gray;
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  color: rgba(255, 255, 255, 0.6);
-  padding: 0.7rem 0;
-  cursor: pointer;
-  font-family: $font-sans;
-  font-size: 0.9rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
-
-  &:hover {
-    border-color: rgba(201, 169, 98, 0.45);
-    color: $white;
-  }
-}
-
-.amountActive {
-  background: rgba(201, 169, 98, 0.1);
-  border-color: $gold;
-  color: $gold;
-}
-
-.customAmountRow {
+.submitBtn {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
-  margin-top: 0.65rem;
-  padding: 0.78rem 1rem;
-  background: $gray;
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  transition: border-color 0.22s ease, box-shadow 0.22s ease;
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: $gold;
+  color: $black;
+  border: none;
+  font-family: $font-sans;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.2s ease;
 
-  &:focus-within {
-    border-color: $gold;
-    box-shadow: 0 0 0 3px rgba(201, 169, 98, 0.09);
+  svg { flex-shrink: 0; }
+
+  &:hover:not(:disabled) {
+    background: $gold-dark;
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
   }
 }
 
-.currency {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.35);
-  font-family: $font-sans;
+.spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(0, 0, 0, 0.25);
+  border-top-color: $black;
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+  flex-shrink: 0;
 }
 
-.customAmountInput {
-  flex: 1;
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.cancelBtn {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
   background: transparent;
-  border: none;
-  color: $white;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.4);
   font-family: $font-sans;
-  font-size: 0.9rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
 
-  &::placeholder { color: rgba(255, 255, 255, 0.2); }
-  &:focus { outline: none; }
+  &:hover:not(:disabled) {
+    border-color: rgba(255, 255, 255, 0.25);
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  &:disabled { opacity: 0.4; cursor: not-allowed; }
 }
 
-/* ─── Error ───────────────────────────────────────────────── */
-
-.errorText {
-  margin: 0;
-  font-size: 0.78rem;
-  color: #f87171;
-  font-weight: 500;
-}
-
-/* ─── Modal actions ───────────────────────────────────────── */
-
-.modalActions {
-  margin-top: 0.5rem;
+.modalNote {
   display: flex;
-  justify-content: flex-end;
-  gap: 0.75rem;
-  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0 2rem 1.5rem;
+  font-size: 0.6rem;
+  color: rgba(255, 255, 255, 0.18);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  margin: 0;
+
+  svg { flex-shrink: 0; }
+
+  @media (max-width: 480px) {
+    padding: 0 1.25rem 1.25rem;
+  }
 }
 
-/* ─── Payment iframe ──────────────────────────────────────── */
-
-.iframeWrapper {
+/* ════════════════════════════════════════
+   PAYMENT IFRAME
+════════════════════════════════════════ */
+.iframeOverlay {
   position: fixed;
   inset: 0;
   z-index: 999999;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 100px 1rem 80px;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  background: rgba(0, 0, 0, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 
   @media (max-width: 500px) {
     padding: 80px 0 0;
   }
+}
+
+.iframeSuccess {
+  position: absolute;
+  top: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(201, 169, 98, 0.12);
+  border: 1px solid rgba(201, 169, 98, 0.35);
+  color: $gold;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  padding: 0.5rem 1.25rem;
+  white-space: nowrap;
+  margin: 0;
 }
 
 .iframe {
@@ -421,10 +670,4 @@
   @media (max-width: 500px) {
     width: 100%;
   }
-}
-
-.statusText {
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.48);
-  margin: 0;
 }

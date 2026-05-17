@@ -9,7 +9,6 @@ import cover2015 from "../../../../assets/patmos/8.jpeg";
 import cover2010 from "../../../../assets/patmos/11.jpeg";
 
 /* ── Types ── */
-interface Track { title: string; duration: string }
 interface StreamLinks {
   spotify?: string;
   youtube?: string;
@@ -21,7 +20,6 @@ interface Album {
   title: string;
   cover: string;
   trackCount: number;
-  tracks: Track[];
   links: StreamLinks;
 }
 
@@ -32,18 +30,6 @@ const ALBUMS: Album[] = [
     title: "Maranatha",
     cover: cover2024,
     trackCount: 10,
-    tracks: [
-      { title: "Maranatha", duration: "4:32" },
-      { title: "Tanga Imana", duration: "3:58" },
-      { title: "Uhorwa", duration: "5:12" },
-      { title: "Nzanahana", duration: "4:05" },
-      { title: "Yesu Aza", duration: "6:20" },
-      { title: "Amakorwa y'Imana", duration: "4:45" },
-      { title: "Haleluya", duration: "3:30" },
-      { title: "Imana Ni Urukundo", duration: "5:55" },
-      { title: "Gusenga", duration: "4:10" },
-      { title: "Ubuzimagatozi", duration: "7:02" },
-    ],
     links: {
       spotify: "https://open.spotify.com/",
       youtube: "https://www.youtube.com/@patmoschoir",
@@ -56,16 +42,6 @@ const ALBUMS: Album[] = [
     title: "Ijambo Ry'Ubukiza",
     cover: cover2021,
     trackCount: 8,
-    tracks: [
-      { title: "Ijambo Ry'Ubukiza", duration: "5:10" },
-      { title: "Tuzabona Umwami", duration: "4:22" },
-      { title: "Imana Yadukunze", duration: "6:05" },
-      { title: "Bwana Mfasha", duration: "3:48" },
-      { title: "Nzaza Ingo", duration: "5:30" },
-      { title: "Witinya", duration: "4:15" },
-      { title: "Indirimbo Y'Intore", duration: "7:00" },
-      { title: "Kugeza Aho", duration: "4:55" },
-    ],
     links: {
       spotify: "https://open.spotify.com/",
       youtube: "https://www.youtube.com/@patmoschoir",
@@ -77,17 +53,6 @@ const ALBUMS: Album[] = [
     title: "Hosanna ku Mwana",
     cover: cover2018,
     trackCount: 9,
-    tracks: [
-      { title: "Hosanna", duration: "4:50" },
-      { title: "Mwana w'Imana", duration: "3:35" },
-      { title: "Ufite Imbaraga", duration: "5:45" },
-      { title: "Jewe Nzafite", duration: "4:20" },
-      { title: "Tugendere Hamwe", duration: "6:10" },
-      { title: "Umwana Wacu", duration: "3:55" },
-      { title: "Nzawe Ntazigama", duration: "5:25" },
-      { title: "Ibuka", duration: "4:40" },
-      { title: "Dore Umugisha", duration: "6:30" },
-    ],
     links: {
       spotify: "https://open.spotify.com/",
       youtube: "https://www.youtube.com/@patmoschoir",
@@ -99,15 +64,6 @@ const ALBUMS: Album[] = [
     title: "Tuzabona Uhorwa",
     cover: cover2015,
     trackCount: 7,
-    tracks: [
-      { title: "Tuzabona Uhorwa", duration: "6:15" },
-      { title: "Amahoro", duration: "4:00" },
-      { title: "Ijuru Ry'Imana", duration: "5:30" },
-      { title: "Ntuziterera", duration: "3:45" },
-      { title: "Ubuhamya Bwanjye", duration: "5:10" },
-      { title: "Patmos Irimbo", duration: "4:55" },
-      { title: "Twizere Yesu", duration: "7:20" },
-    ],
     links: {
       spotify: "https://open.spotify.com/",
       youtube: "https://www.youtube.com/@patmoschoir",
@@ -118,16 +74,6 @@ const ALBUMS: Album[] = [
     title: "Imana Ifite Ineza",
     cover: cover2010,
     trackCount: 8,
-    tracks: [
-      { title: "Imana Ifite Ineza", duration: "5:05" },
-      { title: "Ntuzatyazwe", duration: "4:30" },
-      { title: "Dukorane Imana", duration: "6:00" },
-      { title: "Kwizigama Imana", duration: "3:50" },
-      { title: "Ndashimira Imana", duration: "5:20" },
-      { title: "Igihe Gizaza", duration: "4:10" },
-      { title: "Nizohorera", duration: "5:45" },
-      { title: "Kuririmba Ni Gusenga", duration: "7:15" },
-    ],
     links: {
       youtube: "https://www.youtube.com/@patmoschoir",
     },
@@ -387,37 +333,35 @@ export default function HomePlaylistStreamingSection() {
 
               {/* Info */}
               <div className={styles.albumInfo}>
-                <div className={styles.albumInfoTop}>
-                  <div>
-                    <span className={styles.albumLabel}>Album · {selectedAlbum.year}</span>
-                    <h3 className={styles.albumTitle}>{selectedAlbum.title}</h3>
-                    <p className={styles.albumMeta}>Patmos Choir &nbsp;·&nbsp; {selectedAlbum.trackCount} tracks</p>
-                  </div>
-                  {/* Platform links */}
-                  <div className={styles.platformLinks}>
-                    {(Object.entries(selectedAlbum.links) as [string, string][]).map(([platform, url]) => {
-                      const meta = PLATFORM_META[platform];
-                      if (!meta) return null;
-                      const Icon = meta.icon;
-                      return (
-                        <a
-                          key={platform}
-                          href={url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={styles.platformBtn}
-                          style={{ "--platform-color": meta.color } as React.CSSProperties}
-                          aria-label={`Listen on ${meta.label}`}
-                          title={`Listen on ${meta.label}`}
-                        >
-                          <Icon />
-                          <span>{meta.label}</span>
-                        </a>
-                      );
-                    })}
-                  </div>
-                </div>
+                <span className={styles.albumLabel}>Album · {selectedAlbum.year}</span>
+                <h3 className={styles.albumTitle}>{selectedAlbum.title}</h3>
+                <p className={styles.albumMeta}>Patmos Choir &nbsp;·&nbsp; {selectedAlbum.trackCount} tracks</p>
 
+                <div className={styles.albumDivider} aria-hidden="true" />
+
+                <p className={styles.albumStreamLabel}>Listen on</p>
+                <div className={styles.platformLinks}>
+                  {(Object.entries(selectedAlbum.links) as [string, string][]).map(([platform, url]) => {
+                    const meta = PLATFORM_META[platform];
+                    if (!meta) return null;
+                    const Icon = meta.icon;
+                    return (
+                      <a
+                        key={platform}
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={styles.platformBtn}
+                        style={{ "--platform-color": meta.color } as React.CSSProperties}
+                        aria-label={`Listen on ${meta.label}`}
+                        title={`Listen on ${meta.label}`}
+                      >
+                        <Icon />
+                        <span>{meta.label}</span>
+                      </a>
+                    );
+                  })}
+                </div>
               </div>
             </motion.div>
           </AnimatePresence>
