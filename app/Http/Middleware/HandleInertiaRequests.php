@@ -86,7 +86,7 @@ class HandleInertiaRequests extends Middleware
                 'title' => $siteContent?->site_name ?? 'Patmos Choir',
                 'description' => $siteContent?->description ?? 'A choir born of friendship and faith — raising voices to bring healing, hope, and the presence of God to hearts across Rwanda and beyond. Seventh Day Adventist · Kigali · Est. 1996.',
                 'keywords' => $siteContent && $siteContent->keywords ? (is_array($siteContent->keywords) ? implode(',', $siteContent->keywords) : $siteContent->keywords) : 'Patmos Choir, gospel choir, SDA choir, Seventh Day Adventist, Kigali Rwanda, worship music, Christian ministry, gospel music Rwanda',
-                'image' => $siteContent?->site_logo ?? asset('og-image.jpeg'),
+                'image' => $siteContent?->site_logo ?? asset('patmos-b.png'),
                 'favicon' => $siteContent?->site_logo ?? asset('favicon.ico'),
                 'url' => url('/'),
                 'type' => 'website',
