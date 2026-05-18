@@ -96,26 +96,22 @@
         <!-- Google / Search Engine Tags -->
         <meta itemprop="name" content="{{ $customTitle ?? $title }}" />
         <meta itemprop="description" content="{{ $customDescription ?? $description }}" />
-        @if($image)
-            <meta itemprop="image" content="{{ $customImageUrl ?? $imageUrl }}" />
-        @endif
+        <meta itemprop="image" content="{{ $customImageUrl ?? $imageUrl }}" />
 
         <!-- Facebook Meta Tags -->
-        <meta property="og:url" content="{{ $url }}" />
-        <meta property="og:type" content="{{ $type }}" />
+        <meta property="og:url" content="{{ $customUrl ?? $url }}" />
+        <meta property="og:type" content="{{ $customType ?? $type }}" />
         <meta property="og:title" content="{{ $customTitle ?? $title }}" />
         <meta property="og:description" content="{{ $customDescription ?? $description }}" />
-        @if($image)
-            <meta property="og:image" content="{{ $customImageUrl ?? $imageUrl }}" />
-        @endif
+        <meta property="og:image" content="{{ $customImageUrl ?? $imageUrl }}" />
+        <meta property="og:site_name" content="Patmos Choir" />
 
         <!-- Twitter Meta Tags -->
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="{{ $title }}" />
-        <meta name="twitter:description" content="{{ $description }}" />
-        @if($image)
-            <meta name="twitter:image" content="{{ $customImageUrl ?? $imageUrl }}" />
-        @endif
+        <meta name="twitter:url" content="{{ $customUrl ?? $url }}" />
+        <meta name="twitter:title" content="{{ $customTitle ?? $title }}" />
+        <meta name="twitter:description" content="{{ $customDescription ?? $description }}" />
+        <meta name="twitter:image" content="{{ $customImageUrl ?? $imageUrl }}" />
 
         <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
