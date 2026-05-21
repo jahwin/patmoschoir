@@ -47,6 +47,10 @@ ROute::get('/payment-terms', [WebController::class, 'paymentTerms'])->name('paym
 // 404 Page
 Route::get('/404', [WebController::class, 'notFound'])->name('404');
 
+Route::fallback(function () {
+    return Inertia::render('404')->toResponse(request())->setStatusCode(404);
+});
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');

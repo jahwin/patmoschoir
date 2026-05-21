@@ -1,82 +1,92 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Link } from '@inertiajs/react';
 import PublicLayout from '@/components/layouts/public-layout';
 import styles from './style.module.scss';
 
-export default function NotFound() {
+const NOTES = ['♩', '♪', '♫', '♬', '𝄞', '𝄢'];
+
+function FloatingNote({ note, style }: { note: string; style: React.CSSProperties }) {
   return (
-    <PublicLayout
-      title="404 - Page Not Found"
-      subtitle="Oops! Something went wrong"
-    >
-      <div className={`${styles.notFoundPage} not-found-page`}>
-        <div className={styles.container}>
+    <span className={styles.floatingNote} style={style} aria-hidden="true">
+      {note}
+    </span>
+  );
+}
 
-          {/* Main Content */}
-          <div className={styles.mainContent}>
-            {/* Large 404 Number */}
-            <div className={styles.errorNumber}>404</div>
-            <div className={styles.errorTitle}>Page Not Found</div>
+export default function NotFound() {
+  const notes = [
+    { note: '♪', style: { left: '8%',  top: '18%', animationDelay: '0s',   fontSize: '2.5rem', animationDuration: '9s'  } },
+    { note: '♫', style: { left: '15%', top: '65%', animationDelay: '1.4s', fontSize: '1.8rem', animationDuration: '11s' } },
+    { note: '𝄞', style: { left: '82%', top: '22%', animationDelay: '0.7s', fontSize: '3.2rem', animationDuration: '8s'  } },
+    { note: '♬', style: { left: '88%', top: '70%', animationDelay: '2.1s', fontSize: '2rem',   animationDuration: '13s' } },
+    { note: '♩', style: { left: '50%', top: '12%', animationDelay: '3s',   fontSize: '1.5rem', animationDuration: '10s' } },
+    { note: '♪', style: { left: '70%', top: '80%', animationDelay: '1.8s', fontSize: '2.2rem', animationDuration: '7s'  } },
+    { note: '♫', style: { left: '28%', top: '85%', animationDelay: '0.3s', fontSize: '1.6rem', animationDuration: '12s' } },
+    { note: '𝄢', style: { left: '62%', top: '40%', animationDelay: '4s',   fontSize: '2.8rem', animationDuration: '9s'  } },
+  ];
 
-            {/* Description */}
-            <div className={styles.description}>
-              The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.
-            </div>
+  return (
+    <PublicLayout title="404 — Page Not Found">
+      <div className={styles.page}>
 
-            {/* Action Buttons */}
-            <div className={styles.actionButtons}>
-              <Link href="/" className={styles.primaryButton}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" className={styles.buttonIcon}>
-                  <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
-                </svg>
-                Back to Home
-              </Link>
+        {/* Ambient glow blobs */}
+        <div className={styles.blobLeft}  aria-hidden="true" />
+        <div className={styles.blobRight} aria-hidden="true" />
 
-              <Link href="/contact" className={styles.secondaryButton}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" className={styles.buttonIcon}>
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                </svg>
-                Help Center
-              </Link>
-            </div>
+        {/* Floating musical notes */}
+        {notes.map((n, i) => (
+          <FloatingNote key={i} note={n.note} style={n.style} />
+        ))}
 
-            {/* Suggestions */}
-            <div className={styles.suggestions}>
-              <h3 className={styles.suggestionsTitle}>You might want to:</h3>
-              <div className={styles.suggestionsList}>
-                <div className={styles.suggestionItem}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className={styles.suggestionIcon}>
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                  </svg>
-                  <span>Check our sitemap</span>
-                </div>
-                <div className={styles.suggestionItem}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className={styles.suggestionIcon}>
-                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
-                  </svg>
-                  <span>Contact support</span>
-                </div>
-                <div className={styles.suggestionItem}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className={styles.suggestionIcon}>
-                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
-                  </svg>
-                  <span>Return to previous page</span>
-                </div>
-              </div>
-            </div>
+        {/* Staff lines */}
+        <div className={styles.staff} aria-hidden="true">
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className={styles.staffLine} />
+          ))}
+        </div>
+
+        <div className={styles.content}>
+          {/* Eyebrow */}
+          <p className={styles.eyebrow}>Error 404</p>
+
+          {/* Giant 404 */}
+          <div className={styles.heroNumber} aria-label="404">
+            <span>4</span>
+            <span className={styles.noteGlyph} aria-hidden="true">♩</span>
+            <span>4</span>
           </div>
 
-          {/* Decorative Elements */}
-          <div className={styles.decorativeElements}>
-            <div className={styles.warningIcon}>
-              <svg width="80" height="80" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z" />
-              </svg>
-            </div>
-            <div className={styles.circle1}></div>
-            <div className={styles.circle2}></div>
-            <div className={styles.circle3}></div>
+          {/* Divider */}
+          <div className={styles.divider} aria-hidden="true">
+            <div className={styles.dividerLine} />
+            <div className={styles.dividerDiamond} />
+            <div className={styles.dividerLine} />
           </div>
+
+          {/* Headline */}
+          <h1 className={styles.heading}>This melody went silent</h1>
+
+          {/* Sub-copy */}
+          <p className={styles.body}>
+            The page you're searching for couldn't be found — perhaps it moved,
+            was renamed, or simply rests in the silence between notes.
+          </p>
+
+          {/* Actions */}
+          <div className={styles.actions}>
+            <Link href="/" className={styles.btnPrimary}>
+              Return Home
+            </Link>
+          </div>
+
+          {/* Quick links */}
+          <nav className={styles.quickLinks} aria-label="Helpful links">
+            <span className={styles.quickDot} aria-hidden="true">·</span>
+            <Link href="/events"   className={styles.quickLink}>Events</Link>
+            <span className={styles.quickDot} aria-hidden="true">·</span>
+            <Link href="/contact"  className={styles.quickLink}>Contact</Link>
+            <span className={styles.quickDot} aria-hidden="true">·</span>
+          </nav>
         </div>
       </div>
     </PublicLayout>

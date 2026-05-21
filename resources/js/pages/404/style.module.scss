@@ -1,340 +1,320 @@
-.notFoundPage {
-  background-color: #222;
-  color: white;
-  // min-height: 100vh;
-  font-family: "Jost", sans-serif;
+@use "../../../css/variables" as *;
+
+// ─── Layout ──────────────────────────────────────────────────────────────────
+
+.page {
+  position: relative;
+  min-height: 100svh;
+  background: $black;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem 1rem;
-  position: relative;
   overflow: hidden;
+  padding: 8rem 1.5rem 4rem;
 }
 
-.container {
-  max-width: 800px;
-  width: 100%;
-  text-align: center;
-  position: relative;
-  z-index: 2;
-}
+// ─── Ambient blobs ────────────────────────────────────────────────────────────
 
-.errorBadge {
-  display: inline-block;
-  background: var(--color-theme-clr);
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  margin-bottom: 2rem;
-}
-
-.badgeText {
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-}
-
-.mainContent {
-  // background: white;
-  border-radius: 1rem;
-  padding: 3rem 2rem;
-  // box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  position: relative;
-}
-
-.errorNumber {
-  font-size: 8rem;
-  font-weight: 800;
-  color: var(--color-theme-clr);
-  line-height: 1;
-  margin-bottom: 0.5rem;
-  text-shadow: 0 4px 8px rgba(15, 118, 110, 0.2);
-}
-
-.errorTitle {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--color-theme-clr);
-  margin-bottom: 1.5rem;
-  line-height: 1.2;
-}
-
-.description {
-  font-size: 1.125rem;
-  color: #ccc;
-  line-height: 1.6;
-  margin-bottom: 2.5rem;
-  max-width: 500px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.actionButtons {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  margin-bottom: 3rem;
-  flex-wrap: wrap;
-}
-
-.primaryButton {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: var(--color-theme-clr);
-  color: white;
-  padding: 0.875rem 1.5rem;
-  border-radius: 0.5rem;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 1rem;
-  transition: all 0.2s ease;
-  border: 2px solid var(--color-theme-clr);
-
-  &:hover {
-    background: color-mix(in srgb, var(--color-theme-clr) 50%, transparent);
-    border-color: color-mix(in srgb, var(--color-theme-clr) 50%, transparent);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(238, 151, 11, 0.3);
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
-}
-
-.secondaryButton {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: transparent;
-  color: var(--color-theme-clr);
-  padding: 0.875rem 1.5rem;
-  border-radius: 0.5rem;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 1rem;
-  transition: all 0.2s ease;
-  border: 2px solid var(--color-theme-clr);
-
-  &:hover {
-    background: var(--color-theme-clr);
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(238, 151, 11, 0.3);
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
-}
-
-.buttonIcon {
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-}
-
-.suggestions {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 0.75rem;
-  padding: 1.5rem;
-  text-align: left;
-}
-
-.suggestionsTitle {
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: white;
-  margin-bottom: 1rem;
-  text-align: center;
-}
-
-.suggestionsList {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.suggestionItem {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  color: var(--color-theme-clr);
-  font-size: 0.95rem;
-  font-weight: 500;
-  transition: color 0.2s ease;
-
-  &:hover {
-    color: color-mix(in srgb, var(--color-theme-clr) 50%, transparent);
-  }
-}
-
-.suggestionIcon {
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
-}
-
-.decorativeElements {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.warningIcon {
-  position: absolute;
-  top: 20%;
-  left: 10%;
-  color: var(--color-theme-clr);
-  opacity: 0.1;
-  transform: rotate(-15deg);
-}
-
-.circle1,
-.circle2,
-.circle3 {
+.blobLeft,
+.blobRight {
   position: absolute;
   border-radius: 50%;
-  background: rgba(238, 151, 11, 0.1);
-  animation: float 6s ease-in-out infinite;
+  filter: blur(120px);
+  pointer-events: none;
+  animation: breathe 8s ease-in-out infinite;
 }
 
-.circle1 {
-  width: 120px;
-  height: 120px;
-  top: 10%;
-  right: 15%;
+.blobLeft {
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(circle, rgba($gold, 0.12) 0%, transparent 70%);
+  top: -10%;
+  left: -15%;
   animation-delay: 0s;
 }
 
-.circle2 {
-  width: 80px;
-  height: 80px;
-  bottom: 20%;
-  left: 20%;
-  animation-delay: 2s;
-}
-
-.circle3 {
-  width: 60px;
-  height: 60px;
-  top: 60%;
-  right: 30%;
+.blobRight {
+  width: 360px;
+  height: 360px;
+  background: radial-gradient(circle, rgba($accent, 0.08) 0%, transparent 70%);
+  bottom: -8%;
+  right: -10%;
   animation-delay: 4s;
 }
 
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-20px);
+@keyframes breathe {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.08); }
+}
+
+// ─── Floating notes ───────────────────────────────────────────────────────────
+
+.floatingNote {
+  position: absolute;
+  color: $gold;
+  opacity: 0;
+  pointer-events: none;
+  user-select: none;
+  animation: floatUp linear infinite;
+
+  @media (max-width: 600px) {
+    display: none;
   }
 }
 
-// Global styles for the 404 page
-:global(.not-found-page) {
-  // Ensure proper spacing for fixed header
-  padding-top: 0;
-  
-  // Smooth scrolling
-  scroll-behavior: smooth;
-  
-  // Custom scrollbar
-  &::-webkit-scrollbar {
-    width: 8px;
-  }
-  
-  &::-webkit-scrollbar-track {
-    background: #333;
-  }
-  
-  &::-webkit-scrollbar-thumb {
-    background: var(--color-theme-clr);
-    border-radius: 4px;
-  }
-  
-  &::-webkit-scrollbar-thumb:hover {
-    background: color-mix(in srgb, var(--color-theme-clr) 50%, transparent);
+@keyframes floatUp {
+  0%   { opacity: 0;    transform: translateY(40px) rotate(-8deg); }
+  15%  { opacity: 0.18; }
+  85%  { opacity: 0.12; }
+  100% { opacity: 0;    transform: translateY(-160px) rotate(8deg); }
+}
+
+// ─── Staff lines ──────────────────────────────────────────────────────────────
+
+.staff {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 14px;
+  padding: 0 0;
+  opacity: 0.04;
+
+  @media (max-width: 600px) {
+    display: none;
   }
 }
 
-// Responsive Design
-@media (max-width: 768px) {
-  .notFoundPage {
-    padding: 1rem;
-  }
+.staffLine {
+  height: 1px;
+  width: 100%;
+  background: $white;
+}
 
-  .mainContent {
-    padding: 2rem 1.5rem;
-  }
+// ─── Content ─────────────────────────────────────────────────────────────────
 
-  .errorNumber {
-    font-size: 6rem;
-  }
+.content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 640px;
+  width: 100%;
+  animation: fadeIn 0.9s ease both;
+}
 
-  .errorTitle {
-    font-size: 2rem;
-  }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
-  .description {
-    font-size: 1rem;
-  }
+// ─── Eyebrow ──────────────────────────────────────────────────────────────────
 
-  .actionButtons {
-    flex-direction: column;
-    align-items: center;
-  }
+.eyebrow {
+  font-family: $font-sans;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: $gold;
+  margin-bottom: 1.5rem;
+  opacity: 0.85;
+}
 
-  .primaryButton,
-  .secondaryButton {
-    width: 100%;
-    max-width: 280px;
-    justify-content: center;
-  }
+// ─── Hero 404 ─────────────────────────────────────────────────────────────────
 
-  .suggestions {
-    padding: 1.25rem;
-  }
+.heroNumber {
+  font-family: $font-bulgatti;
+  font-size: clamp(6rem, 22vw, 14rem);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: 0.04em;
+  margin-bottom: 2rem;
 
-  .suggestionsList {
-    gap: 0.5rem;
-  }
+  // Gold-to-white gradient
+  background: linear-gradient(
+    160deg,
+    $gold 0%,
+    lighten($gold, 18%) 40%,
+    $white 65%,
+    $gold-dark 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 
-  .suggestionItem {
-    font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.12em;
+}
+
+.noteGlyph {
+  display: inline-block;
+  font-size: 0.72em;
+  animation: swing 3.6s ease-in-out infinite;
+  transform-origin: 50% 30%;
+
+  // Keep the gradient but shift hue slightly for the note
+  background: linear-gradient(180deg, lighten($gold, 20%) 0%, $gold 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@keyframes swing {
+  0%, 100% { transform: rotate(-6deg); }
+  50%       { transform: rotate(6deg); }
+}
+
+// ─── Divider ─────────────────────────────────────────────────────────────────
+
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+
+.dividerLine {
+  flex: 1;
+  max-width: 80px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba($gold, 0.55), transparent);
+}
+
+.dividerDiamond {
+  width: 6px;
+  height: 6px;
+  background: $gold;
+  transform: rotate(45deg);
+  opacity: 0.7;
+}
+
+// ─── Heading ─────────────────────────────────────────────────────────────────
+
+.heading {
+  font-family: $font-bulgatti;
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $white;
+  margin-bottom: 1.25rem;
+  line-height: 1.2;
+}
+
+// ─── Body copy ────────────────────────────────────────────────────────────────
+
+.body {
+  font-family: $font-sans;
+  font-size: clamp(0.9rem, 2vw, 1.05rem);
+  font-weight: 300;
+  line-height: 1.7;
+  color: rgba($white, 0.55);
+  max-width: 440px;
+  margin: 0 auto 2.5rem;
+}
+
+// ─── Buttons ─────────────────────────────────────────────────────────────────
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 2.5rem;
+}
+
+.btnPrimary,
+.btnOutline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 2rem;
+  font-family: $font-sans;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 50px;
+  transition: all 0.28s ease;
+  cursor: pointer;
+}
+
+.btnPrimary {
+  background: $gold;
+  color: $black;
+  border: 1px solid $gold;
+
+  &:hover {
+    background: lighten($gold, 8%);
+    border-color: lighten($gold, 8%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba($gold, 0.3);
   }
 }
+
+.btnOutline {
+  background: transparent;
+  color: $white;
+  border: 1px solid rgba($white, 0.25);
+
+  &:hover {
+    border-color: $gold;
+    color: $gold;
+    transform: translateY(-2px);
+  }
+}
+
+// ─── Quick links ─────────────────────────────────────────────────────────────
+
+.quickLinks {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.quickLink {
+  font-family: $font-sans;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba($white, 0.35);
+  text-decoration: none;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: $gold;
+  }
+}
+
+.quickDot {
+  color: rgba($white, 0.2);
+  font-size: 1rem;
+  line-height: 1;
+}
+
+// ─── Responsive ──────────────────────────────────────────────────────────────
 
 @media (max-width: 480px) {
-  .errorNumber {
-    font-size: 4.5rem;
+  .page {
+    padding: 7rem 1rem 3rem;
   }
 
-  .errorTitle {
-    font-size: 1.75rem;
-  }
+  .actions {
+    flex-direction: column;
+    align-items: center;
 
-  .mainContent {
-    padding: 1.5rem 1rem;
-  }
-
-  .warningIcon {
-    display: none;
-  }
-
-  .circle1,
-  .circle2,
-  .circle3 {
-    display: none;
+    .btnPrimary,
+    .btnOutline {
+      width: 100%;
+      max-width: 260px;
+    }
   }
 }

@@ -129,7 +129,7 @@
         @vite(['resources/js/app.tsx'])
         @inertiaHead
 
-        @if ($page['props']['siteContent'] && $page['props']['siteContent']['site_color'])
+        @if (!empty($page['props']['siteContent']['site_color']))
             <style>
                 :root {
                     --color-theme-clr: {{ $page['props']['siteContent']['site_color'] }};
