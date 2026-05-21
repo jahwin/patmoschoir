@@ -1,123 +1,218 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { useEffect, useState } from "react";
+import { motion } from "motion/react";
 import { Link, usePage } from "@inertiajs/react";
 import styles from "./HomeEventsSection.module.scss";
-import img8  from "../../../../assets/patmos/8.jpeg";
-import img9  from "../../../../assets/patmos/9.jpeg";
-import img10 from "../../../../assets/patmos/10.jpeg";
-import img11 from "../../../../assets/patmos/11.jpeg";
+import TicketModal from "@/components/modal/TicketModal";
+import PaymentModal from "@/components/modal/PaymentModal";
+import { EPayingType, PaymentWidget, PricingItem, VotingPricingItem } from "@/types/shared/ICommon";
+import { GET_EVENT_PAYMENT_WIDGET_URL } from "@/types/shared/urls";
 
-interface Ticket {
-  tier: string;
-  section: string;
-  description: string;
-  price: number;
-  available: boolean;
-}
-
-interface Event {
+/**
+ * Shape of a single event row from the local DB `events` table,
+ * as serialised by Laravel (date is a full ISO-8601 string because
+ * of the `date` cast + serializeDate).
+ * The `pricings` array is injected server-side by WebController
+ * via the Watch pricing API.
+ */
+interface LocalEvent {
   id: number;
-  type: "concert" | "outreach";
-  name: string;
-  date: string;
-  time?: string;
+  event_id: string | null;      // Watch event ID (e.g. "99")
+  title: string;
+  slug: string;
+  description: string | null;
+  date: string;                 // "2026-08-15T00:00:00.000000Z"
+  start_time: string;           // "18:00:00"
+  end_time: string | null;      // "23:59:00" | null
   location: string;
-  description: string;
-  coverImage?: string;
-  tickets?: Ticket[];
+  image: string | null;         // resolved Storage URL, e.g. "/storage/events/..."
+  booking_link: string | null;
+  ussd: string | null;
+  visibility: "Public" | "Unlisted";
+  created_at: string;
+  updated_at: string;
+  /** Pricing tiers from Watch API — empty [] when no tickets set up yet */
+  pricings: PricingItem[];
 }
 
-const EVENTS: Event[] = [
-  {
-    id: 1,
-    type: "concert",
-    name: "Songs of Worship — A Night of Praise",
-    date: "Saturday, May 30, 2026",
-    time: "6:00 PM",
-    location: "Kigali Convention Center, Rwanda",
-    coverImage: img8,
-    description:
-      "An unforgettable evening of heartfelt worship as Patmos Choir lifts voices in praise. Come experience the transforming presence of God through music, prayer, and community.",
-    tickets: [
-      { tier: "VIP",      section: "Front Row A–C", description: "Reserved front-row seating with welcome drink", price: 50, available: true },
-      { tier: "Premium",  section: "Rows D–H",      description: "Excellent view with reserved allocated seat",  price: 30, available: true },
-      { tier: "Standard", section: "Main Hall",      description: "Open seating in the main concert hall",        price: 15, available: true },
-      { tier: "Balcony",  section: "Upper Level",    description: "Elevated view from the upper balcony",         price: 10, available: false },
-    ],
-  },
-  {
-    id: 2,
-    type: "concert",
-    name: "Praise & Prayer Night",
-    date: "Saturday, June 14, 2026",
-    time: "7:00 PM",
-    location: "SDA Church, Remera, Kigali",
-    coverImage: img9,
-    description:
-      "A sacred night dedicated to prayer and worship. Patmos Choir leads the congregation in a powerful encounter with God — expect healing, hope, and the glory of His presence.",
-    tickets: [
-      { tier: "VIP",      section: "Front Row A–D", description: "Reserved front-row seating", price: 25, available: true },
-      { tier: "Standard", section: "Main Hall",     description: "General seating, open floor",  price: 10, available: true },
-    ],
-  },
-  {
-    id: 3,
-    type: "outreach",
-    name: "Hospital Outreach Ministry",
-    date: "Saturday, March 15, 2026",
-    time: "10:00 AM",
-    location: "CHUK Hospital, Kigali",
-    coverImage: img10,
-    description:
-      "Bringing music and hope to patients who cannot attend worship services. We visit wards, sing, pray, and carry the peace of God to those who need it most.",
-  },
-  {
-    id: 4,
-    type: "outreach",
-    name: "Youth Rehabilitation Ministry",
-    date: "Saturday, April 5, 2026",
-    time: "9:00 AM",
-    location: "Nyanza Rehabilitation Center",
-    description:
-      "Sharing the message of redemption and grace through song with young people in rehabilitation. Every heart deserves to hear the Good News and experience love.",
-  },
-  {
-    id: 5,
-    type: "outreach",
-    name: "Elderly Home Visit",
-    date: "Sunday, April 27, 2026",
-    time: "2:00 PM",
-    location: "Maison des Aînés, Nyamirambo",
-    coverImage: img11,
-    description:
-      "Visiting the elderly who can no longer attend church — bringing worship, fellowship, and the warmth of community to those who have given so much.",
-  },
-];
+interface PageProps {
+  events?: LocalEvent[];
+}
 
-/* Parse "Saturday, May 30, 2026" → Date */
-const parseDate = (s: string) => new Date(s.replace(/^[A-Za-z]+,\s*/, ""));
-const TODAY = new Date("2026-05-17");
-const isUpcoming = (e: Event) => parseDate(e.date) >= TODAY;
-
-/* Sort: upcoming first (soonest), then past (most recent) */
-const SORTED = [...EVENTS].sort((a, b) => {
-  const aUp = isUpcoming(a), bUp = isUpcoming(b);
-  if (aUp !== bUp) return aUp ? -1 : 1;
-  const diff = parseDate(a.date).getTime() - parseDate(b.date).getTime();
-  return aUp ? diff : -diff;
-});
-
-const TIER_COLORS: Record<string, string> = {
-  VIP: "#c9a962", Premium: "#8b7355", Standard: "#555", Balcony: "#444",
+/** Parse any ISO date/datetime string safely, avoiding timezone day-shift */
+const parseDate = (d: string): Date => {
+  // Slice just the date part so we can fix to local midnight
+  const datePart = d.slice(0, 10); // "2026-08-15"
+  const [y, mo, day] = datePart.split("-").map(Number);
+  return new Date(y, mo - 1, day);
 };
 
-export default function HomeEventsSection() {
-  const [activeEvent, setActiveEvent] = useState<Event | null>(null);
-  const isHomePage = usePage().url.split("?")[0] === "/";
+const fmtDate = (d: string) => {
+  const date = parseDate(d);
+  return {
+    month: date.toLocaleString("en-US", { month: "short" }).toUpperCase(),
+    day: date.getDate(),
+    weekday: date.toLocaleDateString("en-US", { weekday: "long" }),
+    full: date.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }),
+  };
+};
 
-  const visibleEvents = isHomePage ? SORTED.slice(0, 2) : SORTED;
-  const CONCERTS = visibleEvents.filter((e) => e.type === "concert");
-  const OUTREACH = visibleEvents.filter((e) => e.type === "outreach");
+const fmtTime = (t: string | null): string | null => {
+  if (!t) return null;
+  const [h, m] = t.split(":").map(Number);
+  const ampm = h >= 12 ? "PM" : "AM";
+  const hr = h > 12 ? h - 12 : h === 0 ? 12 : h;
+  return `${hr}:${String(m).padStart(2, "0")} ${ampm}`;
+};
+
+const isUpcoming = (d: string) => parseDate(d) >= new Date(new Date().toDateString());
+
+export default function HomeEventsSection() {
+  const { props, url } = usePage<PageProps>();
+  const events: LocalEvent[] = props.events ?? [];
+  const isHomePage = url.split("?")[0] === "/";
+
+  const sorted = [...events].sort((a, b) => {
+    const aUp = isUpcoming(a.date), bUp = isUpcoming(b.date);
+    if (aUp !== bUp) return aUp ? -1 : 1;
+    const diff = parseDate(a.date).getTime() - parseDate(b.date).getTime();
+    return aUp ? diff : -diff;
+  });
+
+  const visible = isHomePage ? sorted.slice(0, 2) : sorted;
+  // Ticketed concerts = has event_id or booking_link; outreach = neither
+  const CONCERTS = visible.filter((e) => e.event_id || e.booking_link);
+  const OUTREACH = visible.filter((e) => !e.event_id && !e.booking_link);
+
+  // ── Payment modal state ──
+  const [activeEvent, setActiveEvent] = useState<LocalEvent | null>(null);
+  const [showTicketModal, setShowTicketModal] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [selectedTicket, setSelectedTicket] = useState<number | null>(null);
+  const [numberOfPeople, setNumberOfPeople] = useState(1);
+  const [email, setEmail] = useState("");
+  const [paymentWidget, setPaymentWidget] = useState<PaymentWidget | null>(null);
+  const [paymentLoading, setPaymentLoading] = useState(false);
+  const [paymentError, setPaymentError] = useState<string | null>(null);
+
+  const openTickets = (event: LocalEvent) => {
+    setActiveEvent(event);
+    setSelectedTicket(null);
+    setNumberOfPeople(1);
+    setEmail("");
+    setPaymentError(null);
+    setPaymentWidget(null);
+    setShowTicketModal(true);
+  };
+
+  const fetchPaymentWidget = async (selectedPricing: PricingItem | VotingPricingItem) => {
+    setPaymentLoading(true);
+    setPaymentError(null);
+
+    try {
+      const isPricing = (p: PricingItem | VotingPricingItem): p is PricingItem =>
+        "pricing_id" in p;
+
+      if (!isPricing(selectedPricing)) throw new Error("Invalid pricing type");
+
+      const payload = {
+        eventId: selectedPricing.event_id,
+        selected_price: selectedPricing.pricing_id,
+        selected_amount: selectedPricing.amount,
+        numberOfPeople: numberOfPeople.toString(),
+        emailDelivery: email ? email.split("@")[0] : "guest",
+        currency: selectedPricing.currency,
+        url: "/event/item/pay",
+        amount: selectedPricing.amount * numberOfPeople,
+        first_name: "",
+        last_name: "",
+        email: email || "",
+        phone_number: "",
+      };
+
+      const res = await fetch(GET_EVENT_PAYMENT_WIDGET_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        let msg = `HTTP error ${res.status}`;
+        try { const e = await res.json(); if (e.message) msg = e.message; } catch {}
+        throw new Error(msg);
+      }
+
+      const data: PaymentWidget = await res.json();
+      if (data.status === "ok" && data.iframeUrl) {
+        setPaymentWidget(data);
+        setShowTicketModal(false);
+        setShowPaymentModal(true);
+      } else {
+        throw new Error(data.message || "Failed to load payment");
+      }
+    } catch (err) {
+      setPaymentLoading(false);
+      setPaymentError(err instanceof Error ? err.message : "Payment failed");
+      setShowPaymentModal(false);
+    }
+  };
+
+  useEffect(() => {
+    const handler = (e: MessageEvent) => {
+      if (e.data?.type !== "PAYMENT_STATUS") return;
+      switch (e.data.status) {
+        case "init":
+        case "success":
+          setPaymentLoading(false);
+          break;
+        case "failed":
+          setPaymentLoading(false);
+          setShowPaymentModal(true);
+          break;
+        case "close":
+          setShowTicketModal(true);
+          setPaymentLoading(false);
+          setShowPaymentModal(false);
+          break;
+      }
+    };
+    window.addEventListener("message", handler);
+    return () => window.removeEventListener("message", handler);
+  }, []);
+
+  // ── Ticket button logic per event ──
+  const renderTicketAction = (event: LocalEvent) => {
+    if (event.event_id) {
+      if (event.pricings.length > 0) {
+        return (
+          <button type="button" className={styles.concertBtn} onClick={() => openTickets(event)}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/>
+            </svg>
+            Buy Tickets
+          </button>
+        );
+      }
+      return (
+        <span className={styles.comingSoonBadge}>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+          </svg>
+          Tickets Coming Soon
+        </span>
+      );
+    }
+    if (event.booking_link) {
+      return (
+        <a href={event.booking_link} target="_blank" rel="noopener noreferrer" className={styles.concertBtn}>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+          </svg>
+          Book Now
+        </a>
+      );
+    }
+    return null;
+  };
 
   return (
     <>
@@ -158,69 +253,69 @@ export default function HomeEventsSection() {
               </div>
 
               <div className={styles.concertGrid}>
-                {CONCERTS.map((event, i) => (
-                  <motion.article
-                    key={event.id}
-                    className={styles.concertCard}
-                    initial={{ opacity: 0, y: 32 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-40px" }}
-                    transition={{ duration: 0.55, delay: i * 0.1 }}
-                  >
-                    <div className={styles.concertCardAccent} />
-                    {event.coverImage && (
-                      <div
-                        className={styles.concertCardCover}
-                        style={{ backgroundImage: `url(${event.coverImage})` }}
-                        aria-hidden="true"
-                      />
-                    )}
-                    <div className={styles.concertCardBody}>
-                      <div className={styles.concertDateBadge}>
-                        <span className={styles.concertMonth}>
-                          {event.date.split(" ")[1]}
-                        </span>
-                        <span className={styles.concertDay}>
-                          {event.date.split(" ")[2]?.replace(",", "")}
-                        </span>
-                      </div>
-
-                      <div className={styles.concertInfo}>
-                        <div className={styles.statusRow}>
-                          <span className={isUpcoming(event) ? styles.badgeUpcoming : styles.badgePast}>
-                            {isUpcoming(event) ? "Upcoming" : "Past"}
-                          </span>
-                        </div>
-                        <h3 className={styles.concertName}>{event.name}</h3>
-
-                        <div className={styles.concertMeta}>
-                          <span>
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                            {event.time} &nbsp;·&nbsp; {event.date.split(",")[0]}
-                          </span>
-                          <span>
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                            {event.location}
-                          </span>
+                {CONCERTS.map((event, i) => {
+                  const d = fmtDate(event.date);
+                  const time = fmtTime(event.start_time);
+                  const upcoming = isUpcoming(event.date);
+                  return (
+                    <motion.article
+                      key={event.id}
+                      className={styles.concertCard}
+                      initial={{ opacity: 0, y: 32 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: "-40px" }}
+                      transition={{ duration: 0.55, delay: i * 0.1 }}
+                    >
+                      <div className={styles.concertCardAccent} />
+                      {event.image && (
+                        <div
+                          className={styles.concertCardCover}
+                          style={{ backgroundImage: `url(${event.image})` }}
+                          aria-hidden="true"
+                        />
+                      )}
+                      <div className={styles.concertCardBody}>
+                        <div className={styles.concertDateBadge}>
+                          <span className={styles.concertMonth}>{d.month}</span>
+                          <span className={styles.concertDay}>{d.day}</span>
                         </div>
 
-                        <p className={styles.concertDesc}>{event.description}</p>
+                        <div className={styles.concertInfo}>
+                          <div className={styles.statusRow}>
+                            <span className={upcoming ? styles.badgeUpcoming : styles.badgePast}>
+                              {upcoming ? "Upcoming" : "Past"}
+                            </span>
+                          </div>
+                          <h3 className={styles.concertName}>{event.title}</h3>
 
-                        {isUpcoming(event) && event.tickets && (
-                          <button
-                            type="button"
-                            className={styles.concertBtn}
-                            onClick={() => setActiveEvent(event)}
-                          >
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/></svg>
-                            Buy Tickets
-                          </button>
-                        )}
+                          <div className={styles.concertMeta}>
+                            <span>
+                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                              {time && <>{time} &nbsp;·&nbsp;</>}{d.weekday}
+                            </span>
+                            <span>
+                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                              {event.location}
+                            </span>
+                            {event.ussd && (
+                              <span>
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                                {event.ussd}
+                              </span>
+                            )}
+                          </div>
+
+                          {event.description && (
+                            <p className={styles.concertDesc}>{event.description}</p>
+                          )}
+
+                          {upcoming && renderTicketAction(event)}
+                        </div>
                       </div>
-                    </div>
-                    <div className={styles.concertCardNoise} aria-hidden="true" />
-                  </motion.article>
-                ))}
+                      <div className={styles.concertCardNoise} aria-hidden="true" />
+                    </motion.article>
+                  );
+                })}
               </div>
             </>
           )}
@@ -239,59 +334,74 @@ export default function HomeEventsSection() {
               </div>
 
               <div className={styles.outreachGrid}>
-                {OUTREACH.map((event, i) => (
-                  <motion.article
-                    key={event.id}
-                    className={styles.outreachCard}
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, margin: "-30px" }}
-                    transition={{ duration: 0.5, delay: i * 0.08 }}
-                  >
-                    {event.coverImage && (
-                      <div
-                        className={styles.outreachCardCover}
-                        style={{ backgroundImage: `url(${event.coverImage})` }}
-                        aria-hidden="true"
-                      />
-                    )}
-                    <div className={styles.outreachIndex} aria-hidden="true">
-                      {String(i + 1).padStart(2, "0")}
-                    </div>
-                    <div className={styles.outreachBody}>
-                      <div className={styles.statusRow}>
-                        <span className={isUpcoming(event) ? styles.badgeUpcoming : styles.badgePast}>
-                          {isUpcoming(event) ? "Upcoming" : "Past"}
-                        </span>
+                {OUTREACH.map((event, i) => {
+                  const d = fmtDate(event.date);
+                  const time = fmtTime(event.start_time);
+                  const upcoming = isUpcoming(event.date);
+                  return (
+                    <motion.article
+                      key={event.id}
+                      className={styles.outreachCard}
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true, margin: "-30px" }}
+                      transition={{ duration: 0.5, delay: i * 0.08 }}
+                    >
+                      {event.image && (
+                        <div
+                          className={styles.outreachCardCover}
+                          style={{ backgroundImage: `url(${event.image})` }}
+                          aria-hidden="true"
+                        />
+                      )}
+                      <div className={styles.outreachIndex} aria-hidden="true">
+                        {String(i + 1).padStart(2, "0")}
                       </div>
-                      <h3 className={styles.outreachName}>{event.name}</h3>
-                      <div className={styles.outreachMeta}>
-                        <span>
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                          {event.date}
-                        </span>
-                        {event.time && (
-                          <span>
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                            {event.time}
+                      <div className={styles.outreachBody}>
+                        <div className={styles.statusRow}>
+                          <span className={upcoming ? styles.badgeUpcoming : styles.badgePast}>
+                            {upcoming ? "Upcoming" : "Past"}
                           </span>
+                        </div>
+                        <h3 className={styles.outreachName}>{event.title}</h3>
+                        <div className={styles.outreachMeta}>
+                          <span>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                            {d.full}
+                          </span>
+                          {time && (
+                            <span>
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                              {time}
+                            </span>
+                          )}
+                          <span>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            {event.location}
+                          </span>
+                        </div>
+                        {event.description && (
+                          <p className={styles.outreachDesc}>{event.description}</p>
                         )}
-                        <span>
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                          {event.location}
-                        </span>
                       </div>
-                      <p className={styles.outreachDesc}>{event.description}</p>
-                    </div>
-                    <div className={styles.outreachTag}>Outreach</div>
-                  </motion.article>
-                ))}
+                      <div className={styles.outreachTag}>Outreach</div>
+                    </motion.article>
+                  );
+                })}
               </div>
             </>
           )}
 
+          {/* ── EMPTY STATE ── */}
+          {visible.length === 0 && (
+            <div className={styles.emptyState}>
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <p>No events scheduled yet. Check back soon.</p>
+            </div>
+          )}
+
           {/* ── VIEW MORE (home page only) ── */}
-          {isHomePage && EVENTS.length > 2 && (
+          {isHomePage && sorted.length > 2 && (
             <motion.div
               className={styles.footer}
               initial={{ opacity: 0 }}
@@ -310,78 +420,40 @@ export default function HomeEventsSection() {
       </section>
 
       {/* ── TICKET MODAL ── */}
-      <AnimatePresence>
-        {activeEvent && (
-          <motion.div
-            className={styles.modalOverlay}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
-            onClick={() => setActiveEvent(null)}
-            role="dialog"
-            aria-modal="true"
-            aria-label={`Tickets for ${activeEvent.name}`}
-          >
-            <motion.div
-              className={styles.modal}
-              initial={{ opacity: 0, scale: 0.92, y: 30 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.94, y: 20 }}
-              transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className={styles.modalHead}>
-                <div>
-                  <span className={styles.modalEyebrow}>Select Your Tickets</span>
-                  <h3 className={styles.modalTitle}>{activeEvent.name}</h3>
-                  <p className={styles.modalMeta}>
-                    {activeEvent.date} &nbsp;·&nbsp; {activeEvent.time} &nbsp;·&nbsp; {activeEvent.location}
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  className={styles.modalClose}
-                  onClick={() => setActiveEvent(null)}
-                  aria-label="Close"
-                >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                </button>
-              </div>
+      <TicketModal
+        showModal={showTicketModal}
+        setShowModal={setShowTicketModal}
+        selectedTicket={selectedTicket}
+        setSelectedTicket={setSelectedTicket}
+        numberOfPeople={numberOfPeople}
+        setNumberOfPeople={setNumberOfPeople}
+        email={email}
+        setEmail={setEmail}
+        pricingData={activeEvent?.pricings ?? []}
+        paymentLoading={paymentLoading}
+        paymentError={paymentError}
+        setPaymentError={setPaymentError}
+        fetchPaymentWidget={fetchPaymentWidget}
+        payingType={EPayingType.EVENT_PAYMENT}
+        modalText={activeEvent?.title ?? "Choose Ticket"}
+        contentDescription={
+          activeEvent
+            ? `${fmtDate(activeEvent.date).full}${fmtTime(activeEvent.start_time) ? " · " + fmtTime(activeEvent.start_time) : ""} · ${activeEvent.location}`
+            : "You are about to start payment process"
+        }
+      />
 
-              <div className={styles.ticketGrid}>
-                {activeEvent.tickets?.map((ticket, i) => (
-                  <motion.div
-                    key={ticket.tier}
-                    className={`${styles.ticketCard} ${!ticket.available ? styles.ticketSoldOut : ""}`}
-                    style={{ "--tier-color": TIER_COLORS[ticket.tier] ?? "#555" } as React.CSSProperties}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.07, duration: 0.3 }}
-                  >
-                    <span className={styles.ticketWatermark} aria-hidden="true">
-                      {ticket.tier[0]}
-                    </span>
-                    <div className={styles.ticketInner}>
-                      <span className={styles.ticketTier}>{ticket.tier}</span>
-                      <span className={styles.ticketPrice}>${ticket.price}</span>
-                      <span className={styles.ticketSection}>{ticket.section}</span>
-                    </div>
-                    <button
-                      type="button"
-                      className={styles.buyBtn}
-                      disabled={!ticket.available}
-                      aria-disabled={!ticket.available}
-                    >
-                      {ticket.available ? "Buy Now" : "Sold Out"}
-                    </button>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* ── PAYMENT MODAL ── */}
+      <PaymentModal
+        showPaymentModal={showPaymentModal}
+        setShowPaymentModal={setShowPaymentModal}
+        paymentWidget={paymentWidget}
+        paymentLoading={paymentLoading}
+        paymentError={paymentError}
+        pricingData={activeEvent?.pricings ?? []}
+        selectedTicket={selectedTicket}
+        fetchPaymentWidget={fetchPaymentWidget}
+      />
     </>
   );
 }

@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Head, router, usePage, Link } from "@inertiajs/react";
+import { EVENT_TICKETS_VERIFY_URL } from "@/types/shared/urls";
 import { ArrowRight } from "lucide-react";
 import Button from "@/components/shared/Button";
 import TicketCard from "@/components/shared/TicketCard";
@@ -74,7 +75,7 @@ export default function TicketVerification() {
                 return;
             }
 
-            const response = await fetch('https://api-watch.wecodefy.com/api/v1/event/tickets/verify', {
+            const response = await fetch(EVENT_TICKETS_VERIFY_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

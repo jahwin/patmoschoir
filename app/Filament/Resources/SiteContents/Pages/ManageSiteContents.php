@@ -16,14 +16,12 @@ class ManageSiteContents extends Page
 
     public function mount(): void
     {
-        // Get the first site content record, or create one if none exists
         $siteContent = SiteContent::first();
 
         if (!$siteContent) {
             $siteContent = SiteContent::create([]);
         }
 
-        // Redirect to the edit page of the first record
         $this->redirect(EditSiteContents::getUrl(['record' => $siteContent->id]));
     }
 }

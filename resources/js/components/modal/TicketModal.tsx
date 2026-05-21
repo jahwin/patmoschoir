@@ -117,7 +117,12 @@ export default function TicketModal({
                             <div className={modalStyles.ticketGrid}>
                                 {pricingData.map((ticket, index) => {
                                     const ticketId = 'pricing_id' in ticket ? ticket.pricing_id : ticket.id;
-                                    const ticketQuantity = typeof ticket.quantity === 'string' ? ticket.quantity : `${ticket.quantity} Ticket${ticket.quantity !== 1 ? 's' : ''}`;
+                                    // PricingItem (event) has `name`; VotingPricingItem has `quantity`
+                                    const ticketLabel = 'name' in ticket && ticket.name
+                                        ? ticket.name
+                                        : typeof ticket.quantity === 'string'
+                                            ? ticket.quantity
+                                            : `${ticket.quantity ?? ''} Ticket`.trim();
                                     return (
                                         <button
                                             key={index}
@@ -132,7 +137,7 @@ export default function TicketModal({
                                                 </div>
                                             )}
                                             <div className={`${modalStyles.ticketContent} ${selectedTicket === ticketId ? modalStyles.selected : modalStyles.default}`}>
-                                                <div className={modalStyles.ticketName}>{ticketQuantity}</div>
+                                                <div className={modalStyles.ticketName}>{ticketLabel}</div>
                                                 <div className={modalStyles.ticketPrice}>{ticket.amount} {ticket.currency}</div>
                                             </div>
                                         </button>

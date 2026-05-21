@@ -4,7 +4,6 @@ namespace App\Filament\Resources\SiteContents\Schemas;
 
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TagsInput;
@@ -22,7 +21,6 @@ class SiteContentsForm
             ->components([
                 Tabs::make('Settings')
                     ->tabs([
-                        // General Settings Tab
                         Tab::make('General')
                             ->icon('heroicon-o-cog-6-tooth')
                             ->schema([
@@ -43,12 +41,7 @@ class SiteContentsForm
                                     ->placeholder('Upload site logo')
                                     ->imageEditor()
                                     ->imageEditorMode(2)
-                                    ->imageEditorAspectRatios([
-                                        null,
-                                        '16:9',
-                                        '4:3',
-                                        '1:1',
-                                    ])
+                                    ->imageEditorAspectRatios([null, '16:9', '4:3', '1:1'])
                                     ->maxSize(2048)
                                     ->directory('site/logo')
                                     ->visibility('public')
@@ -61,7 +54,6 @@ class SiteContentsForm
                                     ->columnSpanFull(),
                             ]),
 
-                        // Contact Information Tab
                         Tab::make('Contact')
                             ->icon('heroicon-o-phone')
                             ->schema([
@@ -114,26 +106,13 @@ class SiteContentsForm
                                     ->columnSpanFull(),
                             ]),
 
-                        // About Us Tab
                         Tab::make('About Us')
                             ->icon('heroicon-o-information-circle')
                             ->schema([
                                 RichEditor::make('about_us')
                                     ->label('About Us')
                                     ->placeholder('Enter company description')
-                                    ->toolbarButtons([
-                                        'bold',
-                                        'italic',
-                                        'underline',
-                                        'strike',
-                                        'link',
-                                        'bulletList',
-                                        'orderedList',
-                                        'h2',
-                                        'h3',
-                                        'blockquote',
-                                        'codeBlock',
-                                    ])
+                                    ->toolbarButtons(['bold', 'italic', 'underline', 'strike', 'link', 'bulletList', 'orderedList', 'h2', 'h3', 'blockquote', 'codeBlock'])
                                     ->columnSpanFull(),
 
                                 Textarea::make('about_text')
@@ -148,12 +127,7 @@ class SiteContentsForm
                                     ->placeholder('Upload about section image')
                                     ->imageEditor()
                                     ->imageEditorMode(2)
-                                    ->imageEditorAspectRatios([
-                                        null,
-                                        '16:9',
-                                        '4:3',
-                                        '1:1',
-                                    ])
+                                    ->imageEditorAspectRatios([null, '16:9', '4:3', '1:1'])
                                     ->maxSize(2048)
                                     ->directory('site/about')
                                     ->columnSpanFull(),
@@ -164,12 +138,7 @@ class SiteContentsForm
                                     ->placeholder('Upload subimage for pages')
                                     ->imageEditor()
                                     ->imageEditorMode(2)
-                                    ->imageEditorAspectRatios([
-                                        null,
-                                        '16:9',
-                                        '4:3',
-                                        '1:1',
-                                    ])
+                                    ->imageEditorAspectRatios([null, '16:9', '4:3', '1:1'])
                                     ->maxSize(2048)
                                     ->directory('site/subimages')
                                     ->columnSpanFull(),
@@ -205,7 +174,7 @@ class SiteContentsForm
                                             ->label('Icon (SVG)')
                                             ->placeholder('Enter SVG icon code')
                                             ->rows(4)
-                                            ->helperText('Paste the SVG code for the icon. Example: <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">...</svg>')
+                                            ->helperText('Paste the SVG code for the icon.')
                                             ->columnSpanFull(),
                                     ])
                                     ->columns(2)
@@ -237,66 +206,28 @@ class SiteContentsForm
                                     ->columnSpanFull(),
                             ]),
 
-                        // Legal & Policies Tab
                         Tab::make('Legal & Policies')
                             ->icon('heroicon-o-document-text')
                             ->schema([
                                 RichEditor::make('terms_and_conditions')
                                     ->label('Terms and Conditions')
                                     ->placeholder('Enter terms and conditions')
-                                    ->toolbarButtons([
-                                        'bold',
-                                        'italic',
-                                        'underline',
-                                        'strike',
-                                        'link',
-                                        'bulletList',
-                                        'orderedList',
-                                        'h2',
-                                        'h3',
-                                        'blockquote',
-                                        'codeBlock',
-                                    ])
+                                    ->toolbarButtons(['bold', 'italic', 'underline', 'strike', 'link', 'bulletList', 'orderedList', 'h2', 'h3', 'blockquote', 'codeBlock'])
                                     ->columnSpanFull(),
 
                                 RichEditor::make('privacy_policy')
                                     ->label('Privacy Policy')
                                     ->placeholder('Enter privacy policy')
-                                    ->toolbarButtons([
-                                        'bold',
-                                        'italic',
-                                        'underline',
-                                        'strike',
-                                        'link',
-                                        'bulletList',
-                                        'orderedList',
-                                        'h2',
-                                        'h3',
-                                        'blockquote',
-                                        'codeBlock',
-                                    ])
+                                    ->toolbarButtons(['bold', 'italic', 'underline', 'strike', 'link', 'bulletList', 'orderedList', 'h2', 'h3', 'blockquote', 'codeBlock'])
                                     ->columnSpanFull(),
 
                                 RichEditor::make('payment_terms')
                                     ->label('Payment Terms')
                                     ->placeholder('Enter payment terms and conditions')
-                                    ->toolbarButtons([
-                                        'bold',
-                                        'italic',
-                                        'underline',
-                                        'strike',
-                                        'link',
-                                        'bulletList',
-                                        'orderedList',
-                                        'h2',
-                                        'h3',
-                                        'blockquote',
-                                        'codeBlock',
-                                    ])
+                                    ->toolbarButtons(['bold', 'italic', 'underline', 'strike', 'link', 'bulletList', 'orderedList', 'h2', 'h3', 'blockquote', 'codeBlock'])
                                     ->columnSpanFull(),
                             ]),
 
-                        // SEO & Footer Tab
                         Tab::make('SEO & Footer')
                             ->icon('heroicon-o-magnifying-glass')
                             ->schema([
@@ -315,29 +246,16 @@ class SiteContentsForm
                                 RichEditor::make('footer_text')
                                     ->label('Footer Text')
                                     ->placeholder('Enter footer text content')
-                                    ->toolbarButtons([
-                                        'bold',
-                                        'italic',
-                                        'underline',
-                                        'strike',
-                                        'link',
-                                        'bulletList',
-                                        'orderedList',
-                                        'h2',
-                                        'h3',
-                                        'blockquote',
-                                        'codeBlock',
-                                    ])
+                                    ->toolbarButtons(['bold', 'italic', 'underline', 'strike', 'link', 'bulletList', 'orderedList', 'h2', 'h3', 'blockquote', 'codeBlock'])
                                     ->columnSpanFull(),
                             ]),
 
-                        // Page Settings Tab
                         Tab::make('Page Settings')
                             ->icon('heroicon-o-squares-2x2')
                             ->schema([
                                 TextInput::make('services_page_title')
                                     ->label('Services Page Title')
-                                    ->placeholder('Enter services page title (e.g., Our Ministry)')
+                                    ->placeholder('Enter services page title')
                                     ->maxLength(255)
                                     ->columnSpanFull(),
 
@@ -359,19 +277,13 @@ class SiteContentsForm
                                     ->placeholder('Upload background image for services page')
                                     ->imageEditor()
                                     ->imageEditorMode(2)
-                                    ->imageEditorAspectRatios([
-                                        null,
-                                        '16:9',
-                                        '4:3',
-                                        '1:1',
-                                    ])
+                                    ->imageEditorAspectRatios([null, '16:9', '4:3', '1:1'])
                                     ->maxSize(2048)
                                     ->directory('site/services')
                                     ->visibility('public')
                                     ->columnSpanFull(),
                             ]),
 
-                        // Home Page Tab
                         Tab::make('Home Page')
                             ->icon('heroicon-o-home')
                             ->schema([
@@ -381,12 +293,7 @@ class SiteContentsForm
                                     ->placeholder('Upload background image for home About section')
                                     ->imageEditor()
                                     ->imageEditorMode(2)
-                                    ->imageEditorAspectRatios([
-                                        null,
-                                        '16:9',
-                                        '4:3',
-                                        '1:1',
-                                    ])
+                                    ->imageEditorAspectRatios([null, '16:9', '4:3', '1:1'])
                                     ->maxSize(2048)
                                     ->directory('site/home/about')
                                     ->visibility('public')
@@ -398,12 +305,7 @@ class SiteContentsForm
                                     ->placeholder('Upload background image for home Music section')
                                     ->imageEditor()
                                     ->imageEditorMode(2)
-                                    ->imageEditorAspectRatios([
-                                        null,
-                                        '16:9',
-                                        '4:3',
-                                        '1:1',
-                                    ])
+                                    ->imageEditorAspectRatios([null, '16:9', '4:3', '1:1'])
                                     ->maxSize(2048)
                                     ->directory('site/home/music')
                                     ->visibility('public')
@@ -415,12 +317,7 @@ class SiteContentsForm
                                     ->placeholder('Upload background image for home Videos section')
                                     ->imageEditor()
                                     ->imageEditorMode(2)
-                                    ->imageEditorAspectRatios([
-                                        null,
-                                        '16:9',
-                                        '4:3',
-                                        '1:1',
-                                    ])
+                                    ->imageEditorAspectRatios([null, '16:9', '4:3', '1:1'])
                                     ->maxSize(2048)
                                     ->directory('site/home/videos')
                                     ->visibility('public')
@@ -432,12 +329,7 @@ class SiteContentsForm
                                     ->placeholder('Upload background image for home News section')
                                     ->imageEditor()
                                     ->imageEditorMode(2)
-                                    ->imageEditorAspectRatios([
-                                        null,
-                                        '16:9',
-                                        '4:3',
-                                        '1:1',
-                                    ])
+                                    ->imageEditorAspectRatios([null, '16:9', '4:3', '1:1'])
                                     ->maxSize(2048)
                                     ->directory('site/home/news')
                                     ->visibility('public')

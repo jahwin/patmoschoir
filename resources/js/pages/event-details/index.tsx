@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Head } from "@inertiajs/react";
+import { Head, usePage } from "@inertiajs/react";
 import TicketModal from "@/components/modal/TicketModal";
 import PaymentModal from "@/components/modal/PaymentModal";
 
@@ -8,25 +8,15 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { PaymentWidget, PricingItem, VotingPricingItem } from '@/types/shared/ICommon';
+import { GET_EVENT_PAYMENT_WIDGET_URL } from '@/types/shared/urls';
 
-
-interface PricingsResponse {
-  status: string,
-  message: string,
-  return: PricingItem[]
+interface PageProps {
+  pricings?: PricingItem[];
 }
 
-
-const BASE_URL = process.env.NODE_ENV === 'development' ? "http://127.0.0.1:8000/" : "https://api-watch.wecodefy.com/";
-const API_BASE_URL = BASE_URL + 'api/v1/admin';
-const GET_EVENT_BY_SLUG_URL = "/channel/get/api/key/event/by/israel-mbonyi-album-launch";
-const GET_PRICING_URL = "https://api-watch.wecodefy.com/api/v1/admin/channel/get/api/key/event/pricing/79?api_key=yVAMaaymqW3mLd1yWqDr6If2bntPMecjT2tDX8tJ2q3FPwZKn9jVELkDHgx5jGMAARRYwatUcbKEPn72BnUksyvKtlNkMzkYXf04qE5TWfj8HxLHdcIsMYwr19cvupfh";
-const PAYMENT_WIDGET_URL = "https://api-watch.wecodefy.com/api/v1/event/item/pay";
-
 export default function Home() {
-  const [pricingData, setPricingData] = useState<PricingItem[]>([]);
-  const [pricingLoading, setPricingLoading] = useState(false);
-  const [pricingError, setPricingError] = useState<string | null>(null);
+  const { props } = usePage<PageProps>();
+  const pricingData: PricingItem[] = props.pricings ?? [];
 
   // Payment widget state
   const [paymentWidget, setPaymentWidget] = useState<PaymentWidget | null>(null);
@@ -42,32 +32,6 @@ export default function Home() {
 
   // Event date and time - easily changeable
   const EVENT_DATE_TIME = new Date('2025-10-05T17:00:00'); // October 5th, 2025 at 5:00 PM
-
-  // Function to fetch pricing data
-  const fetchPricingData = async () => {
-    setPricingLoading(true);
-    setPricingError(null);
-
-    try {
-      const response = await fetch(GET_PRICING_URL);
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data: PricingsResponse = await response.json();
-
-      if (data.status === 'ok' && data.return) {
-        setPricingData(data.return);
-      } else {
-        throw new Error(data.message || 'Failed to fetch pricing data');
-      }
-    } catch (error) {
-      setPricingError(error instanceof Error ? error.message : 'Failed to fetch pricing data');
-    } finally {
-      setPricingLoading(false);
-    }
-  };
 
   // Function to fetch payment widget
   const fetchPaymentWidget = async (selectedPricing: PricingItem | VotingPricingItem) => {
@@ -85,7 +49,7 @@ export default function Home() {
       }
 
       const payload = {
-        eventId: 79,
+        eventId: selectedPricing.event_id,
         selected_price: selectedPricing.pricing_id,
         selected_amount: selectedPricing.amount,
         numberOfPeople: numberOfPeople.toString(),
@@ -100,7 +64,7 @@ export default function Home() {
       };
 
 
-      const response = await fetch(PAYMENT_WIDGET_URL, {
+      const response = await fetch(GET_EVENT_PAYMENT_WIDGET_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -149,13 +113,6 @@ export default function Home() {
 
     }
   };
-
-  // Fetch pricing data on component mount
-  useEffect(() => {
-    fetchPricingData();
-  }, []);
-
-
 
 
 

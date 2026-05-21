@@ -123,4 +123,7 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'api_base_url' => env('WATCH_API_BASE_URL', 'https://api-watch.wecodefy.com/'),
+    'api_key' => env('WATCH_API_KEY'),
+
 ];

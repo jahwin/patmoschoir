@@ -703,3 +703,40 @@
 
   &:disabled { opacity: 0.35; cursor: not-allowed; }
 }
+
+/* ── Coming Soon badge ── */
+.comingSoonBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1rem;
+  padding: 0.4rem 0.9rem;
+  border: 1px dashed rgba(201, 169, 98, 0.5);
+  border-radius: 2rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(201, 169, 98, 0.75);
+  pointer-events: none;
+
+  svg { opacity: 0.7; }
+}
+
+/* ── Empty state ── */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 5rem 2rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.3);
+
+  svg { opacity: 0.3; }
+
+  p {
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+  }
+}

@@ -3,7 +3,7 @@ export interface PricingItem {
   pricing_id: number;
   name: string;
   amount: number;
-  quantity: number;
+  quantity?: number;
   currency: string;
 }
 
