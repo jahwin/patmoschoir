@@ -2,10 +2,10 @@
 
 namespace App\Filament\Resources\SiteContents\Schemas;
 
-use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -30,11 +30,6 @@ class SiteContentsForm
                                     ->maxLength(255)
                                     ->columnSpanFull(),
 
-                                ColorPicker::make('site_color')
-                                    ->label('Site Color')
-                                    ->placeholder('Select site color')
-                                    ->columnSpanFull(),
-
                                 FileUpload::make('site_logo')
                                     ->label('Site Logo')
                                     ->image()
@@ -46,73 +41,58 @@ class SiteContentsForm
                                     ->directory('site/logo')
                                     ->visibility('public')
                                     ->columnSpanFull(),
-
-                                TextInput::make('origin_domain')
-                                    ->label('Origin Domain')
-                                    ->placeholder('Enter origin domain (e.g., example.com)')
-                                    ->maxLength(255)
-                                    ->columnSpanFull(),
                             ]),
 
-                        Tab::make('Contact')
-                            ->icon('heroicon-o-phone')
+                        Tab::make('Hero')
+                            ->icon('heroicon-o-sparkles')
                             ->schema([
-                                TextInput::make('address')
-                                    ->label('Address')
-                                    ->placeholder('Enter company address')
+                                FileUpload::make('hero_background_images')
+                                    ->label('Hero Background Images')
+                                    ->image()
+                                    ->multiple()
+                                    ->reorderable()
+                                    ->panelLayout('grid')
+                                    ->panelAspectRatio('16:9')
+                                    ->imagePreviewHeight('80')
+                                    ->imageEditor()
+                                    ->imageEditorAspectRatios([null, '16:9', '4:3', '1:1'])
+                                    ->maxSize(4096)
+                                    ->directory('site/hero')
+                                    ->visibility('public')
+                                    ->columnSpanFull(),
+
+                                TextInput::make('hero_title')
+                                    ->label('Hero Title')
+                                    ->placeholder('Enter hero section title')
                                     ->maxLength(255)
                                     ->columnSpanFull(),
 
-                                TextInput::make('whatsapp_number')
-                                    ->label('WhatsApp Number')
-                                    ->placeholder('Enter WhatsApp number')
-                                    ->tel()
+                                TextInput::make('hero_subtitle')
+                                    ->label('Hero Subtitle')
+                                    ->placeholder('Enter hero section subtitle')
                                     ->maxLength(255)
                                     ->columnSpanFull(),
 
-                                TagsInput::make('phones')
-                                    ->label('Phone Numbers')
-                                    ->placeholder('Enter phone numbers separated by commas')
-                                    ->separator(',')
+                                Textarea::make('hero_description')
+                                    ->label('Hero Description')
+                                    ->placeholder('Enter hero section description')
+                                    ->rows(3)
                                     ->columnSpanFull(),
 
-                                TagsInput::make('emails')
-                                    ->label('Email Addresses')
-                                    ->placeholder('Enter email addresses separated by commas')
-                                    ->separator(',')
-                                    ->columnSpanFull(),
-
-                                Repeater::make('social_links')
-                                    ->label('Social Media Links')
-                                    ->schema([
-                                        TextInput::make('platform')
-                                            ->label('Platform')
-                                            ->placeholder('e.g., Facebook, Twitter, Instagram')
-                                            ->required()
-                                            ->maxLength(255)
-                                            ->columnSpan(1),
-                                        TextInput::make('url')
-                                            ->label('URL')
-                                            ->placeholder('Enter social media URL')
-                                            ->url()
-                                            ->required()
-                                            ->maxLength(255)
-                                            ->columnSpan(1),
-                                    ])
-                                    ->columns(2)
-                                    ->addActionLabel('Add Social Link')
-                                    ->defaultItems(0)
-                                    ->collapsible()
+                                Textarea::make('hero_subdescription')
+                                    ->label('Hero Sub-description')
+                                    ->placeholder('Enter hero section sub-description')
+                                    ->rows(3)
                                     ->columnSpanFull(),
                             ]),
 
                         Tab::make('About Us')
                             ->icon('heroicon-o-information-circle')
                             ->schema([
-                                RichEditor::make('about_us')
-                                    ->label('About Us')
-                                    ->placeholder('Enter company description')
-                                    ->toolbarButtons(['bold', 'italic', 'underline', 'strike', 'link', 'bulletList', 'orderedList', 'h2', 'h3', 'blockquote', 'codeBlock'])
+                                TextInput::make('about_title')
+                                    ->label('About Title')
+                                    ->placeholder('Enter about section title')
+                                    ->maxLength(255)
                                     ->columnSpanFull(),
 
                                 Textarea::make('about_text')
@@ -170,12 +150,6 @@ class SiteContentsForm
                                             ->required()
                                             ->rows(3)
                                             ->columnSpan(1),
-                                        Textarea::make('icon')
-                                            ->label('Icon (SVG)')
-                                            ->placeholder('Enter SVG icon code')
-                                            ->rows(4)
-                                            ->helperText('Paste the SVG code for the icon.')
-                                            ->columnSpanFull(),
                                     ])
                                     ->columns(2)
                                     ->addActionLabel('Add Value')
@@ -183,24 +157,89 @@ class SiteContentsForm
                                     ->collapsible()
                                     ->columnSpanFull(),
 
-                                Repeater::make('faqs')
-                                    ->label('Frequently Asked Questions')
+                                Repeater::make('storyline')
+                                    ->label('Storyline')
                                     ->schema([
-                                        TextInput::make('question')
-                                            ->label('Question')
-                                            ->placeholder('Enter FAQ question')
-                                            ->required()
-                                            ->maxLength(255)
+                                        TextInput::make('year')
+                                            ->label('Year')
+                                            ->placeholder('e.g., 2020')
+                                            ->maxLength(10)
                                             ->columnSpan(1),
-                                        Textarea::make('answer')
-                                            ->label('Answer')
-                                            ->placeholder('Enter FAQ answer')
+                                        Textarea::make('description')
+                                            ->label('Description')
+                                            ->placeholder('Enter storyline event description')
                                             ->required()
                                             ->rows(3)
                                             ->columnSpan(1),
                                     ])
                                     ->columns(2)
-                                    ->addActionLabel('Add FAQ')
+                                    ->addActionLabel('Add Storyline Entry')
+                                    ->defaultItems(0)
+                                    ->collapsible()
+                                    ->columnSpanFull(),
+
+                                FileUpload::make('about_poster')
+                                    ->label('About Poster')
+                                    ->image()
+                                    ->placeholder('Upload about poster image')
+                                    ->imageEditor()
+                                    ->imageEditorMode(2)
+                                    ->imageEditorAspectRatios([null, '16:9', '4:3', '1:1'])
+                                    ->maxSize(2048)
+                                    ->directory('site/about/poster')
+                                    ->columnSpanFull(),
+                            ]),
+
+                        Tab::make('Contact')
+                            ->icon('heroicon-o-phone')
+                            ->schema([
+                                TextInput::make('address')
+                                    ->label('Address')
+                                    ->placeholder('Enter company address')
+                                    ->maxLength(255)
+                                    ->columnSpanFull(),
+
+                                TagsInput::make('phones')
+                                    ->label('Phone Numbers')
+                                    ->placeholder('Enter phone numbers separated by commas')
+                                    ->separator(',')
+                                    ->columnSpanFull(),
+
+                                TagsInput::make('emails')
+                                    ->label('Email Addresses')
+                                    ->placeholder('Enter email addresses separated by commas')
+                                    ->separator(',')
+                                    ->columnSpanFull(),
+
+                                Repeater::make('social_links')
+                                    ->label('Social Media Links')
+                                    ->schema([
+                                        Select::make('platform')
+                                            ->label('Platform')
+                                            ->options([
+                                                'FACEBOOK'  => 'FACEBOOK',
+                                                'INSTAGRAM' => 'INSTAGRAM',
+                                                'TWITTER'   => 'TWITTER',
+                                                'YOUTUBE'   => 'YOUTUBE',
+                                                'TIKTOK'    => 'TIKTOK',
+                                                'SPOTIFY'   => 'SPOTIFY',
+                                                'WHATSAPP'  => 'WHATSAPP',
+                                                'SOUNDCLOUD' => 'SOUNDCLOUD',
+                                                'APPLE_MUSIC' => 'APPLE_MUSIC'
+                                            ])
+                                            ->required()
+                                            ->searchable()
+                                            ->columnSpan(1),
+                                        TextInput::make('url')
+                                            ->label('URL')
+                                            ->placeholder('Enter social media URL')
+                                            ->url()
+                                            ->required()
+                                            ->maxLength(255)
+                                            ->columnSpan(1),
+                                    ])
+                                    ->columns(2)
+                                    ->addActionLabel('Add Social Link')
                                     ->defaultItems(0)
                                     ->collapsible()
                                     ->columnSpanFull(),
@@ -250,40 +289,6 @@ class SiteContentsForm
                                     ->columnSpanFull(),
                             ]),
 
-                        Tab::make('Page Settings')
-                            ->icon('heroicon-o-squares-2x2')
-                            ->schema([
-                                TextInput::make('services_page_title')
-                                    ->label('Services Page Title')
-                                    ->placeholder('Enter services page title')
-                                    ->maxLength(255)
-                                    ->columnSpanFull(),
-
-                                TextInput::make('services_page_subtitle')
-                                    ->label('Services Page Subtitle')
-                                    ->placeholder('Enter services page subtitle')
-                                    ->maxLength(255)
-                                    ->columnSpanFull(),
-
-                                Textarea::make('services_page_description')
-                                    ->label('Services Page Description')
-                                    ->placeholder('Enter services page description')
-                                    ->rows(4)
-                                    ->columnSpanFull(),
-
-                                FileUpload::make('services_page_background_image')
-                                    ->label('Services Page Background Image')
-                                    ->image()
-                                    ->placeholder('Upload background image for services page')
-                                    ->imageEditor()
-                                    ->imageEditorMode(2)
-                                    ->imageEditorAspectRatios([null, '16:9', '4:3', '1:1'])
-                                    ->maxSize(2048)
-                                    ->directory('site/services')
-                                    ->visibility('public')
-                                    ->columnSpanFull(),
-                            ]),
-
                         Tab::make('Home Page')
                             ->icon('heroicon-o-home')
                             ->schema([
@@ -299,39 +304,39 @@ class SiteContentsForm
                                     ->visibility('public')
                                     ->columnSpanFull(),
 
-                                FileUpload::make('home_music_background_image')
-                                    ->label('Home Music Background Image')
+                                FileUpload::make('home_events_background_image')
+                                    ->label('Home Events Background Image')
                                     ->image()
-                                    ->placeholder('Upload background image for home Music section')
+                                    ->placeholder('Upload background image for home Events section')
                                     ->imageEditor()
                                     ->imageEditorMode(2)
                                     ->imageEditorAspectRatios([null, '16:9', '4:3', '1:1'])
                                     ->maxSize(2048)
-                                    ->directory('site/home/music')
+                                    ->directory('site/home/events')
                                     ->visibility('public')
                                     ->columnSpanFull(),
 
-                                FileUpload::make('home_videos_background_image')
-                                    ->label('Home Videos Background Image')
+                                FileUpload::make('home_gallery_background_image')
+                                    ->label('Home Gallery Background Image')
                                     ->image()
-                                    ->placeholder('Upload background image for home Videos section')
+                                    ->placeholder('Upload background image for home Gallery section')
                                     ->imageEditor()
                                     ->imageEditorMode(2)
                                     ->imageEditorAspectRatios([null, '16:9', '4:3', '1:1'])
                                     ->maxSize(2048)
-                                    ->directory('site/home/videos')
+                                    ->directory('site/home/gallery')
                                     ->visibility('public')
                                     ->columnSpanFull(),
 
-                                FileUpload::make('home_news_background_image')
-                                    ->label('Home News Background Image')
+                                FileUpload::make('home_footer_background_image')
+                                    ->label('Home Footer Background Image')
                                     ->image()
-                                    ->placeholder('Upload background image for home News section')
+                                    ->placeholder('Upload background image for home Footer section')
                                     ->imageEditor()
                                     ->imageEditorMode(2)
                                     ->imageEditorAspectRatios([null, '16:9', '4:3', '1:1'])
                                     ->maxSize(2048)
-                                    ->directory('site/home/news')
+                                    ->directory('site/home/footer')
                                     ->visibility('public')
                                     ->columnSpanFull(),
                             ]),

@@ -64,13 +64,12 @@ class SiteContentsResource extends Resource
         return [
             'Site Name' => $record->site_name ?? 'Not set',
             'Address' => $record->address ?? 'Not set',
-            'WhatsApp' => $record->whatsapp_number ?? 'Not set',
             'Description' => $record->description ? substr($record->description, 0, 50) . '...' : 'Not set',
         ];
     }
 
     public static function getGloballySearchableAttributes(): array
     {
-        return ['site_name', 'address', 'whatsapp_number', 'description', 'about_us', 'about_text', 'footer_text', 'origin_domain'];
+        return ['site_name', 'address', 'description', 'about_title', 'about_text', 'footer_text', 'hero_title'];
     }
 }

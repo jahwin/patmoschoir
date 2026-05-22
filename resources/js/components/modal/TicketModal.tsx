@@ -1,10 +1,7 @@
-import { X, Check } from "lucide-react";
+import { X } from "lucide-react";
 import styles from "@/pages/event-details/style.module.scss";
 import modalStyles from "./TicketModal.module.scss";
 import { EPayingType, PricingItem, VotingPricingItem } from "@/types/shared/ICommon";
-import Button from "@/components/shared/Button";
-
-type PricingData = PricingItem | VotingPricingItem;
 
 interface TicketModalProps {
     showModal: boolean;
@@ -20,11 +17,13 @@ interface TicketModalProps {
     paymentError: string | null;
     setPaymentError: (error: string | null) => void;
     fetchPaymentWidget: (selectedPricing: PricingItem | VotingPricingItem) => void | Promise<void>;
-    payingType?: EPayingType,
+    payingType?: EPayingType;
     modalText?: string;
     contentDescription?: string;
-
 }
+
+const isVipTier = (name: string) =>
+    /vip/i.test(name);
 
 export default function TicketModal({
     showModal,
@@ -41,11 +40,18 @@ export default function TicketModal({
     setPaymentError,
     fetchPaymentWidget,
     payingType,
-    modalText = "Choose",
-    contentDescription = "You are about to start payment process"
+    modalText = "Select Your Tickets",
+    contentDescription,
 }: TicketModalProps) {
+    const handleBuyNow = (ticket: PricingItem | VotingPricingItem) => {
+        const id = 'pricing_id' in ticket ? ticket.pricing_id : ticket.id;
+        setSelectedTicket(id);
+        setPaymentError(null);
+        fetchPaymentWidget(ticket);
+    };
+
     return (
-        showModal && (
+        showModal ? (
             <div
                 className={styles.modalOverlay}
                 onClick={() => setShowModal(false)}
@@ -54,112 +60,123 @@ export default function TicketModal({
                     className={styles.modalTicket}
                     onClick={(e) => e.stopPropagation()}
                 >
-                    {/* Header */}
+                    {/* ── Header ── */}
                     <div className={styles.header}>
-                        <h2 className={modalStyles.modalTitle}>{modalText}</h2>
+                        <div>
+                            <span className={modalStyles.eyebrow}>Select Your Tickets</span>
+                            <h2 className={modalStyles.modalTitle}>{modalText}</h2>
+                            {contentDescription && (
+                                <p className={modalStyles.contentDescription}>{contentDescription}</p>
+                            )}
+                        </div>
                         <button
                             onClick={() => setShowModal(false)}
                             className={modalStyles.closeButton}
+                            aria-label="Close"
                         >
                             <X />
                         </button>
                     </div>
 
-                    {/* Content */}
+                    {/* ── Content ── */}
                     <div className={styles.content}>
 
-                        <p className={modalStyles.contentDescription}>{contentDescription}</p>
-                        {
-                            payingType === EPayingType.EVENT_PAYMENT && (
-                                <>
-                                    {/* Number of People */}
-                                    <div className={modalStyles.formGroup}>
-                                        <label className={modalStyles.formLabel}>
-                                            Enter number of people
-                                        </label>
-                                        <input
-                                            type="number"
-                                            min="1"
-                                            value={numberOfPeople}
-                                            onChange={(e) => {
-                                                setNumberOfPeople(parseInt(e.target.value));
-                                            }}
-                                            className={modalStyles.inputField}
-                                            autoComplete="off"
-                                        />
-                                    </div>
-
-                                    {/* Email Address */}
-                                    <div className={modalStyles.formGroup}>
-                                        <label className={modalStyles.formLabel}>
-                                            Ticket Delivery Email Address <span className={modalStyles.optionalLabel}>(Optional)</span>
-                                        </label>
-                                        <input
-                                            type="email"
-                                            value={email}
-                                            onChange={(e) => {
-                                                setEmail(e.target.value);
-                                            }}
-                                            placeholder="Ex: example.me@gmail.com"
-                                            className={modalStyles.inputField}
-                                            autoComplete="off"
-                                        />
-                                    </div>
-                                </>
-                            )
-                        }
-
-                        {/* Ticket Type Selection */}
-                        <div className={modalStyles.ticketSelectionSection}>
-                            <label className={modalStyles.ticketSelectionLabel}>
-                                Select Ticket Type
-                            </label>
-                            <div className={modalStyles.ticketGrid}>
-                                {pricingData.map((ticket, index) => {
-                                    const ticketId = 'pricing_id' in ticket ? ticket.pricing_id : ticket.id;
-                                    // PricingItem (event) has `name`; VotingPricingItem has `quantity`
-                                    const ticketLabel = 'name' in ticket && ticket.name
-                                        ? ticket.name
-                                        : typeof ticket.quantity === 'string'
-                                            ? ticket.quantity
-                                            : `${ticket.quantity ?? ''} Ticket`.trim();
-                                    return (
-                                        <button
-                                            key={index}
-                                            onClick={() => {
-                                                setSelectedTicket(ticketId);
-                                            }}
-                                            className={`${modalStyles.ticketButton} ${selectedTicket === ticketId ? modalStyles.selected : ''}`}
-                                        >
-                                            {selectedTicket === ticketId && (
-                                                <div className={modalStyles.selectedIndicator}>
-                                                    <Check />
-                                                </div>
-                                            )}
-                                            <div className={`${modalStyles.ticketContent} ${selectedTicket === ticketId ? modalStyles.selected : modalStyles.default}`}>
-                                                <div className={modalStyles.ticketName}>{ticketLabel}</div>
-                                                <div className={modalStyles.ticketPrice}>{ticket.amount} {ticket.currency}</div>
-                                            </div>
-                                        </button>
-                                    );
-                                })}
+                        {/* Inputs */}
+                        {payingType === EPayingType.EVENT_PAYMENT && (
+                            <div className={modalStyles.inputRow}>
+                                <div className={modalStyles.formGroup}>
+                                    <label className={modalStyles.formLabel}>
+                                        Number of People
+                                    </label>
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        value={numberOfPeople}
+                                        onChange={(e) => setNumberOfPeople(parseInt(e.target.value) || 1)}
+                                        className={modalStyles.inputField}
+                                        autoComplete="off"
+                                    />
+                                </div>
+                                <div className={modalStyles.formGroup}>
+                                    <label className={modalStyles.formLabel}>
+                                        Email <span className={modalStyles.optionalLabel}>(Optional)</span>
+                                    </label>
+                                    <input
+                                        type="email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        placeholder="example@email.com"
+                                        className={modalStyles.inputField}
+                                        autoComplete="off"
+                                    />
+                                </div>
                             </div>
+                        )}
+
+                        {/* Ticket cards */}
+                        <div className={modalStyles.ticketGrid}>
+                            {pricingData.map((ticket, index) => {
+                                const ticketId = 'pricing_id' in ticket ? ticket.pricing_id : ticket.id;
+                                const name = 'name' in ticket && ticket.name
+                                    ? ticket.name
+                                    : typeof ticket.quantity === 'string'
+                                        ? ticket.quantity
+                                        : 'Ticket';
+                                const isSelected = selectedTicket === ticketId;
+                                const vip = isVipTier(name);
+
+                                return (
+                                    <div
+                                        key={index}
+                                        className={`${modalStyles.ticketCard} ${isSelected ? modalStyles.cardSelected : ''}`}
+                                        onClick={() => setSelectedTicket(ticketId)}
+                                    >
+                                        {/* Watermark */}
+                                        <span className={modalStyles.watermark} aria-hidden="true">
+                                            {name[0]?.toUpperCase()}
+                                        </span>
+
+                                        {/* Tier name */}
+                                        <div className={`${modalStyles.tierName} ${vip ? modalStyles.tierVip : ''}`}>
+                                            {name.toUpperCase()}
+                                        </div>
+
+                                        {/* Price */}
+                                        <div className={modalStyles.priceBlock}>
+                                            <span className={modalStyles.priceAmount}>
+                                                {Number(ticket.amount).toLocaleString()}
+                                            </span>
+                                            <span className={modalStyles.priceCurrency}>
+                                                {ticket.currency}
+                                            </span>
+                                        </div>
+
+                                        {/* Buy button */}
+                                        <button
+                                            type="button"
+                                            className={`${modalStyles.buyBtn} ${isSelected ? modalStyles.buyBtnSelected : ''}`}
+                                            disabled={paymentLoading}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleBuyNow(ticket);
+                                            }}
+                                        >
+                                            {paymentLoading && isSelected ? 'Loading…' : isSelected ? 'Continue →' : 'Buy Now'}
+                                        </button>
+                                    </div>
+                                );
+                            })}
                         </div>
 
-                        {/* Error Display */}
+                        {/* Error */}
                         {paymentError && (
                             <div className={modalStyles.errorContainer}>
                                 <div className={modalStyles.errorContent}>
-                                    <div className={modalStyles.errorIcon}>
-                                        <X />
-                                    </div>
+                                    <div className={modalStyles.errorIcon}><X /></div>
                                     <div className={modalStyles.errorText}>
                                         <h3 className={modalStyles.errorTitle}>Payment Error</h3>
                                         <p className={modalStyles.errorMessage}>{paymentError}</p>
-                                        <button
-                                            onClick={() => setPaymentError(null)}
-                                            className={modalStyles.errorDismiss}
-                                        >
+                                        <button onClick={() => setPaymentError(null)} className={modalStyles.errorDismiss}>
                                             Dismiss
                                         </button>
                                     </div>
@@ -167,42 +184,9 @@ export default function TicketModal({
                             </div>
                         )}
                     </div>
-                    {/* Action Buttons */}
-                    <div className={modalStyles.actionButtons}>
-                        <Button
-                            onClick={() => {
-                                // Clear any previous payment error
-                                setPaymentError(null);
 
-                                // Find the selected pricing item
-                                const selectedPricing = pricingData.find(p => {
-                                    const itemId = 'pricing_id' in p ? p.pricing_id : p.id;
-                                    return itemId === selectedTicket;
-                                });
-
-                                if (selectedPricing) {
-                                    fetchPaymentWidget(selectedPricing);
-                                } else {
-                                }
-                            }}
-                            disabled={paymentLoading || !selectedTicket}
-                            variant="primary"
-                            size="md"
-                            fullWidth
-                        >
-                            {paymentLoading ? 'Loading...' : 'Next'}
-                        </Button>
-                        <Button
-                            onClick={() => setShowModal(false)}
-                            variant="outline"
-                            size="md"
-                            fullWidth
-                        >
-                            Cancel
-                        </Button>
-                    </div>
                 </div>
             </div>
-        )
+        ) : null
     );
 }

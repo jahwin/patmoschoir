@@ -7,45 +7,58 @@ use Illuminate\Database\Eloquent\Model;
 class SiteContent extends Model
 {
     protected $fillable = [
-        'site_logo',
-        'site_color',
+        // General
         'site_name',
-        'social_links',
-        'address',
-        'whatsapp_number',
-        'phones',
-        'emails',
-        'faqs',
+        'site_logo',
+
+        // Hero
+        'hero_background_images',
+        'hero_title',
+        'hero_subtitle',
+        'hero_description',
+        'hero_subdescription',
+
+        // About Us
+        'about_title',
         'about_text',
-        'about_us',
+        'about_image',
+        'subimage',
         'mission',
         'vision',
         'values',
+        'storyline',
+        'about_poster',
+
+        // Contact
+        'address',
+        'phones',
+        'emails',
+        'social_links',
+
+        // Legal & Policies
         'terms_and_conditions',
         'privacy_policy',
-        'keywords',
-        'description',
         'payment_terms',
-        'about_image',
+
+        // SEO & Footer
+        'description',
+        'keywords',
         'footer_text',
-        'subimage',
-        'origin_domain',
-        'services_page_title',
-        'services_page_subtitle',
-        'services_page_description',
-        'services_page_background_image',
+
+        // Home Page Backgrounds
         'home_about_background_image',
-        'home_music_background_image',
-        'home_videos_background_image',
-        'home_news_background_image',
+        'home_events_background_image',
+        'home_gallery_background_image',
+        'home_footer_background_image',
     ];
 
     protected $casts = [
-        'social_links' => 'array',
+        'hero_background_images' => 'array',
+        'values' => 'array',
+        'storyline' => 'array',
         'phones' => 'array',
         'emails' => 'array',
-        'faqs' => 'array',
+        'social_links' => 'array',
         'keywords' => 'array',
-        'values' => 'array',
     ];
 }

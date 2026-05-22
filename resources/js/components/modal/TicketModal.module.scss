@@ -1,70 +1,94 @@
-// ── Modal title ──────────────────────────────────────────
+// ── Header ────────────────────────────────────────────────
+.eyebrow {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-theme-clr);
+    margin-bottom: 0.3rem;
+}
+
 .modalTitle {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     font-weight: 700;
     color: #fff;
+    margin: 0 0 0.15rem;
+    letter-spacing: 0.01em;
+    line-height: 1.3;
+}
+
+.contentDescription {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.4);
     margin: 0;
     letter-spacing: 0.01em;
 }
 
-// ── Close button ─────────────────────────────────────────
+// ── Close button ──────────────────────────────────────────
 .closeButton {
-    color: rgba(255, 255, 255, 0.4);
-    transition: color 0.2s ease;
-    background: none;
-    border: none;
+    flex-shrink: 0;
+    color: rgba(255, 255, 255, 0.35);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    padding: 0.4rem;
     cursor: pointer;
-    padding: 0.25rem;
     display: flex;
     align-items: center;
+    justify-content: center;
+    transition: color 0.2s, background 0.2s;
+    align-self: flex-start;
 
-    &:hover { color: #fff; }
+    &:hover {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.1);
+    }
 
-    svg { width: 1.25rem; height: 1.25rem; }
+    svg { width: 1.1rem; height: 1.1rem; }
 }
 
-// ── Description ──────────────────────────────────────────
-.contentDescription {
-    color: rgba(255, 255, 255, 0.45);
-    font-size: 0.8rem;
-    margin-bottom: 0.5rem;
-    text-align: center;
-    letter-spacing: 0.02em;
+// ── Inputs row ────────────────────────────────────────────
+.inputRow {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 0.75rem;
+
+    @media (max-width: 500px) {
+        grid-template-columns: 1fr;
+    }
 }
 
-// ── Form groups ──────────────────────────────────────────
 .formGroup {
-    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
 }
 
 .formLabel {
-    display: block;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.55);
+    color: rgba(255, 255, 255, 0.45);
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    margin-bottom: 0.45rem;
+    margin-bottom: 0.4rem;
 }
 
 .optionalLabel {
-    color: rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.25);
     font-weight: 400;
     text-transform: none;
     letter-spacing: 0;
 }
 
-// ── Input fields ─────────────────────────────────────────
 .inputField {
-    width: 100%;
-    padding: 0.55rem 0.85rem;
+    padding: 0.5rem 0.75rem;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: #fff;
     border-radius: 6px;
     font-size: 0.875rem;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
     outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
 
     &:focus {
         border-color: var(--color-theme-clr);
@@ -74,90 +98,124 @@
     &::placeholder { color: rgba(255, 255, 255, 0.2); }
 }
 
-// ── Ticket selection ─────────────────────────────────────
-.ticketSelectionSection {
-    margin-bottom: 0.5rem;
-}
-
-.ticketSelectionLabel {
-    display: block;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.55);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-bottom: 0.75rem;
-}
-
-// ── Ticket grid ───────────────────────────────────────────
+// ── Ticket card grid ──────────────────────────────────────
 .ticketGrid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     gap: 0.65rem;
 }
 
-// ── Ticket button ─────────────────────────────────────────
-.ticketButton {
+// ── Individual ticket card ────────────────────────────────
+.ticketCard {
     position: relative;
-    padding: 1rem 0.85rem;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1.5px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+    background: #0a0a0a;
+    border: 1px solid rgba(255, 255, 255, 0.07);
     border-radius: 8px;
+    display: flex;
+    flex-direction: column;
     cursor: pointer;
-    outline: none;
-    transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
-    text-align: left;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    user-select: none;
 
     &:hover {
-        border-color: rgba(201, 169, 98, 0.45);
-        background: rgba(201, 169, 98, 0.06);
+        border-color: rgba(201, 169, 98, 0.35);
     }
 
-    &.selected {
+    &.cardSelected {
         border-color: var(--color-theme-clr);
-        background: rgba(201, 169, 98, 0.1);
-        box-shadow: 0 0 0 1px rgba(201, 169, 98, 0.2), 0 8px 24px rgba(201, 169, 98, 0.12);
+        box-shadow: 0 0 0 1px rgba(201, 169, 98, 0.2), 0 8px 32px rgba(201, 169, 98, 0.1);
     }
 }
 
-// ── Selected checkmark ────────────────────────────────────
-.selectedIndicator {
+// Large background watermark letter
+.watermark {
     position: absolute;
-    top: -0.45rem;
-    right: -0.45rem;
-    left: auto;
-    width: 1.25rem;
-    height: 1.25rem;
-    background: var(--color-theme-clr);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    svg { width: 0.7rem; height: 0.7rem; color: #000; }
+    bottom: 2.5rem;
+    right: 0.75rem;
+    font-size: 4.5rem;
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.04);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+    font-style: italic;
 }
 
-// ── Ticket content ────────────────────────────────────────
-.ticketContent {
-    text-align: center;
-
-    &.selected { color: var(--color-theme-clr); }
-    &.default  { color: rgba(255, 255, 255, 0.85); }
-}
-
-.ticketName {
+// Tier name row
+.tierName {
+    padding: 0.9rem 1rem 0.4rem;
+    font-size: 0.6rem;
     font-weight: 700;
-    font-size: 0.95rem;
-    margin-bottom: 0.3rem;
-    letter-spacing: 0.01em;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.4);
+    position: relative;
+    z-index: 1;
 }
 
-.ticketPrice {
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.5);
+.tierVip {
+    color: var(--color-theme-clr);
+}
 
-    .selected & { color: rgba(201, 169, 98, 0.75); }
+// Price block
+.priceBlock {
+    padding: 0 1rem 0.5rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.35rem;
+    position: relative;
+    z-index: 1;
+    flex: 1;
+}
+
+.priceAmount {
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1;
+    letter-spacing: -0.02em;
+}
+
+.priceCurrency {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.35);
+    text-transform: uppercase;
+}
+
+// Buy button at bottom of card
+.buyBtn {
+    margin: 0;
+    padding: 0.65rem 1rem;
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+    position: relative;
+    z-index: 1;
+
+    &:hover:not(:disabled) {
+        background: rgba(255, 255, 255, 0.04);
+        color: #fff;
+    }
+
+    &.buyBtnSelected {
+        background: var(--color-theme-clr);
+        border-color: var(--color-theme-clr);
+        color: #000;
+        font-weight: 800;
+    }
+
+    &:disabled { opacity: 0.5; cursor: not-allowed; }
 }
 
 // ── Error display ─────────────────────────────────────────
@@ -206,18 +264,17 @@
     &:hover { color: #fca5a5; }
 }
 
-// ── Action buttons ────────────────────────────────────────
+// ── Action buttons ─────────────────────────────────────────
 .actionButtons {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
     padding: 0 0.25rem;
 }
 
-// ── Spinner ───────────────────────────────────────────────
+// ── Spinner ────────────────────────────────────────────────
 .spinner {
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 2rem;
+    height: 2rem;
     border: 3px solid rgba(255, 255, 255, 0.08);
     border-top: 3px solid var(--color-theme-clr);
     border-radius: 50%;

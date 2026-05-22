@@ -22,7 +22,7 @@
 }
 
 .modalTicket {
-    width: 450px;
+    width: min(860px, calc(100vw - 2rem));
     max-height: 90vh;
     background-color: #111;
     border: 1px solid rgba(255, 255, 255, 0.07);
