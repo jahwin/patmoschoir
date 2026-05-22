@@ -2,40 +2,76 @@
 
 namespace App\Filament\Widgets;
 
+use App\Filament\Resources\Albums\AlbumsResource;
 use App\Filament\Resources\Events\EventsResource;
+use App\Filament\Resources\Galleries\GalleriesResource;
 use App\Filament\Resources\SiteContents\SiteContentsResource;
+use App\Filament\Resources\Streamings\StreamingsResource;
 use App\Models\Events;
+use App\Models\Gallery;
+use App\Models\Playlist;
 use App\Models\SiteContent;
+use App\Models\Streaming;
 use Carbon\Carbon;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class WebsiteContentOverviewWidget extends BaseWidget
 {
+    protected static ?int $sort = 1;
+
     protected function getStats(): array
     {
-        $timezone = 'Africa/Kigali';
-        $todayStart = Carbon::now($timezone)->startOfDay();
-        $todayEnd = Carbon::now($timezone)->endOfDay();
-        $donationCurrency = config('weflexfy.default_currency', 'USD');
-
+        $timezone   = 'Africa/Kigali';
+        $now        = Carbon::now($timezone);
         $siteContent = $this->tryQuery(fn () => SiteContent::first());
 
-        $stats = [];
+        $totalEvents    = $this->tryCount(fn () => Events::count());
+        $upcomingEvents = $this->tryCount(fn () => Events::where('date', '>=', $now->toDateString())->count());
 
-        $stats[] = Stat::make('Site Name', $siteContent?->site_name ?? 'Not Configured')
-            ->description('Current site configuration')
-            ->descriptionIcon('heroicon-m-globe-alt')
-            ->color($siteContent?->site_name ? 'success' : 'warning')
-            ->url($siteContent ? SiteContentsResource::getUrl('edit', ['record' => $siteContent]) : SiteContentsResource::getUrl('index'));
+        $totalAlbums = $this->tryCount(fn () => Playlist::count());
 
-        $stats[] = Stat::make('Events', $this->tryCount(fn () => Events::count()))
-            ->description('Total events / shows')
-            ->descriptionIcon('lucide-ticket')
-            ->color('warning')
-            ->url(EventsResource::getUrl('index'));
+        $totalGalleries  = $this->tryCount(fn () => Gallery::count());
+        $publicGalleries = $this->tryCount(fn () => Gallery::where('visibility', 'Public')->count());
 
-        return $stats;
+        $totalStreams    = $this->tryCount(fn () => Streaming::count());
+        $upcomingStreams = $this->tryCount(fn () => Streaming::where('date', '>=', $now->toDateString())->count());
+
+        return [
+            Stat::make('Site', $siteContent?->site_name ?? 'Not Configured')
+                ->description('Active site configuration')
+                ->descriptionIcon('heroicon-m-globe-alt')
+                ->color($siteContent?->site_name ? 'success' : 'warning')
+                ->url(
+                    $siteContent
+                        ? SiteContentsResource::getUrl('edit', ['record' => $siteContent])
+                        : SiteContentsResource::getUrl('index')
+                ),
+
+            Stat::make('Events', $totalEvents)
+                ->description("{$upcomingEvents} upcoming")
+                ->descriptionIcon('lucide-ticket')
+                ->color('warning')
+                ->url(EventsResource::getUrl('index')),
+
+            Stat::make('Albums', $totalAlbums)
+                ->description('Music releases')
+                ->descriptionIcon('lucide-disc-3')
+                ->color('info')
+                ->url(AlbumsResource::getUrl('index')),
+
+            Stat::make('Galleries', $totalGalleries)
+                ->description("{$publicGalleries} public")
+                ->descriptionIcon('lucide-image')
+                ->color('success')
+                ->url(GalleriesResource::getUrl('index')),
+
+            Stat::make('Live Streams', $totalStreams)
+                ->description("{$upcomingStreams} upcoming")
+                ->descriptionIcon('lucide-radio')
+                ->color('danger')
+                ->url(StreamingsResource::getUrl('index')),
+        ];
     }
 
     private function tryQuery(\Closure $callback): mixed

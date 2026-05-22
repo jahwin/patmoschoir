@@ -11,6 +11,8 @@ use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use App\Filament\Widgets\InquiriesStatsWidget;
+use App\Filament\Widgets\TestimonialsStatsWidget;
 use App\Filament\Widgets\WebsiteContentOverviewWidget;
 use Filament\Widgets\AccountWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -42,8 +44,10 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
-                WebsiteContentOverviewWidget::class,
                 AccountWidget::class,
+                WebsiteContentOverviewWidget::class,
+                TestimonialsStatsWidget::class,
+                InquiriesStatsWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
