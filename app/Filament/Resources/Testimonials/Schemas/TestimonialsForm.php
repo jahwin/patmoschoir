@@ -6,7 +6,6 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 
 class TestimonialsForm
@@ -64,10 +63,6 @@ class TestimonialsForm
                     ])
                     ->default('PUBLIC')
                     ->required(),
-
-                Toggle::make('verified')
-                    ->label('Verified')
-                    ->default(false),
 
                 Textarea::make('message')
                     ->label('Testimonial')

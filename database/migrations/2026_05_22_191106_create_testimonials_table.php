@@ -21,7 +21,6 @@ return new class extends Migration
             $table->string('date');
             $table->enum('visibility', ['PUBLIC', 'UNLISTED'])->default('PUBLIC');
             $table->enum('status', ['PENDING', 'APPROVED', 'REJECTED'])->default('PENDING');
-            $table->boolean('verified')->default(false);
             $table->timestamps();
         });
     }

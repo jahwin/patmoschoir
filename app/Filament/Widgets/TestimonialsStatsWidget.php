@@ -17,7 +17,7 @@ class TestimonialsStatsWidget extends BaseWidget
         $pending  = $this->tryCount(fn () => Testimonials::where('status', 'PENDING')->count());
         $approved = $this->tryCount(fn () => Testimonials::where('status', 'APPROVED')->count());
         $rejected = $this->tryCount(fn () => Testimonials::where('status', 'REJECTED')->count());
-        $verified = $this->tryCount(fn () => Testimonials::where('verified', true)->count());
+        $public   = $this->tryCount(fn () => Testimonials::where('visibility', 'PUBLIC')->where('status', 'APPROVED')->count());
 
         return [
             Stat::make('Testimonials', $total)
@@ -38,9 +38,9 @@ class TestimonialsStatsWidget extends BaseWidget
                 ->color('success')
                 ->url(TestimonialsResource::getUrl('index')),
 
-            Stat::make('Verified', $verified)
-                ->description('Verified testimonials')
-                ->descriptionIcon('heroicon-m-shield-check')
+            Stat::make('Public & Approved', $public)
+                ->description('Visible on site')
+                ->descriptionIcon('heroicon-m-eye')
                 ->color('info')
                 ->url(TestimonialsResource::getUrl('index')),
         ];
