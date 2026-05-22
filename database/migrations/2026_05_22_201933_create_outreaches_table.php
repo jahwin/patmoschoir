@@ -11,18 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('streamings', function (Blueprint $table) {
+        Schema::create('outreaches', function (Blueprint $table) {
             $table->id();
             $table->string('title');
             $table->string('description');
-            $table->string('cover');
+            $table->string('image')->nullable();
+            $table->string('location');
             $table->date('date');
             $table->time('start_time');
-            $table->time('end_time');
-            $table->string('location');
-            $table->string('link')->nullable();
-            $table->string('stream_id')->unique();
-            $table->string('stream_url')->nullable();
+            $table->time('end_time')->nullable();
             $table->enum('visibility', ['PUBLIC', 'UNLISTED'])->default('PUBLIC');
             $table->timestamps();
         });
@@ -33,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('streamings');
+        Schema::dropIfExists('outreaches');
     }
 };

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Streamings\Schemas;
+namespace App\Filament\Resources\Outreaches\Schemas;
 
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
@@ -10,7 +10,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
 use Filament\Schemas\Schema;
 
-class StreamingsForm
+class OutreachesForm
 {
     public static function configure(Schema $schema): Schema
     {
@@ -28,40 +28,21 @@ class StreamingsForm
                     ->rows(3)
                     ->columnSpanFull(),
 
-                DatePicker::make('date')
-                    ->label('Date')
-                    ->required(),
-
                 TextInput::make('location')
                     ->label('Location')
                     ->required()
                     ->maxLength(255),
+
+                DatePicker::make('date')
+                    ->label('Date')
+                    ->required(),
 
                 TimePicker::make('start_time')
                     ->label('Start Time')
                     ->required(),
 
                 TimePicker::make('end_time')
-                    ->label('End Time')
-                    ->required(),
-
-                TextInput::make('link')
-                    ->label('Event Link')
-                    ->placeholder('https://')
-                    ->url()
-                    ->maxLength(500),
-
-                TextInput::make('stream_url')
-                    ->label('Stream URL')
-                    ->placeholder('https://')
-                    ->url()
-                    ->maxLength(500),
-
-                TextInput::make('stream_id')
-                    ->label('Stream ID')
-                    ->placeholder('Auto-generated if left blank')
-                    ->maxLength(255)
-                    ->helperText('Leave blank to auto-generate a unique ID.'),
+                    ->label('End Time'),
 
                 Select::make('visibility')
                     ->label('Visibility')
@@ -72,13 +53,13 @@ class StreamingsForm
                     ->default('PUBLIC')
                     ->required(),
 
-                FileUpload::make('cover')
-                    ->label('Cover Image')
+                FileUpload::make('image')
+                    ->label('Image')
                     ->image()
                     ->imageEditor()
                     ->imageEditorAspectRatios([null, '16:9', '4:3', '1:1'])
                     ->maxSize(2048)
-                    ->directory('streamings/covers')
+                    ->directory('outreaches')
                     ->visibility('public')
                     ->columnSpanFull(),
             ]);

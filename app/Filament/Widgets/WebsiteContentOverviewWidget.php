@@ -5,10 +5,12 @@ namespace App\Filament\Widgets;
 use App\Filament\Resources\Albums\AlbumsResource;
 use App\Filament\Resources\Events\EventsResource;
 use App\Filament\Resources\Galleries\GalleriesResource;
+use App\Filament\Resources\Outreaches\OutreachesResource;
 use App\Filament\Resources\SiteContents\SiteContentsResource;
 use App\Filament\Resources\Streamings\StreamingsResource;
 use App\Models\Events;
 use App\Models\Gallery;
+use App\Models\Outreach;
 use App\Models\Playlist;
 use App\Models\SiteContent;
 use App\Models\Streaming;
@@ -36,6 +38,9 @@ class WebsiteContentOverviewWidget extends BaseWidget
 
         $totalStreams    = $this->tryCount(fn () => Streaming::count());
         $upcomingStreams = $this->tryCount(fn () => Streaming::where('date', '>=', $now->toDateString())->count());
+
+        $totalOutreaches    = $this->tryCount(fn () => Outreach::count());
+        $upcomingOutreaches = $this->tryCount(fn () => Outreach::where('date', '>=', $now->toDateString())->count());
 
         return [
             Stat::make('Site', $siteContent?->site_name ?? 'Not Configured')
@@ -71,6 +76,12 @@ class WebsiteContentOverviewWidget extends BaseWidget
                 ->descriptionIcon('lucide-radio')
                 ->color('danger')
                 ->url(StreamingsResource::getUrl('index')),
+
+            Stat::make('Outreaches', $totalOutreaches)
+                ->description("{$upcomingOutreaches} upcoming")
+                ->descriptionIcon('lucide-heart-handshake')
+                ->color('success')
+                ->url(OutreachesResource::getUrl('index')),
         ];
     }
 

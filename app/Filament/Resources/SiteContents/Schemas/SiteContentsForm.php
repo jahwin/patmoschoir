@@ -161,16 +161,22 @@ class SiteContentsForm
                                     ->label('Storyline')
                                     ->schema([
                                         TextInput::make('year')
-                                            ->label('Year')
-                                            ->placeholder('e.g., 2020')
-                                            ->maxLength(10)
+                                            ->label('Time')
+                                            ->placeholder('e.g., 2020, 2018–2020, Early 2022')
+                                            ->maxLength(20)
+                                            ->columnSpan(1),
+                                        TextInput::make('title')
+                                            ->label('Title')
+                                            ->placeholder('e.g., Founded, First Album Release')
+                                            ->required()
+                                            ->maxLength(255)
                                             ->columnSpan(1),
                                         Textarea::make('description')
                                             ->label('Description')
                                             ->placeholder('Enter storyline event description')
                                             ->required()
                                             ->rows(3)
-                                            ->columnSpan(1),
+                                            ->columnSpanFull(),
                                     ])
                                     ->columns(2)
                                     ->addActionLabel('Add Storyline Entry')
