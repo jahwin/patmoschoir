@@ -11,14 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('playlists', function (Blueprint $table) {
+        Schema::create('galleries', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
+            $table->string('title')->nullable();
             $table->string('description')->nullable();
-            $table->string('image')->nullable();
-            $table->json('links')->nullable();
-            $table->json('tracks')->nullable();
+            $table->string('cover')->nullable();
+            $table->json('images')->nullable();
             $table->string('year')->nullable();
+            $table->string('slug')->unique();
+            $table->enum('visibility', ['Public', 'Unlisted'])->default('Public');
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('playlists');
+        Schema::dropIfExists('galleries');
     }
 };

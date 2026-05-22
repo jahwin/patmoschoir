@@ -14,7 +14,6 @@ use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
-use UnitEnum;
 
 class EventsResource extends Resource
 {
@@ -27,8 +26,6 @@ class EventsResource extends Resource
     protected static ?string $pluralModelLabel = 'Events';
 
     protected static string|BackedEnum|null $navigationIcon = 'lucide-ticket';
-
-    protected static UnitEnum|string|null $navigationGroup = 'Events';
 
     protected static ?int $navigationSort = 1;
 

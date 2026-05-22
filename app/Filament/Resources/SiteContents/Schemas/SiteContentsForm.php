@@ -205,10 +205,27 @@ class SiteContentsForm
                                     ->separator(',')
                                     ->columnSpanFull(),
 
-                                TagsInput::make('emails')
+                                Repeater::make('emails')
                                     ->label('Email Addresses')
-                                    ->placeholder('Enter email addresses separated by commas')
-                                    ->separator(',')
+                                    ->schema([
+                                        TextInput::make('title')
+                                            ->label('Title')
+                                            ->placeholder('e.g., Support, Bookings, General')
+                                            ->required()
+                                            ->maxLength(255)
+                                            ->columnSpan(1),
+                                        TextInput::make('value')
+                                            ->label('Email')
+                                            ->placeholder('e.g., info@example.com')
+                                            ->email()
+                                            ->required()
+                                            ->maxLength(255)
+                                            ->columnSpan(1),
+                                    ])
+                                    ->columns(2)
+                                    ->addActionLabel('Add Email')
+                                    ->defaultItems(0)
+                                    ->collapsible()
                                     ->columnSpanFull(),
 
                                 Repeater::make('social_links')
@@ -247,6 +264,7 @@ class SiteContentsForm
 
                         Tab::make('Legal & Policies')
                             ->icon('heroicon-o-document-text')
+                            ->hidden()
                             ->schema([
                                 RichEditor::make('terms_and_conditions')
                                     ->label('Terms and Conditions')

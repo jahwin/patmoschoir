@@ -11,7 +11,6 @@ use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
-use UnitEnum;
 
 class SiteContentsResource extends Resource
 {
@@ -24,8 +23,6 @@ class SiteContentsResource extends Resource
     protected static ?string $modelLabel = 'Site Settings';
 
     protected static ?string $pluralModelLabel = 'Site Settings';
-
-    protected static UnitEnum|string|null $navigationGroup = 'Settings';
 
     protected static ?int $navigationSort = 10;
 
