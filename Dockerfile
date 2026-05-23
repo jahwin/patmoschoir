@@ -1,85 +1,131 @@
 # syntax=docker/dockerfile:1
-# BuildKit caches speed rebuilds; ensure DOCKER_BUILDKIT=1 (default on Docker Desktop).
 
 # -----------------------------------------------------------------------------
-# Stage 1: Vite → public/build (Alpine base = smaller pull than bookworm)
+# Stage 1: Frontend build (Vite)
 # -----------------------------------------------------------------------------
-FROM node:20-alpine AS frontend
-WORKDIR /app
+    FROM node:20-alpine AS frontend
 
-ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
-RUN corepack enable && corepack prepare pnpm@9 --activate
-
-COPY package.json pnpm-lock.yaml ./
-RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
-    pnpm install --frozen-lockfile
-
-COPY vite.config.ts tsconfig.json ./
-COPY resources ./resources
-COPY public ./public
-
-RUN pnpm run build
-
-# -----------------------------------------------------------------------------
-# Stage 2: PHP + Apache (final image — no Node, no Composer after install)
-# -----------------------------------------------------------------------------
-FROM php:8.3-apache-bookworm
-
-ENV COMPOSER_ALLOW_SUPERUSER=1 \
-    COMPOSER_NO_INTERACTION=1
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    libicu-dev \
-    libpng-dev \
-    libjpeg62-turbo-dev \
-    libfreetype6-dev \
-    libzip-dev \
-    libonig-dev \
-    unzip \
-    curl \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j"$(nproc)" \
-    pdo_mysql \
-    mbstring \
-    exif \
-    pcntl \
-    bcmath \
-    gd \
-    zip \
-    intl \
-    opcache \
-    && a2enmod rewrite headers \
-    && sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|g' /etc/apache2/sites-available/000-default.conf \
-    && sed -i 's|<Directory /var/www/html/>|<Directory /var/www/html/public/>|g' /etc/apache2/sites-available/000-default.conf \
-    && sed -i 's|AllowOverride None|AllowOverride All|g' /etc/apache2/sites-available/000-default.conf \
-    && sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/conf-available/docker-php.conf \
-    && rm -rf /var/lib/apt/lists/*
-
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-
-WORKDIR /var/www/html
-
-COPY composer.json composer.lock ./
-RUN --mount=type=cache,id=composer-cache,target=/root/.composer/cache \
-    composer install \
-    --no-dev \
-    --no-scripts \
-    --no-autoloader \
-    --prefer-dist \
-    --no-interaction
-
-COPY . .
-
-RUN composer dump-autoload --optimize --no-dev \
-    && php artisan package:discover --ansi --no-interaction
-
-COPY --from=frontend /app/public/build ./public/build
-
-RUN mkdir -p storage/framework/{sessions,views,cache} storage/logs bootstrap/cache \
-    && chown -R www-data:www-data storage bootstrap/cache \
-    && chmod -R ug+rwx storage bootstrap/cache \
-    && rm -f /usr/bin/composer
-
-EXPOSE 80
-
-CMD ["apache2-foreground"]
+    WORKDIR /app
+    
+    ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+    
+    RUN corepack enable && corepack prepare pnpm@9 --activate
+    
+    COPY package.json pnpm-lock.yaml ./
+    
+    RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
+        pnpm install --frozen-lockfile
+    
+    COPY vite.config.ts tsconfig.json ./
+    COPY resources ./resources
+    COPY public ./public
+    
+    RUN pnpm run build
+    
+    # -----------------------------------------------------------------------------
+    # Stage 2: PHP + Apache
+    # -----------------------------------------------------------------------------
+    FROM php:8.3-apache-bookworm
+    
+    ENV COMPOSER_ALLOW_SUPERUSER=1 \
+        COMPOSER_NO_INTERACTION=1 \
+        APACHE_DOCUMENT_ROOT=/var/www/html/public
+    
+    # -----------------------------------------------------------------------------
+    # System dependencies
+    # -----------------------------------------------------------------------------
+    RUN apt-get update && apt-get install -y --no-install-recommends \
+        libicu-dev \
+        libpng-dev \
+        libjpeg62-turbo-dev \
+        libfreetype6-dev \
+        libzip-dev \
+        libonig-dev \
+        unzip \
+        git \
+        curl \
+        wget \
+        zip \
+        && docker-php-ext-configure gd --with-freetype --with-jpeg \
+        && docker-php-ext-install -j"$(nproc)" \
+            pdo_mysql \
+            mbstring \
+            exif \
+            pcntl \
+            bcmath \
+            gd \
+            zip \
+            intl \
+            opcache \
+        && a2enmod rewrite headers \
+        && sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
+            /etc/apache2/sites-available/*.conf \
+            /etc/apache2/apache2.conf \
+            /etc/apache2/conf-available/*.conf \
+        && rm -rf /var/lib/apt/lists/*
+    
+    # -----------------------------------------------------------------------------
+    # Composer
+    # -----------------------------------------------------------------------------
+    COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+    
+    WORKDIR /var/www/html
+    
+    # -----------------------------------------------------------------------------
+    # Install PHP dependencies first (better layer caching)
+    # -----------------------------------------------------------------------------
+    COPY composer.json composer.lock ./
+    
+    RUN --mount=type=cache,id=composer-cache,target=/root/.composer/cache \
+        composer install \
+            --no-dev \
+            --prefer-dist \
+            --optimize-autoloader \
+            --no-interaction
+    
+    # -----------------------------------------------------------------------------
+    # Copy application
+    # -----------------------------------------------------------------------------
+    COPY . .
+    
+    # -----------------------------------------------------------------------------
+    # Copy frontend build
+    # -----------------------------------------------------------------------------
+    COPY --from=frontend /app/public/build ./public/build
+    
+    # -----------------------------------------------------------------------------
+    # Laravel setup
+    # -----------------------------------------------------------------------------
+    RUN mkdir -p \
+        storage/framework/cache \
+        storage/framework/sessions \
+        storage/framework/views \
+        storage/logs \
+        bootstrap/cache \
+        && chown -R www-data:www-data storage bootstrap/cache \
+        && chmod -R 775 storage bootstrap/cache
+    
+    # -----------------------------------------------------------------------------
+    # Clear Laravel caches safely
+    # -----------------------------------------------------------------------------
+    RUN php artisan config:clear || true \
+        && php artisan route:clear || true \
+        && php artisan view:clear || true \
+        && php artisan cache:clear || true \
+        && php artisan package:discover --ansi || true
+    
+    # -----------------------------------------------------------------------------
+    # Healthcheck
+    # -----------------------------------------------------------------------------
+    HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+        CMD curl -f http://localhost/health || exit 1
+    
+    # -----------------------------------------------------------------------------
+    # Expose Apache port
+    # -----------------------------------------------------------------------------
+    EXPOSE 80
+    
+    # -----------------------------------------------------------------------------
+    # Start Apache
+    # -----------------------------------------------------------------------------
+    CMD ["apache2-foreground"]
