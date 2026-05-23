@@ -15,10 +15,5 @@ class Testimonials extends Model
         'date',
         'visibility',
         'status',
-        'verified',
-    ];
-
-    protected $casts = [
-        'verified' => 'boolean',
     ];
 }

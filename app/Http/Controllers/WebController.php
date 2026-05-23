@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Contact;
 use App\Models\Events;
 use App\Models\Gallery;
+use App\Models\JoinUs;
 use App\Models\Playlist;
 use App\Models\SiteContent;
 use App\Models\Streaming;
 use App\Models\Testimonials;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -258,6 +263,88 @@ class WebController extends Controller
     public function contact()
     {
         return Inertia::render('contact');
+    }
+
+    public function submitContact(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:50'],
+            'message' => ['required', 'string', 'max:5000'],
+        ]);
+
+        Contact::create($validated);
+
+        return back();
+    }
+
+    public function submitSubscribe(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:50'],
+            'country' => ['required', 'string', 'max:255'],
+            'city' => ['nullable', 'string', 'max:255'],
+            'address' => ['nullable', 'string', 'max:500'],
+        ]);
+
+        JoinUs::create([
+            'first_name' => $validated['first_name'],
+            'last_name' => $validated['last_name'],
+            'email' => $validated['email'],
+            'phone' => $validated['phone'] ?? null,
+            'country' => $validated['country'],
+            'city' => $validated['city'] ?? null,
+            'message' => $validated['address'] ?? '',
+        ]);
+
+        return back();
+    }
+
+    public function submitMinistryJoin(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'full_name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:50'],
+        ]);
+
+        $nameParts = preg_split('/\s+/', trim($validated['full_name']), 2);
+
+        JoinUs::create([
+            'first_name' => $nameParts[0],
+            'last_name' => $nameParts[1] ?? '',
+            'email' => $validated['email'],
+            'phone' => $validated['phone'] ?? null,
+            'country' => null,
+            'city' => null,
+            'message' => 'Ministry partnership inquiry',
+        ]);
+
+        return back();
+    }
+
+    public function submitTestimonial(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'message' => ['required', 'string', 'max:5000'],
+        ]);
+
+        Testimonials::create([
+            'name' => $validated['name'],
+            'message' => $validated['message'],
+            'platform' => 'SITE',
+            'status' => 'PENDING',
+            'date' => now()->toDateString(),
+        ]);
+
+        return response()->json([
+            'message' => 'Thank you! Your testimonial has been submitted for review.',
+        ], 201);
     }
 
     public function notFound()

@@ -23,6 +23,9 @@ Route::get('/contact', [WebController::class, 'contact'])->name('contact');
 Route::post('/contact', [WebController::class, 'submitContact'])->name('contact.submit');
 Route::post('/ministry/join', [WebController::class, 'submitMinistryJoin'])->name('ministry.join');
 Route::post('/subscribe', [WebController::class, 'submitSubscribe'])->name('subscribe');
+Route::post('/testimonials', [WebController::class, 'submitTestimonial'])
+    ->middleware(['throttle:10,1'])
+    ->name('testimonials.submit');
 Route::post('/donations/initiate', [DonationController::class, 'initiate'])
     ->middleware(['throttle:10,1'])
     ->name('donations.initiate');
