@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # -----------------------------------------------------------------------------
-# Stage 1: Frontend build (Vite)
+# Stage 1: Frontend Build (Vite)
 # -----------------------------------------------------------------------------
     FROM node:20-alpine AS frontend
 
@@ -34,7 +34,7 @@
     WORKDIR /var/www/html
     
     # -----------------------------------------------------------------------------
-    # Install system dependencies
+    # Install system packages + PHP extensions
     # -----------------------------------------------------------------------------
     RUN apt-get update && apt-get install -y --no-install-recommends \
         libicu-dev \
@@ -63,6 +63,7 @@
         && sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
             /etc/apache2/sites-available/*.conf \
             /etc/apache2/apache2.conf \
+        && echo "ServerName localhost" >> /etc/apache2/apache2.conf \
         && rm -rf /var/lib/apt/lists/*
     
     # -----------------------------------------------------------------------------
@@ -71,7 +72,7 @@
     COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
     
     # -----------------------------------------------------------------------------
-    # Copy entire application FIRST
+    # Copy application
     # -----------------------------------------------------------------------------
     COPY . .
     
@@ -86,12 +87,12 @@
             --no-interaction
     
     # -----------------------------------------------------------------------------
-    # Copy frontend assets
+    # Copy frontend assets from frontend stage
     # -----------------------------------------------------------------------------
     COPY --from=frontend /app/public/build ./public/build
     
     # -----------------------------------------------------------------------------
-    # Laravel permissions
+    # Laravel setup
     # -----------------------------------------------------------------------------
     RUN mkdir -p \
         storage/framework/cache \
@@ -103,16 +104,17 @@
         && chmod -R 775 storage bootstrap/cache
     
     # -----------------------------------------------------------------------------
-    # Laravel optimization
+    # Laravel cleanup / optimization
     # -----------------------------------------------------------------------------
-    RUN php artisan config:clear || true \
-        && php artisan route:clear || true \
-        && php artisan view:clear || true \
-        && php artisan cache:clear || true \
+    RUN php artisan optimize:clear || true \
+        && php artisan storage:link || true \
         && php artisan package:discover --ansi || true
     
     # -----------------------------------------------------------------------------
     # Healthcheck
+    # NOTE:
+    # Coolify may still override this internally.
+    # Configure Coolify healthcheck path to /health manually in UI.
     # -----------------------------------------------------------------------------
     HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
         CMD curl -f http://localhost/health || exit 1
