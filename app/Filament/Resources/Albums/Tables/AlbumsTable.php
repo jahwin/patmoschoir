@@ -31,9 +31,10 @@ class AlbumsTable
                     ->sortable(),
 
                 TextColumn::make('tracks')
-                    ->label('Tracks')
-                    ->formatStateUsing(fn ($state) => is_array($state) ? count($state) : 0)
-                    ->suffix(' tracks'),
+                    ->label('Songs')
+                    ->sortable()
+                    ->placeholder('—')
+                    ->formatStateUsing(fn ($state) => filled($state) ? "{$state} " . ((int) $state === 1 ? 'song' : 'songs') : null),
 
                 TextColumn::make('description')
                     ->label('Description')

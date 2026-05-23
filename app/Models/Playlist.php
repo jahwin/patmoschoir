@@ -17,6 +17,6 @@ class Playlist extends Model
 
     protected $casts = [
         'links'  => 'array',
-        'tracks' => 'array',
+        'tracks' => 'integer',
     ];
 }

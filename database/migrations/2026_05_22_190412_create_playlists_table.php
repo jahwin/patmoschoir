@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->string('image')->nullable();
             $table->json('links')->nullable();
-            $table->json('tracks')->nullable();
+            $table->unsignedInteger('tracks')->nullable();
             $table->string('year')->nullable();
             $table->timestamps();
         });

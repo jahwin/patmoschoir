@@ -41,32 +41,12 @@ class AlbumsForm
                     ->rows(3)
                     ->columnSpanFull(),
 
-                Repeater::make('tracks')
-                    ->label('Tracks')
-                    ->schema([
-                        TextInput::make('number')
-                            ->label('#')
-                            ->numeric()
-                            ->minValue(1)
-                            ->columnSpan(1),
-                        TextInput::make('title')
-                            ->label('Track Title')
-                            ->required()
-                            ->maxLength(255)
-                            ->columnSpan(2),
-                        TextInput::make('duration')
-                            ->label('Duration')
-                            ->placeholder('e.g., 3:45')
-                            ->maxLength(10)
-                            ->columnSpan(1),
-                    ])
-                    ->columns(4)
-                    ->reorderable()
-                    ->reorderableWithDragAndDrop()
-                    ->addActionLabel('Add Track')
-                    ->defaultItems(0)
-                    ->collapsible()
-                    ->columnSpanFull(),
+                TextInput::make('tracks')
+                    ->label('Number of Songs')
+                    ->numeric()
+                    ->integer()
+                    ->minValue(0)
+                    ->placeholder('e.g., 12'),
 
                 Repeater::make('links')
                     ->label('Streaming Links')
