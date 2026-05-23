@@ -31,8 +31,10 @@
         COMPOSER_NO_INTERACTION=1 \
         APACHE_DOCUMENT_ROOT=/var/www/html/public
     
+    WORKDIR /var/www/html
+    
     # -----------------------------------------------------------------------------
-    # System dependencies
+    # Install system dependencies
     # -----------------------------------------------------------------------------
     RUN apt-get update && apt-get install -y --no-install-recommends \
         libicu-dev \
@@ -61,21 +63,21 @@
         && sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
             /etc/apache2/sites-available/*.conf \
             /etc/apache2/apache2.conf \
-            /etc/apache2/conf-available/*.conf \
         && rm -rf /var/lib/apt/lists/*
     
     # -----------------------------------------------------------------------------
-    # Composer
+    # Install Composer
     # -----------------------------------------------------------------------------
     COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
     
-    WORKDIR /var/www/html
+    # -----------------------------------------------------------------------------
+    # Copy entire application FIRST
+    # -----------------------------------------------------------------------------
+    COPY . .
     
     # -----------------------------------------------------------------------------
-    # Install PHP dependencies first (better layer caching)
+    # Install PHP dependencies
     # -----------------------------------------------------------------------------
-    COPY composer.json composer.lock ./
-    
     RUN --mount=type=cache,id=composer-cache,target=/root/.composer/cache \
         composer install \
             --no-dev \
@@ -84,17 +86,12 @@
             --no-interaction
     
     # -----------------------------------------------------------------------------
-    # Copy application
-    # -----------------------------------------------------------------------------
-    COPY . .
-    
-    # -----------------------------------------------------------------------------
-    # Copy frontend build
+    # Copy frontend assets
     # -----------------------------------------------------------------------------
     COPY --from=frontend /app/public/build ./public/build
     
     # -----------------------------------------------------------------------------
-    # Laravel setup
+    # Laravel permissions
     # -----------------------------------------------------------------------------
     RUN mkdir -p \
         storage/framework/cache \
@@ -106,7 +103,7 @@
         && chmod -R 775 storage bootstrap/cache
     
     # -----------------------------------------------------------------------------
-    # Clear Laravel caches safely
+    # Laravel optimization
     # -----------------------------------------------------------------------------
     RUN php artisan config:clear || true \
         && php artisan route:clear || true \
@@ -121,7 +118,7 @@
         CMD curl -f http://localhost/health || exit 1
     
     # -----------------------------------------------------------------------------
-    # Expose Apache port
+    # Expose port
     # -----------------------------------------------------------------------------
     EXPOSE 80
     
