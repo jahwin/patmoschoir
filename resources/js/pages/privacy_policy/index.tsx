@@ -1,8 +1,6 @@
 import { motion } from "motion/react";
-import { Head, usePage } from "@inertiajs/react";
+import { Head } from "@inertiajs/react";
 import PublicLayout from "@/components/layouts/public-layout";
-import BlogContent from "@/components/shared/BlogContent";
-import { SharedData } from "@/types/shared";
 import styles from "./style.module.scss";
 
 const fadeUp = {
@@ -278,20 +276,12 @@ function PrivacyPageDesign() {
 }
 
 export default function PrivacyPolicy() {
-  const { siteContent } = usePage<SharedData>().props;
-
   return (
     <>
       <Head title="Privacy Policy" />
-      {siteContent?.privacy_policy && siteContent.privacy_policy.length > 10 ? (
-        <PublicLayout title="Privacy Policy">
-          <BlogContent content={siteContent.privacy_policy} />
-        </PublicLayout>
-      ) : (
-        <PublicLayout>
-          <PrivacyPageDesign />
-        </PublicLayout>
-      )}
+      <PublicLayout>
+        <PrivacyPageDesign />
+      </PublicLayout>
     </>
   );
 }
