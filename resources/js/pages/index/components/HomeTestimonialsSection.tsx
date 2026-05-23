@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import styles from "./HomeTestimonialsSection.module.scss";
+import type { TestimonialData } from "../index";
 
 /* ── Types ── */
 type Platform = "youtube" | "facebook" | "instagram" | "x" | "website";
@@ -68,162 +69,26 @@ const PLATFORM: Record<Platform, { label: string; color: string; icon: () => Rea
   },
 };
 
-/* ── Testimonial data ── */
-const ALL: Testimonial[] = [
-  {
-    id: 1,
-    platform: "website",
-    name: "Immaculée Nyiransabimana",
-    handle: "Via patmoschoir.rw",
-    initials: "IN",
-    avatarColor: "#a98d4a",
-    text: "I discovered Patmos Choir through this website and I have not stopped listening since. There is a peace in their music that I cannot explain with words. God is truly in this ministry.",
-    date: "2 days ago",
-  },
-  {
-    id: 2,
-    platform: "website",
-    name: "Gervais Ntwari",
-    handle: "Via patmoschoir.rw",
-    initials: "GN",
-    avatarColor: "#7b6030",
-    text: "I attended the Praise & Prayer Night at SDA Remera and I am still carrying what God did that evening. The choir led us into a place of deep encounter. Thank you Patmos.",
-    date: "1 week ago",
-    verified: true,
-  },
-  {
-    id: 3,
-    platform: "website",
-    name: "Chantal Uwamahoro",
-    handle: "Via patmoschoir.rw",
-    initials: "CU",
-    avatarColor: "#c9a962",
-    text: "My family plays Patmos Choir every Sunday morning. It sets the tone for our whole week. This is not just music — it is ministry, and we are so grateful for everything you do.",
-    date: "3 days ago",
-  },
-  {
-    id: 4,
-    platform: "youtube",
-    name: "Claudine Umutoni",
-    handle: "@claudine_umutoni",
-    initials: "CU",
-    avatarColor: "#7c4dff",
-    text: "I was going through the darkest season of my life when a friend sent me this video. I played it on repeat for three days straight. Something in the harmonies just broke me open — in the best way. Thank you Patmos Choir.",
-    date: "3 weeks ago",
-  },
-  {
-    id: 5,
-    platform: "facebook",
-    name: "Jean-Pierre Hakizimana",
-    handle: "@jphakizimana",
-    initials: "JP",
-    avatarColor: "#00897b",
-    text: "Patmos Choir performed at my sister's wedding last month and the entire room fell silent when they began. People who hadn't cried in years were weeping — not from sadness but from the sheer presence of God in that room. Unforgettable.",
-    date: "1 month ago",
-  },
-  {
-    id: 6,
-    platform: "instagram",
-    name: "Aline Irakoze",
-    handle: "@aline.irakoze",
-    initials: "AI",
-    avatarColor: "#e91e63",
-    text: "The harmonies in Maranatha literally gave me chills from the first note. This is what worship is supposed to sound like — raw, sincere, anointed. 🙌",
-    date: "5 days ago",
-  },
-  {
-    id: 7,
-    platform: "x",
-    name: "Emmanuel Ndayishimiye",
-    handle: "@emma_nday",
-    initials: "EN",
-    avatarColor: "#f57c00",
-    text: "Still playing 'Tanga Imana' on repeat at 2am. Don't even care that I have a 6am shift. God bless Patmos Choir and everyone who makes this ministry possible. 🙏 #PatmosChoir",
-    date: "2 weeks ago",
-  },
-  {
-    id: 8,
-    platform: "youtube",
-    name: "Solange Mukamana",
-    handle: "@solange_muka",
-    initials: "SM",
-    avatarColor: "#1565c0",
-    text: "My mother is in the hospital and can no longer go to church. I showed her this video and she sang along to every word — she used to hear this choir live in Kigali in the 2000s. You gave her a piece of joy today. From our family, thank you.",
-    date: "2 months ago",
-  },
-  {
-    id: 9,
-    platform: "facebook",
-    name: "Pastor David Nkurunziza",
-    handle: "@pastordavidrwa",
-    initials: "DN",
-    avatarColor: "#2e7d32",
-    text: "We invited Patmos Choir for our revival week and the atmosphere shifted the moment they started singing. Three people gave their lives to Christ that evening. This is ministry in its truest form.",
-    date: "6 weeks ago",
-    verified: true,
-  },
-  {
-    id: 10,
-    platform: "instagram",
-    name: "Nadine Uwera",
-    handle: "@nadine_uwera",
-    initials: "NU",
-    avatarColor: "#6a1b9a",
-    text: "Attended the Songs of Worship concert at Kigali Convention Center last November. Drove 4 hours from Musanze to be there. Worth every kilometer. 💛",
-    date: "4 months ago",
-  },
-  {
-    id: 11,
-    platform: "x",
-    name: "Thierry Habimana",
-    handle: "@thabimana_rw",
-    initials: "TH",
-    avatarColor: "#c62828",
-    text: "Woke up at 3am, couldn't sleep. Put on Patmos Choir. Felt God's peace wash over me like a wave. Fell back asleep smiling. That's real anointing.",
-    date: "1 week ago",
-  },
-  {
-    id: 12,
-    platform: "youtube",
-    name: "Vestine Ingabire",
-    handle: "@vestine_ing",
-    initials: "VI",
-    avatarColor: "#00695c",
-    text: "These people don't just sing — they minister to the soul. You can hear the difference between performance and genuine worship. Patmos Choir is the latter. May God keep you.",
-    date: "3 months ago",
-  },
-  {
-    id: 13,
-    platform: "facebook",
-    name: "Révérien Niyonsaba",
-    handle: "@rev.niyonsaba",
-    initials: "RN",
-    avatarColor: "#558b2f",
-    text: "Our church brought Patmos Choir for our 20th anniversary celebration. The congregation that night experienced something we still talk about every Sunday. Thank you for the gift of your voices.",
-    date: "3 months ago",
-    verified: true,
-  },
-  {
-    id: 14,
-    platform: "instagram",
-    name: "Cynthia Uwimana",
-    handle: "@cynthia.uwimana",
-    initials: "CW",
-    avatarColor: "#e65100",
-    text: "Every time I feel spiritually dry I play Patmos Choir and something in me comes alive again. Genuine anointing is real and you can hear it. 🔥",
-    date: "2 weeks ago",
-  },
-  {
-    id: 15,
-    platform: "x",
-    name: "Fidèle Bigirimana",
-    handle: "@fidele_bigi",
-    initials: "FB",
-    avatarColor: "#283593",
-    text: "There are choirs, and then there is Patmos Choir. The level of unity, spirituality, and musicality in one group is rare. Rwanda is blessed to have them.",
-    date: "6 weeks ago",
-  },
+const AVATAR_COLORS = [
+  "#a98d4a", "#7b6030", "#c9a962", "#7c4dff", "#00897b",
+  "#e91e63", "#f57c00", "#1565c0", "#2e7d32", "#6a1b9a",
 ];
+
+function toInitials(name: string): string {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0]?.toUpperCase() ?? "")
+    .join("");
+}
+
+function normalizePlatform(platform: string): Platform {
+  const key = platform.toLowerCase();
+  if (key in PLATFORM) return key as Platform;
+  return "website";
+}
+
 
 /* ── Card ── */
 function TestimonialCard({ t }: { t: Testimonial }) {
@@ -474,12 +339,31 @@ function ShareModal({ onClose }: { onClose: () => void }) {
   );
 }
 
+interface HomeTestimonialsSectionProps {
+  testimonials: TestimonialData[];
+}
+
 /* ── Section ── */
-export default function HomeTestimonialsSection() {
+export default function HomeTestimonialsSection({ testimonials }: HomeTestimonialsSectionProps) {
   const trackRef   = useRef<HTMLDivElement>(null);
   const animRef    = useRef<number | null>(null);
   const pausedRef  = useRef(false);
   const [modalOpen, setModalOpen] = useState(false);
+
+  const items: Testimonial[] = useMemo(
+    () =>
+      testimonials.map((t, i) => ({
+        id: t.id,
+        platform: normalizePlatform(t.platform),
+        name: t.name,
+        handle: t.handle || "Patmos Choir",
+        initials: toInitials(t.name),
+        avatarColor: AVATAR_COLORS[i % AVATAR_COLORS.length],
+        text: t.text,
+        date: t.date,
+      })),
+    [testimonials],
+  );
 
   /* Slow auto-scroll */
   useEffect(() => {
@@ -560,7 +444,7 @@ export default function HomeTestimonialsSection() {
           </button>
 
           <div className={styles.carouselTrack} ref={trackRef}>
-            {ALL.map((t) => (
+            {items.map((t) => (
               <TestimonialCard key={t.id} t={t} />
             ))}
           </div>

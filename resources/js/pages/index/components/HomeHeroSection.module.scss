@@ -21,6 +21,7 @@
   transform: scale(1.04);
   animation: heroZoom 18s ease-in-out infinite alternate;
   z-index: 0;
+  transition: opacity 1.2s ease-in-out;
 }
 
 @keyframes heroZoom {

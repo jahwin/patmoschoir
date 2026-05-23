@@ -11,20 +11,27 @@ class GalleryController extends Controller
 {
     public function index()
     {
-        $galleries = Gallery::latest()->get();
-
-        // Process galleries data even if empty
-        $galleries = $galleries->map(function ($gallery) {
-            $gallery->image = Storage::url($gallery->image);
-            
-            if ($gallery->images && is_array($gallery->images)) {
-                $gallery->images = array_map(function ($image) {
-                    return Storage::url($image);
-                }, $gallery->images);
-            }
-            
-            return $gallery;
-        });
+        $galleries = Gallery::query()
+            ->where('visibility', 'Public')
+            ->orderByDesc('year')
+            ->get()
+            ->map(function (Gallery $gallery) {
+                return [
+                    'id' => $gallery->id,
+                    'title' => $gallery->title,
+                    'description' => $gallery->description,
+                    'image' => $gallery->cover ? Storage::url($gallery->cover) : null,
+                    'images' => collect($gallery->images ?? [])
+                        ->filter()
+                        ->map(fn ($path) => Storage::url($path))
+                        ->values()
+                        ->all(),
+                    'year' => (int) ($gallery->year ?? 0),
+                ];
+            })
+            ->filter(fn (array $gallery) => filled($gallery['image']) && $gallery['year'] > 0)
+            ->sortByDesc('year')
+            ->values();
 
         return Inertia::render('gallery', compact('galleries'));
     }

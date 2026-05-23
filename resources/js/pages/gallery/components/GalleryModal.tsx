@@ -9,8 +9,7 @@ interface GalleryItem {
   image: string;
   description: string;
   images: string[];
-  created_at: string;
-  updated_at: string;
+  year: number;
 }
 
 interface GalleryModalProps {
@@ -22,12 +21,6 @@ interface GalleryModalProps {
   hasPrevious: boolean;
   hasNext: boolean;
   className?: string;
-}
-
-function formatDate(dateStr: string): string {
-  return new Date(dateStr).toLocaleDateString('en-GB', {
-    day: '2-digit', month: 'short', year: 'numeric',
-  });
 }
 
 export default function GalleryModal({
@@ -160,7 +153,7 @@ export default function GalleryModal({
           <div className={styles.topOverlay}>
             <div className={styles.topOverlayContent}>
               <div className={styles.topMeta}>
-                <span className={styles.topDate}>{formatDate(item.created_at)}</span>
+                <span className={styles.topDate}>{item.year}</span>
                 {allImages.length > 1 && (
                   <span className={styles.topCounter}>
                     {currentIndex + 1} / {allImages.length}

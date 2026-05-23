@@ -1,51 +1,84 @@
 import { motion } from "motion/react";
 import styles from "./HomeVisionMissionSection.module.scss";
-
-const PILLARS = [
-  {
-    icon: (
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-        <circle cx="12" cy="12" r="3" />
-      </svg>
-    ),
-    label: "Vision",
-    title: "Hearts Transformed",
-    body: "Patmos Choir envisions a world where hearts are transformed and lives are uplifted through the power of worship. Through our songs, we seek to create deep spiritual encounters that bring healing, restore hope, and draw people closer to God — reaching individuals and communities with a message of faith and love.",
-  },
-  {
-    icon: (
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-      </svg>
-    ),
-    label: "Mission",
-    title: "Preaching Through Song",
-    body: "Our mission is to preach the Word of God through heartfelt songs of worship that touch lives and inspire change. We are committed to bringing hope, encouragement, and healing — creating moments where people can encounter God's presence. As a united choir, we strive to grow spiritually and musically, using our voices to serve, uplift, and impact communities with love and purpose.",
-  },
-  {
-    icon: (
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-      </svg>
-    ),
-    label: "Values",
-    title: "What We Stand On",
-    values: [
-      { name: "Faith", desc: "Rooted in trust in God and His Word." },
-      { name: "Unity", desc: "One choir, one purpose, one voice." },
-      { name: "Service", desc: "Going wherever we are called to go." },
-      { name: "Humility", desc: "Vessels for His glory alone." },
-    ],
-  },
-];
+import type { AboutData } from "../index";
 
 const cardVariant = {
   initial: { opacity: 0, y: 40 },
   animate: { opacity: 1, y: 0 },
 };
 
-export default function HomeVisionMissionSection() {
+const visionIcon = (
+  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+    <circle cx="12" cy="12" r="3" />
+  </svg>
+);
+
+const missionIcon = (
+  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+  </svg>
+);
+
+const valuesIcon = (
+  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+  </svg>
+);
+
+interface HomeVisionMissionSectionProps {
+  about: AboutData;
+}
+
+export default function HomeVisionMissionSection({ about }: HomeVisionMissionSectionProps) {
+  const pillars: {
+    key: string;
+    icon: React.ReactNode;
+    label: string;
+    title: string;
+    body?: string;
+    values?: { name: string; desc: string }[];
+  }[] = [];
+
+  if (about.vision?.trim()) {
+    pillars.push({
+      key: "vision",
+      icon: visionIcon,
+      label: "Vision",
+      title: "Our Vision",
+      body: about.vision.trim(),
+    });
+  }
+
+  if (about.mission?.trim()) {
+    pillars.push({
+      key: "mission",
+      icon: missionIcon,
+      label: "Mission",
+      title: "Our Mission",
+      body: about.mission.trim(),
+    });
+  }
+
+  const values = (about.values ?? [])
+    .filter((v) => v.title?.trim() || v.description?.trim())
+    .map((v) => ({
+      name: v.title?.trim() || "Value",
+      desc: v.description?.trim() || "",
+    }));
+
+  if (values.length > 0) {
+    pillars.push({
+      key: "values",
+      icon: valuesIcon,
+      label: "Values",
+      title: "What We Stand On",
+      values,
+    });
+  }
+
+  if (pillars.length === 0) return null;
+
   return (
     <section className={styles.section}>
       <div className={styles.inner}>
@@ -64,9 +97,9 @@ export default function HomeVisionMissionSection() {
         </motion.div>
 
         <div className={styles.grid}>
-          {PILLARS.map((pillar, i) => (
+          {pillars.map((pillar, i) => (
             <motion.article
-              key={pillar.label}
+              key={pillar.key}
               className={styles.card}
               variants={cardVariant}
               initial="initial"
@@ -77,9 +110,7 @@ export default function HomeVisionMissionSection() {
               <div className={styles.cardIcon}>{pillar.icon}</div>
               <span className={styles.cardLabel}>{pillar.label}</span>
               <h3 className={styles.cardTitle}>{pillar.title}</h3>
-              {pillar.body && (
-                <p className={styles.cardBody}>{pillar.body}</p>
-              )}
+              {pillar.body && <p className={styles.cardBody}>{pillar.body}</p>}
               {pillar.values && (
                 <ul className={styles.valuesList}>
                   {pillar.values.map((v) => (

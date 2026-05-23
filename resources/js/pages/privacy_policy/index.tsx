@@ -1,7 +1,7 @@
 import { motion } from "motion/react";
 import { Head, usePage } from "@inertiajs/react";
 import PublicLayout from "@/components/layouts/public-layout";
-import BlogContent from "../blog.$slug/components/BlogContent";
+import BlogContent from "@/components/shared/BlogContent";
 import { SharedData } from "@/types/shared";
 import styles from "./style.module.scss";
 

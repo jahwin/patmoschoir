@@ -64,7 +64,6 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
   background: linear-gradient(135deg, #0d0d0d 0%, #1a1208 100%);
   position: relative;
   overflow: hidden;
@@ -74,66 +73,112 @@
     position: absolute;
     inset: 0;
     background: radial-gradient(ellipse at 50% 60%, rgba(201, 169, 98, 0.06) 0%, transparent 70%);
+    z-index: 0;
   }
 }
 
-.streamOfflinePulse {
+.streamOfflineHasCover {
+  &::before {
+    display: none;
+  }
+}
+
+.streamOfflineDim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(ellipse at 50% 45%, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.82) 72%),
+    rgba(0, 0, 0, 0.58);
+  pointer-events: none;
+}
+
+.streamUpcomingOverlay {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+}
+
+.streamUpcomingPulse {
   position: absolute;
   inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   pointer-events: none;
+  z-index: 0;
 
   span {
     position: absolute;
+    width: min(300px, 78%);
+    aspect-ratio: 1;
     border-radius: 50%;
-    border: 1px solid rgba(201, 169, 98, 0.1);
-    animation: ripple 3s ease-out infinite;
-
-    &:nth-child(1) { width: 120px; height: 120px; animation-delay: 0s; }
-    &:nth-child(2) { width: 220px; height: 220px; animation-delay: 1s; }
-    &:nth-child(3) { width: 340px; height: 340px; animation-delay: 2s; }
+    border: 1px solid rgba(201, 169, 98, 0.35);
+    animation: streamRingPulse 2s ease-in-out infinite;
   }
 }
 
-@keyframes ripple {
-  0%   { opacity: 0.5; transform: scale(0.8); }
-  100% { opacity: 0;   transform: scale(1); }
+@keyframes streamRingPulse {
+  0% {
+    opacity: 0.4;
+    transform: scale(0.92);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.04);
+  }
 }
 
-.streamOfflineIcon {
-  color: rgba(201, 169, 98, 0.3);
+.streamUpcomingIcon {
   position: relative;
   z-index: 1;
-  margin-bottom: 0.5rem;
+  color: $gold;
+  flex-shrink: 0;
 }
 
-.streamOfflineLabel {
-  font-size: 0.68rem;
+.streamUpcomingLabel,
+.streamUpcomingDate,
+.streamUpcomingTime {
+  position: relative;
+  z-index: 1;
+}
+
+.streamUpcomingLabel {
+  font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.25em;
+  letter-spacing: 0.32em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.35);
-  position: relative;
-  z-index: 1;
+  color: $gold;
+  margin: 0.15rem 0 0;
 }
 
-.streamOfflineDate {
+.streamUpcomingDate {
   font-family: $font-bulgatti;
-  font-size: 1.1rem;
+  font-size: clamp(0.9rem, 2.4vw, 1.25rem);
   font-weight: 600;
   color: $white;
-  position: relative;
-  z-index: 1;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1.4;
+  max-width: min(92%, 26rem);
+  margin: 0;
 }
 
-.streamOfflineTime {
-  font-size: 0.8rem;
+.streamUpcomingTime {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
   color: $gold;
-  position: relative;
-  z-index: 1;
-  letter-spacing: 0.1em;
+  margin: 0.1rem 0 0;
 }
 
 /* ── info side ── */

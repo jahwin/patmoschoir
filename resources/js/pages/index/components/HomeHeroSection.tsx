@@ -1,20 +1,53 @@
+import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import { Link } from "@inertiajs/react";
 import styles from "./HomeHeroSection.module.scss";
 import heroImage from "../../../../assets/patmos/IMG_2078.JPEG";
+import type { HeroData } from "../index";
 
 const fadeUp = {
   initial: { opacity: 0, y: 28 },
   animate: { opacity: 1, y: 0 },
 };
 
-export default function HomeHeroSection() {
+interface HomeHeroSectionProps {
+  hero: HeroData;
+}
+
+export default function HomeHeroSection({ hero }: HomeHeroSectionProps) {
+  const backgrounds =
+    hero.background_images && hero.background_images.length > 0
+      ? hero.background_images
+      : [heroImage];
+
+  const [bgIndex, setBgIndex] = useState(0);
+
+  useEffect(() => {
+    if (backgrounds.length <= 1) return;
+    const timer = setInterval(() => {
+      setBgIndex((i) => (i + 1) % backgrounds.length);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, [backgrounds.length]);
+
+  const meta = hero.subtitle?.trim();
+  const title = hero.title?.trim() || "Patmos Choir";
+  const description = hero.description?.trim();
+  const tagline = hero.subdescription?.trim();
+
   return (
     <section className={styles.hero}>
-      <div
-        className={styles.heroBg}
-        style={{ backgroundImage: `url(${heroImage})` }}
-      />
+      {backgrounds.map((src, i) => (
+        <div
+          key={`${src}-${i}`}
+          className={styles.heroBg}
+          style={{
+            backgroundImage: `url(${src})`,
+            opacity: i === bgIndex ? 1 : 0,
+          }}
+          aria-hidden={i !== bgIndex}
+        />
+      ))}
       <div className={styles.heroOverlay} />
 
       <motion.div
@@ -28,20 +61,19 @@ export default function HomeHeroSection() {
         </motion.span>
 
         <motion.h1 variants={fadeUp} transition={{ duration: 0.6 }}>
-          Patmos Choir
+          {title}
         </motion.h1>
 
         <motion.p className={styles.heroMeta} variants={fadeUp} transition={{ duration: 0.55 }}>
-          Seventh Day Adventist &nbsp;·&nbsp; Kigali, Rwanda &nbsp;·&nbsp; Est.&nbsp;1996
+          {meta}
         </motion.p>
 
         <motion.p className={styles.heroDesc} variants={fadeUp} transition={{ duration: 0.55 }}>
-          A choir born of friendship and faith — raising voices to bring healing, hope,
-          and the presence of God to hearts across Rwanda and beyond.
+          {description}
         </motion.p>
 
         <motion.p className={styles.heroTagline} variants={fadeUp} transition={{ duration: 0.55 }}>
-          &ldquo;Where worship speaks, hearts are healed, and hope is restored.&rdquo;
+          "{tagline}"
         </motion.p>
 
         <motion.div className={styles.heroCta} variants={fadeUp} transition={{ duration: 0.5 }}>

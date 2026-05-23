@@ -1,102 +1,74 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import styles from "./HomePlaylistStreamingSection.module.scss";
+import type { AlbumData, StreamData } from "../index";
 
-import cover2024 from "../../../../assets/patmos/1.JPG";
-import cover2021 from "../../../../assets/patmos/3.JPG";
-import cover2018 from "../../../../assets/patmos/6.JPG";
-import cover2015 from "../../../../assets/patmos/8.jpeg";
-import cover2010 from "../../../../assets/patmos/11.jpeg";
-
-/* ── Types ── */
-interface StreamLinks {
-  spotify?: string;
-  youtube?: string;
-  appleMusic?: string;
-  soundcloud?: string;
-}
-interface Album {
-  year: number;
-  title: string;
-  cover: string;
-  trackCount: number;
-  links: StreamLinks;
-}
-
-/* ── Static Data ── */
-const ALBUMS: Album[] = [
-  {
-    year: 2024,
-    title: "Maranatha",
-    cover: cover2024,
-    trackCount: 10,
-    links: {
-      spotify: "https://open.spotify.com/",
-      youtube: "https://www.youtube.com/@patmoschoir",
-      appleMusic: "#",
-      soundcloud: "#",
-    },
-  },
-  {
-    year: 2021,
-    title: "Ijambo Ry'Ubukiza",
-    cover: cover2021,
-    trackCount: 8,
-    links: {
-      spotify: "https://open.spotify.com/",
-      youtube: "https://www.youtube.com/@patmoschoir",
-      appleMusic: "#",
-    },
-  },
-  {
-    year: 2018,
-    title: "Hosanna ku Mwana",
-    cover: cover2018,
-    trackCount: 9,
-    links: {
-      spotify: "https://open.spotify.com/",
-      youtube: "https://www.youtube.com/@patmoschoir",
-      soundcloud: "#",
-    },
-  },
-  {
-    year: 2015,
-    title: "Tuzabona Uhorwa",
-    cover: cover2015,
-    trackCount: 7,
-    links: {
-      spotify: "https://open.spotify.com/",
-      youtube: "https://www.youtube.com/@patmoschoir",
-    },
-  },
-  {
-    year: 2010,
-    title: "Imana Ifite Ineza",
-    cover: cover2010,
-    trackCount: 8,
-    links: {
-      youtube: "https://www.youtube.com/@patmoschoir",
-    },
-  },
-];
-
-const YEARS = ALBUMS.map((a) => a.year).sort((a, b) => b - a);
-
-/* ── Live stream config (set isLive: true when broadcasting) ── */
-const STREAM = {
-  isLive: false,
-  title: "Praise & Prayer Night — Live",
-  subtitle: "Next Broadcast",
-  date: "Saturday, June 14, 2026",
-  time: "7:00 PM EAT",
-  location: "SDA Church, Remera, Kigali",
-  youtubeId: "jfKfPfyJRdk",
-  viewers: 1_243,
-  channelLinks: {
-    youtube: "https://www.youtube.com/@patmoschoir",
-    facebook: "https://www.facebook.com/patmoschoir",
-  },
+const parseDate = (d: string): Date => {
+  const datePart = d.slice(0, 10);
+  const [y, mo, day] = datePart.split("-").map(Number);
+  return new Date(y, mo - 1, day);
 };
+
+const fmtStreamDate = (d: string) =>
+  parseDate(d).toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+
+const fmtTime = (t: string | null | undefined): string | null => {
+  if (!t) return null;
+  const [h, m] = t.split(":").map(Number);
+  const ampm = h >= 12 ? "PM" : "AM";
+  const hr = h > 12 ? h - 12 : h === 0 ? 12 : h;
+  return `${hr}:${String(m).padStart(2, "0")} ${ampm}`;
+};
+
+function StreamCameraIcon() {
+  return (
+    <svg
+      className={styles.streamUpcomingIcon}
+      width="44"
+      height="44"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M23 7l-7 5 7 5V7z" />
+      <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+    </svg>
+  );
+}
+
+function StreamUpcomingOverlay({
+  date,
+  time,
+}: {
+  date: string;
+  time: string | null;
+}) {
+  return (
+    <div className={styles.streamUpcomingOverlay}>
+      <div className={styles.streamUpcomingPulse} aria-hidden="true">
+        <span />
+      </div>
+      <StreamCameraIcon />
+      <p className={styles.streamUpcomingLabel}>Stream starts on</p>
+      <p className={styles.streamUpcomingDate}>{fmtStreamDate(date).toUpperCase()}</p>
+      {time && <p className={styles.streamUpcomingTime}>{time}</p>}
+    </div>
+  );
+}
+
+interface HomePlaylistStreamingSectionProps {
+  stream?: StreamData | null;
+  albums?: AlbumData[];
+}
 
 /* ── Platform icons ── */
 function SpotifyIcon() {
@@ -149,18 +121,54 @@ const PLATFORM_META: Record<string, { label: string; icon: () => JSX.Element; co
 /* ══════════════════════════════════════
    COMPONENT
 ══════════════════════════════════════ */
-export default function HomePlaylistStreamingSection() {
-  const [selectedYear, setSelectedYear] = useState<number>(YEARS[0]);
+export default function HomePlaylistStreamingSection({
+  stream = null,
+  albums = [],
+}: HomePlaylistStreamingSectionProps) {
+  const albumList = albums ?? [];
+  const years = useMemo(
+    () => [...new Set(albumList.map((a) => a.year))].filter(Boolean).sort((a, b) => b - a),
+    [albumList],
+  );
 
-  const selectedAlbum = ALBUMS.find((a) => a.year === selectedYear)!;
+  const [selectedYear, setSelectedYear] = useState<number>(() => years[0] ?? 0);
+
+  const selectedAlbum = albumList.find((a) => a.year === selectedYear);
+
+  const youtubeLink =
+    stream?.stream_url?.includes("youtube") || stream?.stream_url?.includes("youtu.be")
+      ? stream.stream_url
+      : stream?.link?.includes("youtube") || stream?.link?.includes("youtu.be")
+        ? stream.link
+        : null;
+  const facebookLink =
+    stream?.link?.includes("facebook") ? stream.link
+    : stream?.stream_url?.includes("facebook") ? stream.stream_url
+    : null;
+
+  const streamTime = stream
+    ? [fmtTime(stream.start_time), fmtTime(stream.end_time)].filter(Boolean).join(" – ")
+    : null;
+
+  const streamOverlayTime = stream
+    ? (() => {
+        const start = fmtTime(stream.start_time);
+        if (!start) return null;
+        return stream.end_time
+          ? `${start} – ${fmtTime(stream.end_time)} EAT`
+          : `${start} EAT`;
+      })()
+    : null;
+
+  if (!stream && albumList.length === 0) {
+    return null;
+  }
 
   return (
     <section id="music" className={styles.section}>
       <div className={styles.inner}>
 
-        {/* ═══════════════════════════
-            LIVE / UPCOMING STREAM
-        ═══════════════════════════ */}
+        {stream && (
         <motion.div
           className={styles.streamBlock}
           initial={{ opacity: 0, y: 28 }}
@@ -170,103 +178,77 @@ export default function HomePlaylistStreamingSection() {
         >
           {/* Left — player */}
           <div className={styles.streamPlayer}>
-            {STREAM.isLive ? (
-              <iframe
-                className={styles.streamIframe}
-                src={`https://www.youtube.com/embed/${STREAM.youtubeId}?autoplay=1&mute=1&live=1&modestbranding=1&rel=0`}
-                title="Patmos Choir Live Stream"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            ) : (
-              <div className={styles.streamOffline}>
-                <div className={styles.streamOfflinePulse} aria-hidden="true">
-                  <span />
-                  <span />
-                  <span />
-                </div>
-                <svg className={styles.streamOfflineIcon} width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <polygon points="23 7 16 12 23 17 23 7"/>
-                  <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
-                </svg>
-                <p className={styles.streamOfflineLabel}>Stream starts on</p>
-                <p className={styles.streamOfflineDate}>{STREAM.date}</p>
-                <p className={styles.streamOfflineTime}>{STREAM.time}</p>
-              </div>
-            )}
+            <div
+              className={`${styles.streamOffline} ${stream.cover ? styles.streamOfflineHasCover : ""}`}
+              style={
+                stream.cover
+                  ? {
+                      backgroundImage: `url(${stream.cover})`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                    }
+                  : undefined
+              }
+            >
+              {stream.cover && (
+                <div className={styles.streamOfflineDim} aria-hidden="true" />
+              )}
+              <StreamUpcomingOverlay date={stream.date} time={streamOverlayTime} />
+            </div>
           </div>
 
           {/* Right — info */}
           <div className={styles.streamInfo}>
             <div className={styles.streamBadgeRow}>
-              {STREAM.isLive ? (
-                <span className={styles.liveBadge}>
-                  <span className={styles.liveDot} aria-hidden="true" />
-                  LIVE
-                </span>
-              ) : (
-                <span className={styles.upcomingBadge}>UPCOMING</span>
-              )}
-              {STREAM.isLive && (
-                <span className={styles.viewerCount}>
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                  {STREAM.viewers.toLocaleString()} watching
-                </span>
-              )}
+              <span className={styles.upcomingBadge}>UPCOMING</span>
             </div>
 
-            <h3 className={styles.streamTitle}>{STREAM.title}</h3>
+            <h3 className={styles.streamTitle}>{stream.title}</h3>
 
             <div className={styles.streamMeta}>
               <span>
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                {STREAM.date}
+                {fmtStreamDate(stream.date)}
               </span>
-              <span>
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                {STREAM.time}
-              </span>
-              <span>
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                {STREAM.location}
-              </span>
+              {streamTime && (
+                <span>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  {streamTime}
+                </span>
+              )}
+              {stream.location && (
+                <span>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  {stream.location}
+                </span>
+              )}
             </div>
 
-            <p className={styles.streamDesc}>
-              Join us live as Patmos Choir leads a night of prayer and worship.
-              Stream free on YouTube and Facebook — no registration required.
-            </p>
+            {stream.description && (
+              <p className={styles.streamDesc}>{stream.description}</p>
+            )}
 
-            <div className={styles.streamChannels}>
-              <span className={styles.streamChannelsLabel}>Watch on</span>
-              <div className={styles.streamChannelBtns}>
-                <a
-                  href={STREAM.channelLinks.youtube}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`${styles.channelBtn} ${styles.channelBtnYt}`}
-                >
-                  <YouTubeIcon /> YouTube
-                </a>
-                <a
-                  href={STREAM.channelLinks.facebook}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`${styles.channelBtn} ${styles.channelBtnFb}`}
-                >
-                  <FacebookIcon /> Facebook
-                </a>
+            {(youtubeLink || facebookLink) && (
+              <div className={styles.streamChannels}>
+                <span className={styles.streamChannelsLabel}>Watch on</span>
+                <div className={styles.streamChannelBtns}>
+                  {youtubeLink && (
+                    <a href={youtubeLink} target="_blank" rel="noopener noreferrer" className={`${styles.channelBtn} ${styles.channelBtnYt}`}>
+                      <YouTubeIcon /> YouTube
+                    </a>
+                  )}
+                  {facebookLink && (
+                    <a href={facebookLink} target="_blank" rel="noopener noreferrer" className={`${styles.channelBtn} ${styles.channelBtnFb}`}>
+                      <FacebookIcon /> Facebook
+                    </a>
+                  )}
+                </div>
               </div>
-            </div>
+            )}
 
-            {!STREAM.isLive && (
+            {youtubeLink && (
               <div className={styles.reminderRow}>
-                <a
-                  href={STREAM.channelLinks.youtube}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.reminderBtn}
-                >
+                <a href={youtubeLink} target="_blank" rel="noopener noreferrer" className={styles.reminderBtn}>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
                   Set Reminder on YouTube
                 </a>
@@ -274,10 +256,9 @@ export default function HomePlaylistStreamingSection() {
             )}
           </div>
         </motion.div>
+        )}
 
-        {/* ═══════════════════════════
-            DISCOGRAPHY
-        ═══════════════════════════ */}
+        {albumList.length > 0 && selectedAlbum && (
         <div className={styles.discography}>
           <motion.div
             className={styles.discographyHeader}
@@ -292,7 +273,7 @@ export default function HomePlaylistStreamingSection() {
             </div>
             {/* Year tabs */}
             <div className={styles.yearTabs} role="tablist" aria-label="Album year">
-              {YEARS.map((year) => (
+              {years.map((year) => (
                 <button
                   key={year}
                   type="button"
@@ -335,7 +316,16 @@ export default function HomePlaylistStreamingSection() {
               <div className={styles.albumInfo}>
                 <span className={styles.albumLabel}>Album · {selectedAlbum.year}</span>
                 <h3 className={styles.albumTitle}>{selectedAlbum.title}</h3>
-                <p className={styles.albumMeta}>Patmos Choir &nbsp;·&nbsp; {selectedAlbum.trackCount} tracks</p>
+                <p className={styles.albumMeta}>
+                  Patmos Choir
+                  {selectedAlbum.trackCount > 0 && (
+                    <> &nbsp;·&nbsp; {selectedAlbum.trackCount} {selectedAlbum.trackCount === 1 ? "song" : "songs"}</>
+                  )}
+                </p>
+
+                {selectedAlbum.description && (
+                  <p className={styles.streamDesc}>{selectedAlbum.description}</p>
+                )}
 
                 <div className={styles.albumDivider} aria-hidden="true" />
 
@@ -366,6 +356,7 @@ export default function HomePlaylistStreamingSection() {
             </motion.div>
           </AnimatePresence>
         </div>
+        )}
 
       </div>
     </section>

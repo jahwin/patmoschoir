@@ -79,6 +79,11 @@ export default function HomeEventsSection() {
   });
 
   const visible = isHomePage ? sorted.slice(0, 2) : sorted;
+
+  if (visible.length === 0) {
+    return null;
+  }
+
   // Ticketed concerts = has event_id or booking_link; outreach = neither
   const CONCERTS = visible.filter((e) => e.event_id || e.booking_link);
   const OUTREACH = visible.filter((e) => !e.event_id && !e.booking_link);

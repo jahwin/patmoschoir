@@ -70,41 +70,16 @@ export default function ContactForm() {
               {errors.email && <p className={styles.fieldError}>{errors.email}</p>}
             </div>
           </div>
-
-          {/* Row 2: Phone + Subject */}
-          <div className={styles.row}>
-            <div className={styles.field}>
-              <label htmlFor="phone" className={styles.label}>Phone <span className={styles.optional}>(optional)</span></label>
-              <input
-                id="phone" name="phone" type="tel"
-                className={styles.input}
-                value={data.phone}
-                onChange={set('phone')}
-                placeholder="+250 700 000 000"
-              />
-            </div>
-            <div className={styles.field}>
-              <label htmlFor="subject" className={styles.label}>Subject <span aria-hidden="true">*</span></label>
-              <div className={styles.selectWrap}>
-                <select
-                  id="subject" name="subject"
-                  className={`${styles.select} ${errors.subject ? styles.inputError : ''}`}
-                  value={data.subject}
-                  onChange={set('subject')}
-                  required
-                >
-                  {SUBJECTS.map((s) => (
-                    <option key={s.value} value={s.value} disabled={s.value === ''}>
-                      {s.label}
-                    </option>
-                  ))}
-                </select>
-                <svg className={styles.selectChevron} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <polyline points="6 9 12 15 18 9"/>
-                </svg>
-              </div>
-              {errors.subject && <p className={styles.fieldError}>{errors.subject}</p>}
-            </div>
+          
+          <div className={styles.field}>
+            <label htmlFor="phone" className={styles.label}>Phone <span className={styles.optional}>(optional)</span></label>
+            <input
+              id="phone" name="phone" type="tel"
+              className={styles.input}
+              value={data.phone}
+              onChange={set('phone')}
+              placeholder="+250 700 000 000"
+            />
           </div>
 
           {/* Message */}

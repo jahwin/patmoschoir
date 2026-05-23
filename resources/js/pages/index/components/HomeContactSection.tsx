@@ -2,8 +2,13 @@ import { motion } from "motion/react";
 import styles from "./HomeContactSection.module.scss";
 import ContactInfo from "@/pages/contact/components/ContactInfo";
 import ContactForm from "@/pages/contact/components/ContactForm";
+import type { ContactsData } from "@/utils/contactData";
 
-export default function HomeContactSection() {
+interface HomeContactSectionProps {
+  contacts: ContactsData;
+}
+
+export default function HomeContactSection({ contacts }: HomeContactSectionProps) {
   return (
     <section className={styles.section}>
       <div className={styles.inner}>
@@ -32,7 +37,7 @@ export default function HomeContactSection() {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <ContactInfo />
+            <ContactInfo contacts={contacts} />
           </motion.div>
 
           <motion.div

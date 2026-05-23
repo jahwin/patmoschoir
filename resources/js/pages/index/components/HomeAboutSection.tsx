@@ -4,21 +4,51 @@ import styles from "./HomeAboutSection.module.scss";
 import img2 from "../../../../assets/patmos/4.JPG";
 import img3 from "../../../../assets/patmos/5.JPG";
 import img6 from "../../../../assets/patmos/9.jpeg";
+import type { AboutData } from "../index";
 
-const MILESTONES = [
-  { year: "1996", text: "Friends reunited in Kigali sing at a wedding — the spark that started it all." },
-  { year: "1997", text: "More voices join. A singing group grows into a full choir." },
-  { year: "1998", text: "A member brings the name \"Patmos\" — from the island in Scripture — and all agree." },
-  { year: "2025", text: "29 years of ministry: churches, crusades, schools, homes, and wherever God calls." },
-];
+interface HomeAboutSectionProps {
+  about: AboutData;
+}
 
-export default function HomeAboutSection() {
+type Milestone = { year: string; title?: string; text: string };
+
+/** Show at most 4 timeline points: start, mid points, and last. */
+function pickTimelineMilestones(items: Milestone[], max = 4): Milestone[] {
+  const n = items.length;
+  if (n <= max) return items;
+
+  const indices = new Set<number>([0, n - 1]);
+  const middleSlots = max - 2;
+
+  for (let i = 1; i <= middleSlots; i++) {
+    indices.add(Math.round((i * (n - 1)) / (middleSlots + 1)));
+  }
+
+  return [...indices]
+    .sort((a, b) => a - b)
+    .map((index) => items[index]);
+}
+
+export default function HomeAboutSection({ about }: HomeAboutSectionProps) {
+  const mainImage = about.image || img2;
+  const secondaryImage = about.subimage || img3;
+  const posterImage = about.poster || img6;
+
+  const milestones = (about.storyline ?? [])
+    .filter((s) => s.title?.trim() || s.description?.trim() || s.year?.trim())
+    .map((s) => ({
+      year: s.year?.trim() || "",
+      title: s.title?.trim(),
+      text: s.description?.trim() || "",
+    }));
+
+  const timelineMilestones = pickTimelineMilestones(milestones);
+  const firstStorylineYear = milestones[0]?.year;
+
   return (
     <section id="about" className={styles.section}>
       <div className={styles.inner}>
-
         <div className={styles.layout}>
-          {/* Left — images */}
           <div className={styles.imageStack}>
             <motion.div
               className={`${styles.imgFrame} ${styles.imgMain}`}
@@ -27,7 +57,7 @@ export default function HomeAboutSection() {
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.65 }}
             >
-              <img src={img2} alt="Patmos Choir performing" loading="lazy" />
+              <img src={mainImage} alt="Patmos Choir performing" loading="lazy" />
             </motion.div>
 
             <motion.div
@@ -37,22 +67,23 @@ export default function HomeAboutSection() {
               viewport={{ once: true, margin: "-40px" }}
               transition={{ duration: 0.65, delay: 0.15 }}
             >
-              <img src={img3} alt="Patmos Choir in worship" loading="lazy" />
+              <img src={secondaryImage} alt="Patmos Choir in worship" loading="lazy" />
             </motion.div>
 
-            <motion.div
-              className={styles.yearBadge}
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-            >
-              <span className={styles.yearBadgeYear}>1996</span>
-              <span className={styles.yearBadgeLabel}>Est.</span>
-            </motion.div>
+            {firstStorylineYear && (
+              <motion.div
+                className={styles.yearBadge}
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+              >
+                <span className={styles.yearBadgeYear}>{firstStorylineYear}</span>
+                <span className={styles.yearBadgeLabel}>Est.</span>
+              </motion.div>
+            )}
           </div>
 
-          {/* Right — story */}
           <div className={styles.content}>
             <motion.span
               className={styles.eyebrow}
@@ -64,51 +95,29 @@ export default function HomeAboutSection() {
               Our Story
             </motion.span>
 
-            <motion.h2
-              className={styles.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.55, delay: 0.08 }}
-            >
-              Born of Friendship,<br />Sustained by Grace
-            </motion.h2>
+            {about.title?.trim() && (
+              <motion.h2
+                className={styles.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.55, delay: 0.08 }}
+              >
+                {about.title}
+              </motion.h2>
+            )}
 
-            <motion.p
-              className={styles.body}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.14 }}
-            >
-              In 1996, a group of friends who had shared school halls in DRC came together in
-              Kigali to sing at a wedding. What began as one song became a calling. More voices
-              joined; friendships deepened. They decided they were more than a singing group —
-              they were a choir. And a name was found in Scripture: <em>Patmos</em>.
-            </motion.p>
-
-            <motion.p
-              className={styles.body}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
-              Through joy and loss, sickness and harvest, Patmos Choir has never ceased to
-              minister. They go to churches and crusades, but also to schools, weddings, homes
-              of the grieving, and bedsides of those too weak to attend worship. Wherever the
-              need is, their voices follow.
-            </motion.p>
-
-            {/* <motion.blockquote
-              className={styles.pullQuote}
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.25 }}
-            >
-              &ldquo;Well done, faithful servants&rdquo; — the words they live toward. Matthew&nbsp;25:23
-            </motion.blockquote> */}
+            {about.text?.trim() && (
+              <motion.p
+                className={styles.body}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.14 }}
+              >
+                {about.text}
+              </motion.p>
+            )}
 
             <motion.div
               initial={{ opacity: 0, y: 12 }}
@@ -121,24 +130,32 @@ export default function HomeAboutSection() {
           </div>
         </div>
 
-        {/* Timeline */}
-        <motion.div
-          className={styles.timeline}
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-40px" }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-        >
-          {MILESTONES.map((m, i) => (
-            <div key={i} className={styles.milestone}>
-              <div className={styles.milestoneDot} />
-              <span className={styles.milestoneYear}>{m.year}</span>
-              <p className={styles.milestoneText}>{m.text}</p>
-            </div>
-          ))}
-        </motion.div>
+        {timelineMilestones.length > 0 && (
+          <motion.div
+            className={styles.timeline}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
+            {timelineMilestones.map((m, i) => (
+              <div
+                key={`${m.year}-${m.title ?? ""}-${i}`}
+                className={styles.milestone}
+              >
+                <div className={styles.milestoneDot} />
+                {m.year && <span className={styles.milestoneYear}>{m.year}</span>}
+                {(m.title || m.text) && (
+                  <p className={styles.milestoneText}>
+                    {m.title && <strong>{m.title}: </strong>}
+                    {m.text}
+                  </p>
+                )}
+              </div>
+            ))}
+          </motion.div>
+        )}
 
-        {/* Bottom accent image */}
         <motion.div
           className={styles.accentImg}
           initial={{ opacity: 0, y: 24 }}
@@ -146,13 +163,10 @@ export default function HomeAboutSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.65, delay: 0.1 }}
         >
-          <img src={img6} alt="Patmos Choir together" style={{ objectPosition: 'center' }} loading="lazy" />
+          <img src={posterImage} alt="Patmos Choir together" style={{ objectPosition: "center" }} loading="lazy" />
           <div className={styles.accentImgOverlay} />
-          <p className={styles.accentCaption}>
-            Patmos Choir — Kigali, Rwanda
-          </p>
+          <p className={styles.accentCaption}>Patmos Choir — Kigali, Rwanda</p>
         </motion.div>
-
       </div>
     </section>
   );

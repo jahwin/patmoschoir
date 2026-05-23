@@ -154,6 +154,11 @@
   color: rgba(255, 255, 255, 0.65);
   font-weight: 300;
   margin-bottom: 1.2rem;
+  line-clamp: 13;
+  -webkit-line-clamp: 13;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .pullQuote {
@@ -245,6 +250,11 @@
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.55);
   font-weight: 300;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  overflow: hidden;
 }
 
 /* ── accent wide image ── */

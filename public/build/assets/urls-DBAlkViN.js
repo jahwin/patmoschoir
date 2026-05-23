@@ -1,0 +1,1 @@
+const e="https://api-watch.wecodefy.com/",E=e+"api/v1",t="https://api-watch.wecodefy.com/api/v1",_=`${E}/event/item`,c=`${t}/event/item/pay`,s=`${t}/event/tickets/verify`;export{s as E,c as G,_ as a};

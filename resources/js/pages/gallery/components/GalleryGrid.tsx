@@ -19,8 +19,7 @@ interface GalleryItem {
   image: string;
   description: string;
   images: string[];
-  created_at: string;
-  updated_at: string;
+  year: number;
 }
 
 interface GalleryGridProps {

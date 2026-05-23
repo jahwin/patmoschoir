@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 import { Link } from '@inertiajs/react';
-import PublicLayout from '@/components/layouts/public-layout';
 import styles from './style.module.scss';
 
 const NOTES = ['♩', '♪', '♫', '♬', '𝄞', '𝄢'];
@@ -26,69 +25,67 @@ export default function NotFound() {
   ];
 
   return (
-    <PublicLayout title="404 — Page Not Found">
-      <div className={styles.page}>
+    <div className={styles.page}>
 
-        {/* Ambient glow blobs */}
-        <div className={styles.blobLeft}  aria-hidden="true" />
-        <div className={styles.blobRight} aria-hidden="true" />
+      {/* Ambient glow blobs */}
+      <div className={styles.blobLeft}  aria-hidden="true" />
+      <div className={styles.blobRight} aria-hidden="true" />
 
-        {/* Floating musical notes */}
-        {notes.map((n, i) => (
-          <FloatingNote key={i} note={n.note} style={n.style} />
+      {/* Floating musical notes */}
+      {notes.map((n, i) => (
+        <FloatingNote key={i} note={n.note} style={n.style} />
+      ))}
+
+      {/* Staff lines */}
+      <div className={styles.staff} aria-hidden="true">
+        {[...Array(5)].map((_, i) => (
+          <div key={i} className={styles.staffLine} />
         ))}
-
-        {/* Staff lines */}
-        <div className={styles.staff} aria-hidden="true">
-          {[...Array(5)].map((_, i) => (
-            <div key={i} className={styles.staffLine} />
-          ))}
-        </div>
-
-        <div className={styles.content}>
-          {/* Eyebrow */}
-          <p className={styles.eyebrow}>Error 404</p>
-
-          {/* Giant 404 */}
-          <div className={styles.heroNumber} aria-label="404">
-            <span>4</span>
-            <span className={styles.noteGlyph} aria-hidden="true">♩</span>
-            <span>4</span>
-          </div>
-
-          {/* Divider */}
-          <div className={styles.divider} aria-hidden="true">
-            <div className={styles.dividerLine} />
-            <div className={styles.dividerDiamond} />
-            <div className={styles.dividerLine} />
-          </div>
-
-          {/* Headline */}
-          <h1 className={styles.heading}>This melody went silent</h1>
-
-          {/* Sub-copy */}
-          <p className={styles.body}>
-            The page you're searching for couldn't be found — perhaps it moved,
-            was renamed, or simply rests in the silence between notes.
-          </p>
-
-          {/* Actions */}
-          <div className={styles.actions}>
-            <Link href="/" className={styles.btnPrimary}>
-              Return Home
-            </Link>
-          </div>
-
-          {/* Quick links */}
-          <nav className={styles.quickLinks} aria-label="Helpful links">
-            <span className={styles.quickDot} aria-hidden="true">·</span>
-            <Link href="/events"   className={styles.quickLink}>Events</Link>
-            <span className={styles.quickDot} aria-hidden="true">·</span>
-            <Link href="/contact"  className={styles.quickLink}>Contact</Link>
-            <span className={styles.quickDot} aria-hidden="true">·</span>
-          </nav>
-        </div>
       </div>
-    </PublicLayout>
+
+      <div className={styles.content}>
+        {/* Eyebrow */}
+        <p className={styles.eyebrow}>Error 404</p>
+
+        {/* Giant 404 */}
+        <div className={styles.heroNumber} aria-label="404">
+          <span>4</span>
+          <span className={styles.noteGlyph} aria-hidden="true">♩</span>
+          <span>4</span>
+        </div>
+
+        {/* Divider */}
+        <div className={styles.divider} aria-hidden="true">
+          <div className={styles.dividerLine} />
+          <div className={styles.dividerDiamond} />
+          <div className={styles.dividerLine} />
+        </div>
+
+        {/* Headline */}
+        <h1 className={styles.heading}>This melody went silent</h1>
+
+        {/* Sub-copy */}
+        <p className={styles.body}>
+          The page you're searching for couldn't be found — perhaps it moved,
+          was renamed, or simply rests in the silence between notes.
+        </p>
+
+        {/* Actions */}
+        <div className={styles.actions}>
+          <Link href="/" className={styles.btnPrimary}>
+            Return Home
+          </Link>
+        </div>
+
+        {/* Quick links */}
+        <nav className={styles.quickLinks} aria-label="Helpful links">
+          <span className={styles.quickDot} aria-hidden="true">·</span>
+          <Link href="/events"   className={styles.quickLink}>Events</Link>
+          <span className={styles.quickDot} aria-hidden="true">·</span>
+          <Link href="/contact"  className={styles.quickLink}>Contact</Link>
+          <span className={styles.quickDot} aria-hidden="true">·</span>
+        </nav>
+      </div>
+    </div>
   );
 }
