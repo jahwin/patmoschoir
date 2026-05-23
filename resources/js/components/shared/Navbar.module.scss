@@ -264,6 +264,10 @@
   }
 }
 
+.lang-switcher-hidden {
+  display: none !important;
+}
+
 .lang-switcher {
   display: flex;
   align-items: center;

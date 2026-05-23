@@ -3,13 +3,22 @@ import Styles from "./Navbar.module.scss";
 import { Link, router, usePage } from "@inertiajs/react";
 import { useEffect, useRef, useState } from "react";
 
+/** Set to true when translations are ready */
+const SHOW_TRANSLATIONS = false;
+
 const LANGS = ["EN", "FR", "KN"] as const;
 type Lang = (typeof LANGS)[number];
 
 function LangSwitcher({ className }: { className?: string }) {
   const [active, setActive] = useState<Lang>("EN");
   return (
-    <div className={`${Styles["lang-switcher"]} ${className ?? ""}`} role="group" aria-label="Language">
+    <div
+      className={`${Styles["lang-switcher"]} ${className ?? ""} ${!SHOW_TRANSLATIONS ? Styles["lang-switcher-hidden"] : ""}`}
+      role="group"
+      aria-label="Language"
+      aria-hidden={!SHOW_TRANSLATIONS}
+      hidden={!SHOW_TRANSLATIONS}
+    >
       {LANGS.map((lang) => (
         <button
           key={lang}
@@ -17,6 +26,7 @@ function LangSwitcher({ className }: { className?: string }) {
           className={`${Styles["lang-btn"]} ${active === lang ? Styles["lang-btn-active"] : ""}`}
           onClick={() => setActive(lang)}
           aria-pressed={active === lang}
+          tabIndex={SHOW_TRANSLATIONS ? 0 : -1}
         >
           {lang}
         </button>
@@ -24,7 +34,6 @@ function LangSwitcher({ className }: { className?: string }) {
     </div>
   );
 }
-// import { useLocation } from "react-router";
 
 interface NavbarProps {
   setJoinMinistryOpen: (open: boolean) => void;
