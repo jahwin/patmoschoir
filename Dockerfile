@@ -23,7 +23,7 @@ RUN pnpm run build
 # -----------------------------------------------------------------------------
 # Stage 2: PHP + Apache (final image — no Node, no Composer after install)
 # -----------------------------------------------------------------------------
-FROM php:8.2-apache-bookworm
+FROM php:8.3-apache-bookworm
 
 ENV COMPOSER_ALLOW_SUPERUSER=1 \
     COMPOSER_NO_INTERACTION=1
