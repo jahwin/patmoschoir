@@ -29,7 +29,9 @@ FROM php:8.3-apache-bookworm
 
 ENV COMPOSER_ALLOW_SUPERUSER=1 \
     COMPOSER_NO_INTERACTION=1 \
-    APACHE_DOCUMENT_ROOT=/var/www/html/public
+    APACHE_DOCUMENT_ROOT=/var/www/html/public \
+    LOG_CHANNEL=stderr \
+    LOG_STACK=stderr
 
 WORKDIR /var/www/html
 
@@ -95,21 +97,20 @@ COPY --from=frontend /app/public/build ./public/build
 # Laravel setup
 # -----------------------------------------------------------------------------
 RUN mkdir -p \
-    storage/framework/cache \
+    storage/app/public \
+    storage/framework/cache/data \
     storage/framework/sessions \
     storage/framework/views \
     storage/logs \
     bootstrap/cache \
-    && chown -R www-data:www-data storage bootstrap/cache \
-    && chmod -R 775 storage bootstrap/cache
-
-# -----------------------------------------------------------------------------
-# Laravel cleanup / optimization
-# -----------------------------------------------------------------------------
-RUN php artisan optimize:clear || true \
+    && php artisan optimize:clear || true \
     && php artisan storage:link || true \
-    && php artisan package:discover --ansi || true
+    && php artisan package:discover --ansi || true \
+    && chown -R www-data:www-data storage bootstrap/cache \
+    && chmod -R ug+rwX storage bootstrap/cache
 
+COPY docker/entrypoint.sh docker/artisan.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/entrypoint.sh /usr/local/bin/artisan.sh
 
 # -----------------------------------------------------------------------------
 # Expose port
@@ -119,4 +120,5 @@ EXPOSE 80
 # -----------------------------------------------------------------------------
 # Start Apache
 # -----------------------------------------------------------------------------
+ENTRYPOINT ["entrypoint.sh"]
 CMD ["apache2-foreground"]
