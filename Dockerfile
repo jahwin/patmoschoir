@@ -14,7 +14,7 @@ COPY package.json pnpm-lock.yaml ./
 RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
     pnpm install --frozen-lockfile
 
-COPY vite.config.js ./
+COPY vite.config.ts ./
 COPY resources ./resources
 COPY public ./public
 
