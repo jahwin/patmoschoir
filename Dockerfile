@@ -1,43 +1,33 @@
 # syntax=docker/dockerfile:1
+# BuildKit caches speed rebuilds; ensure DOCKER_BUILDKIT=1 (default on Docker Desktop).
 
 # -----------------------------------------------------------------------------
-# Stage 1: Frontend Build (Vite)
+# Stage 1: Vite → public/build (Alpine base = smaller pull than bookworm)
 # -----------------------------------------------------------------------------
 FROM node:20-alpine AS frontend
-
 WORKDIR /app
 
 ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
-
 RUN corepack enable && corepack prepare pnpm@9 --activate
 
 COPY package.json pnpm-lock.yaml ./
-
 RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
     pnpm install --frozen-lockfile
 
-COPY vite.config.ts tsconfig.json ./
+COPY vite.config.js ./
 COPY resources ./resources
 COPY public ./public
 
 RUN pnpm run build
 
 # -----------------------------------------------------------------------------
-# Stage 2: PHP + Apache
+# Stage 2: PHP + Apache (final image — no Node, no Composer after install)
 # -----------------------------------------------------------------------------
-FROM php:8.3-apache-bookworm
+FROM php:8.2-apache-bookworm
 
 ENV COMPOSER_ALLOW_SUPERUSER=1 \
-    COMPOSER_NO_INTERACTION=1 \
-    APACHE_DOCUMENT_ROOT=/var/www/html/public \
-    LOG_CHANNEL=stderr \
-    LOG_STACK=stderr
+    COMPOSER_NO_INTERACTION=1
 
-WORKDIR /var/www/html
-
-# -----------------------------------------------------------------------------
-# Install system packages + PHP extensions
-# -----------------------------------------------------------------------------
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libicu-dev \
     libpng-dev \
@@ -46,10 +36,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libzip-dev \
     libonig-dev \
     unzip \
-    git \
-    curl \
-    wget \
-    zip \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j"$(nproc)" \
     pdo_mysql \
@@ -62,63 +48,37 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     intl \
     opcache \
     && a2enmod rewrite headers \
-    && sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
-    /etc/apache2/sites-available/*.conf \
-    /etc/apache2/apache2.conf \
-    && echo "ServerName localhost" >> /etc/apache2/apache2.conf \
+    && sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|g' /etc/apache2/sites-available/000-default.conf \
+    && sed -i 's|<Directory /var/www/html/>|<Directory /var/www/html/public/>|g' /etc/apache2/sites-available/000-default.conf \
+    && sed -i 's|AllowOverride None|AllowOverride All|g' /etc/apache2/sites-available/000-default.conf \
+    && sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/conf-available/docker-php.conf \
     && rm -rf /var/lib/apt/lists/*
 
-# -----------------------------------------------------------------------------
-# Install Composer
-# -----------------------------------------------------------------------------
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# -----------------------------------------------------------------------------
-# Copy application
-# -----------------------------------------------------------------------------
-COPY . .
+WORKDIR /var/www/html
 
-# -----------------------------------------------------------------------------
-# Install PHP dependencies
-# -----------------------------------------------------------------------------
+COPY composer.json composer.lock ./
 RUN --mount=type=cache,id=composer-cache,target=/root/.composer/cache \
     composer install \
     --no-dev \
+    --no-scripts \
+    --no-autoloader \
     --prefer-dist \
-    --optimize-autoloader \
     --no-interaction
 
-# -----------------------------------------------------------------------------
-# Copy frontend assets from frontend stage
-# -----------------------------------------------------------------------------
+COPY . .
+
+RUN composer dump-autoload --optimize --no-dev \
+    && php artisan package:discover --ansi --no-interaction
+
 COPY --from=frontend /app/public/build ./public/build
 
-# -----------------------------------------------------------------------------
-# Laravel setup
-# -----------------------------------------------------------------------------
-RUN mkdir -p \
-    storage/app/public \
-    storage/framework/cache/data \
-    storage/framework/sessions \
-    storage/framework/views \
-    storage/logs \
-    bootstrap/cache \
-    && php artisan optimize:clear || true \
-    && php artisan storage:link || true \
-    && php artisan package:discover --ansi || true \
+RUN mkdir -p storage/framework/{sessions,views,cache} storage/logs bootstrap/cache \
     && chown -R www-data:www-data storage bootstrap/cache \
-    && chmod -R ug+rwX storage bootstrap/cache
+    && chmod -R ug+rwx storage bootstrap/cache \
+    && rm -f /usr/bin/composer
 
-COPY docker/entrypoint.sh docker/artisan.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/entrypoint.sh /usr/local/bin/artisan.sh
-
-# -----------------------------------------------------------------------------
-# Expose port
-# -----------------------------------------------------------------------------
 EXPOSE 80
 
-# -----------------------------------------------------------------------------
-# Start Apache
-# -----------------------------------------------------------------------------
-ENTRYPOINT ["entrypoint.sh"]
 CMD ["apache2-foreground"]
