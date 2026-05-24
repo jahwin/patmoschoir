@@ -50,6 +50,14 @@ class SiteContent extends Model
         'home_events_background_image',
         'home_gallery_background_image',
         'home_footer_background_image',
+
+        // Donation
+        'donation_title',
+        'donation_description',
+        'donation_subdescription',
+        'card_title',
+        'card_description',
+        'amounts',
     ];
 
     protected $casts = [
@@ -60,5 +68,6 @@ class SiteContent extends Model
         'emails' => 'array',
         'social_links' => 'array',
         'keywords' => 'array',
+        'amounts' => 'array',
     ];
 }

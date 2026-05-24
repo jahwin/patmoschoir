@@ -100,17 +100,18 @@
   font-size: clamp(1.15rem, 2.5vw, 1.45rem);
   font-style: italic;
   line-height: 1.7;
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(255, 255, 255, 0.9);
   border-left: 2px solid rgba(201, 169, 98, 0.5);
   padding-left: 1.5rem;
+  font-weight: 500;
   margin: 0;
 }
 
 .bodyText {
   font-size: 0.9rem;
   line-height: 1.9;
-  color: rgba(255, 255, 255, 0.42);
-  font-weight: 300;
+  color: rgba(255, 255, 255, 0.65);
+  font-weight: 400;
   margin: 0;
 }
 
@@ -421,9 +422,8 @@
 
 .customRow {
   display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.8rem 1rem;
+  align-items: stretch;
+  overflow: hidden;
   background: $gray;
   border: 1px solid rgba(255, 255, 255, 0.08);
   transition: border-color 0.22s ease, box-shadow 0.22s ease;
@@ -435,25 +435,51 @@
   }
 }
 
-.currencySign {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.3);
-  font-family: $font-sans;
-  flex-shrink: 0;
-}
-
 .customInput {
   flex: 1;
+  min-width: 0;
   background: transparent;
   border: none;
   color: $white;
   font-family: $font-sans;
   font-size: 0.9rem;
-  min-width: 0;
+  padding: 0.8rem 1rem;
 
   &::placeholder { color: rgba(255, 255, 255, 0.2); }
   &:focus { outline: none; }
+}
+
+.currencySelector {
+  display: flex;
+  flex-shrink: 0;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.currencyOption {
+  min-width: 3.1rem;
+  padding: 0.8rem 0.65rem;
+  border: none;
+  background: rgba(0, 0, 0, 0.18);
+  color: rgba(255, 255, 255, 0.42);
+  font-family: $font-sans;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+
+  &:not(:last-child) {
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  &:hover {
+    color: rgba(255, 255, 255, 0.72);
+  }
+}
+
+.currencyOptionActive {
+  background: rgba(201, 169, 98, 0.14);
+  color: $gold;
 }
 
 /* ── Form fields ── */

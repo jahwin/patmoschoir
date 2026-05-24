@@ -196,6 +196,66 @@ class SiteContentsForm
                                     ->columnSpanFull(),
                             ]),
 
+                        Tab::make('Donation')
+                            ->icon('heroicon-o-heart')
+                            ->schema([
+                                TextInput::make('donation_title')
+                                    ->label('Donation Title')
+                                    ->placeholder('Enter donation section title')
+                                    ->maxLength(255)
+                                    ->columnSpanFull(),
+
+                                Textarea::make('donation_description')
+                                    ->label('Donation Description')
+                                    ->placeholder('Enter donation section description')
+                                    ->rows(3)
+                                    ->columnSpanFull(),
+
+                                Textarea::make('donation_subdescription')
+                                    ->label('Donation Sub-description')
+                                    ->placeholder('Enter donation section sub-description')
+                                    ->rows(3)
+                                    ->columnSpanFull(),
+
+                                TextInput::make('card_title')
+                                    ->label('Card Title')
+                                    ->placeholder('Enter donation card title')
+                                    ->maxLength(255)
+                                    ->columnSpanFull(),
+
+                                Textarea::make('card_description')
+                                    ->label('Card Description')
+                                    ->placeholder('Enter donation card description')
+                                    ->rows(3)
+                                    ->columnSpanFull(),
+
+                                Repeater::make('amounts')
+                                    ->label('Preset Donation Amounts')
+                                    ->schema([
+                                        TextInput::make('amount')
+                                            ->label('Amount')
+                                            ->placeholder('e.g., 10, 5000')
+                                            ->numeric()
+                                            ->required()
+                                            ->minValue(1)
+                                            ->columnSpan(1),
+                                        Select::make('currency')
+                                            ->label('Currency')
+                                            ->options([
+                                                'USD' => 'USD',
+                                                'RWF' => 'RWF',
+                                            ])
+                                            ->required()
+                                            ->default('USD')
+                                            ->columnSpan(1),
+                                    ])
+                                    ->columns(2)
+                                    ->addActionLabel('Add Amount')
+                                    ->defaultItems(0)
+                                    ->collapsible()
+                                    ->columnSpanFull(),
+                            ]),
+
                         Tab::make('Contact')
                             ->icon('heroicon-o-phone')
                             ->schema([

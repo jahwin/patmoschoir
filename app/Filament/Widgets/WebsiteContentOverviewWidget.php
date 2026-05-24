@@ -3,11 +3,13 @@
 namespace App\Filament\Widgets;
 
 use App\Filament\Resources\Albums\AlbumsResource;
+use App\Filament\Resources\Donations\DonationsResource;
 use App\Filament\Resources\Events\EventsResource;
 use App\Filament\Resources\Galleries\GalleriesResource;
 use App\Filament\Resources\Outreaches\OutreachesResource;
 use App\Filament\Resources\SiteContents\SiteContentsResource;
 use App\Filament\Resources\Streamings\StreamingsResource;
+use App\Models\Donation;
 use App\Models\Events;
 use App\Models\Gallery;
 use App\Models\Outreach;
@@ -41,6 +43,8 @@ class WebsiteContentOverviewWidget extends BaseWidget
 
         $totalOutreaches    = $this->tryCount(fn () => Outreach::count());
         $upcomingOutreaches = $this->tryCount(fn () => Outreach::where('date', '>=', $now->toDateString())->count());
+
+        $totalDonations = $this->tryCount(fn () => Donation::count());
 
         return [
             Stat::make('Site', $siteContent?->site_name ?? 'Not Configured')
@@ -82,6 +86,12 @@ class WebsiteContentOverviewWidget extends BaseWidget
                 ->descriptionIcon('lucide-heart-handshake')
                 ->color('success')
                 ->url(OutreachesResource::getUrl('index')),
+
+            Stat::make('Donations', $totalDonations)
+                ->description('Ministry support gifts')
+                ->descriptionIcon('lucide-hand-coins')
+                ->color('warning')
+                ->url(DonationsResource::getUrl('index')),
         ];
     }
 

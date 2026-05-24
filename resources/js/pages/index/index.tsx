@@ -47,6 +47,22 @@ export interface AboutData {
   poster?: string | null;
 }
 
+export type DonationCurrency = "USD" | "RWF";
+
+export interface DonationAmount {
+  amount: number;
+  currency: DonationCurrency;
+}
+
+export interface DonationData {
+  title?: string | null;
+  description?: string | null;
+  subdescription?: string | null;
+  card_title?: string | null;
+  card_description?: string | null;
+  amounts?: DonationAmount[];
+}
+
 export interface StreamData {
   id: number;
   title: string;
@@ -91,6 +107,7 @@ interface Gallery {
 export interface IndexPageProps {
   hero?: HeroData;
   about?: AboutData;
+  donation?: DonationData;
   stream?: StreamData | null;
   albums?: AlbumData[];
   testimonials?: TestimonialData[];
@@ -134,6 +151,18 @@ function hasVisionMission(about?: AboutData): boolean {
   );
 }
 
+function hasDonation(donation?: DonationData): boolean {
+  if (!donation) return false;
+  return !!(
+    donation.title?.trim() ||
+    donation.description?.trim() ||
+    donation.subdescription?.trim() ||
+    donation.card_title?.trim() ||
+    donation.card_description?.trim() ||
+    (donation.amounts && donation.amounts.length > 0)
+  );
+}
+
 function hasMusic(stream?: StreamData | null, albums?: AlbumData[]): boolean {
   return !!(stream || (albums && albums.length > 0));
 }
@@ -149,6 +178,7 @@ export default function Home() {
   const {
     hero,
     about,
+    donation,
     stream = null,
     albums = [],
     testimonials = [],
@@ -181,7 +211,7 @@ export default function Home() {
         <HomePlaylistStreamingSection stream={stream} albums={albums} />
       )}
 
-      {/* <HomeSupportMinistrySection /> */}
+      {hasDonation(donation) && <HomeSupportMinistrySection donation={donation!} />}
 
       {homeGalleryItems.length > 0 && <HomeGallerySection items={homeGalleryItems} />}
 

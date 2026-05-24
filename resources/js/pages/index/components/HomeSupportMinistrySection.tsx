@@ -1,8 +1,23 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import styles from "./HomeSupportMinistrySection.module.scss";
+import type { DonationAmount, DonationCurrency, DonationData } from "../index";
 
-const PRESET_AMOUNTS = [10, 25, 50, 100];
+const FALLBACK_AMOUNTS: DonationAmount[] = [
+  { amount: 10, currency: "USD" },
+  { amount: 25, currency: "USD" },
+  { amount: 50, currency: "USD" },
+  { amount: 100, currency: "USD" },
+];
+
+function formatAmount(amount: number, currency: DonationCurrency): string {
+  if (currency === "RWF") {
+    return `RWF ${amount.toLocaleString()}`;
+  }
+  return `$${amount % 1 === 0 ? amount : amount.toFixed(2)}`;
+}
+
+const CURRENCIES: DonationCurrency[] = ["USD", "RWF"];
 
 function CloseIcon() {
   return (
@@ -30,12 +45,34 @@ function LockIcon() {
   );
 }
 
-export default function HomeSupportMinistrySection({ onDonate }: { onDonate?: () => void }) {
+interface HomeSupportMinistrySectionProps {
+  donation: DonationData;
+  onDonate?: () => void;
+}
+
+export default function HomeSupportMinistrySection({ donation, onDonate }: HomeSupportMinistrySectionProps) {
+  const presetAmounts = useMemo(
+    () => (donation.amounts && donation.amounts.length > 0 ? donation.amounts : FALLBACK_AMOUNTS),
+    [donation.amounts],
+  );
+
+  const currencyNote = useMemo(() => {
+    const currencies = [...new Set(presetAmounts.map((item) => item.currency))];
+    if (currencies.length === 1) {
+      return currencies[0] === "RWF" ? "all amounts in RWF" : "all amounts in USD";
+    }
+    return `amounts in ${currencies.join(" & ")}`;
+  }, [presetAmounts]);
+
   const [isOpen, setIsOpen] = useState(false);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [selectedAmount, setSelectedAmount] = useState<number | null>(PRESET_AMOUNTS[1]);
+  const defaultPreset = presetAmounts[1] ?? presetAmounts[0] ?? null;
+  const [selectedPreset, setSelectedPreset] = useState<DonationAmount | null>(defaultPreset);
+  const [activeCurrency, setActiveCurrency] = useState<DonationCurrency>(
+    defaultPreset?.currency ?? "USD",
+  );
   const [customAmount, setCustomAmount] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -44,8 +81,14 @@ export default function HomeSupportMinistrySection({ onDonate }: { onDonate?: ()
 
   const amountValue = useMemo(() => {
     if (customAmount.trim()) return Number(customAmount);
-    return selectedAmount ?? 0;
-  }, [customAmount, selectedAmount]);
+    return selectedPreset?.amount ?? 0;
+  }, [customAmount, selectedPreset]);
+
+  const eyebrow = donation.subdescription?.trim() || "Support the Ministry";
+  const title = donation.title?.trim() || "Build the Harbor";
+  const pullQuote = donation.description?.trim();
+  const cardTitle = donation.card_title?.trim() || "Partner With Us";
+  const cardText = donation.card_description?.trim();
 
   useEffect(() => {
     if (!isOpen) {
@@ -77,12 +120,24 @@ export default function HomeSupportMinistrySection({ onDonate }: { onDonate?: ()
   const resetModal = () => {
     setErrorMessage(""); setIframeUrl(""); setSubmitting(false);
     setAutoClosing(false); setFullName(""); setEmail(""); setPhone("");
-    setSelectedAmount(PRESET_AMOUNTS[1]); setCustomAmount("");
+    const preset = presetAmounts[1] ?? presetAmounts[0] ?? null;
+    setSelectedPreset(preset);
+    setActiveCurrency(preset?.currency ?? "USD");
+    setCustomAmount("");
   };
 
   const handleClose = () => { setIsOpen(false); resetModal(); };
 
-  const handlePresetClick = (amount: number) => { setSelectedAmount(amount); setCustomAmount(""); };
+  const handlePresetClick = (preset: DonationAmount) => {
+    setSelectedPreset(preset);
+    setActiveCurrency(preset.currency);
+    setCustomAmount("");
+  };
+
+  const isPresetActive = (preset: DonationAmount) =>
+    !customAmount &&
+    selectedPreset?.amount === preset.amount &&
+    selectedPreset?.currency === preset.currency;
 
   const getCsrfToken = () => {
     const match = document.cookie.match(/XSRF-TOKEN=([^;]+)/);
@@ -106,6 +161,7 @@ export default function HomeSupportMinistrySection({ onDonate }: { onDonate?: ()
           email: email.trim() || null,
           phone: phone.trim() || null,
           amount: amountValue,
+          currency: activeCurrency,
         }),
       });
       if (!res.ok) {
@@ -113,8 +169,12 @@ export default function HomeSupportMinistrySection({ onDonate }: { onDonate?: ()
         throw new Error(data?.message || "Unable to start the donation.");
       }
       const data = await res.json();
-      if (data?.iframe_url) setIframeUrl(data.iframe_url);
-      else throw new Error("Payment gateway did not return a payment link.");
+      if (data?.iframe_url) {
+        onDonate?.();
+        setIframeUrl(data.iframe_url);
+      } else {
+        throw new Error("Payment gateway did not return a payment link.");
+      }
     } catch (err) {
       setErrorMessage(err instanceof Error ? err.message : "Unable to start the donation.");
     } finally {
@@ -125,12 +185,10 @@ export default function HomeSupportMinistrySection({ onDonate }: { onDonate?: ()
   return (
     <>
       <section className={styles.section}>
-        {/* Decorative background elements */}
         <div className={styles.bgGlow} aria-hidden="true" />
         <div className={styles.bgOrb} aria-hidden="true" />
 
         <div className={styles.inner}>
-          {/* Header */}
           <motion.div
             className={styles.header}
             initial={{ opacity: 0, y: 24 }}
@@ -139,11 +197,10 @@ export default function HomeSupportMinistrySection({ onDonate }: { onDonate?: ()
             transition={{ duration: 0.6 }}
           >
             <span className={styles.eyebrow}>Support the Ministry</span>
-            <h2 className={styles.title}>Build the Harbor</h2>
+            <h2 className={styles.title}>{title}</h2>
             <div className={styles.titleRule} aria-hidden="true" />
           </motion.div>
 
-          {/* Body grid */}
           <div className={styles.body}>
             {/* Left — quote + pillars */}
             <motion.div
@@ -153,17 +210,16 @@ export default function HomeSupportMinistrySection({ onDonate }: { onDonate?: ()
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.6, delay: 0.1 }}
             >
-              <p className={styles.pullQuote}>
-                "Every gift becomes a seed. Every seed becomes a story. Every story becomes a testimony."
-              </p>
-              <p className={styles.bodyText}>
-                This ministry exists because hearts believe in the vision. Through your generosity,
-                more people can experience worship, healing, and hope. You are not just a donor —
-                you are a co-builder of something eternal.
-              </p>
+              {donation.description && (
+                <p className={styles.pullQuote}>
+                  "{donation.description}"
+                </p>
+              )}
+              {donation.subdescription && (
+                <p className={styles.bodyText}>{donation.subdescription}</p>
+              )}
             </motion.div>
 
-            {/* Right — giving card */}
             <motion.div
               className={styles.givingCard}
               initial={{ opacity: 0, x: 24 }}
@@ -172,19 +228,24 @@ export default function HomeSupportMinistrySection({ onDonate }: { onDonate?: ()
               transition={{ duration: 0.6, delay: 0.15 }}
             >
               <div className={styles.cardTopBar} aria-hidden="true" />
-              <h3 className={styles.cardTitle}>Partner With Us</h3>
-              <p className={styles.cardText}>
-                Your offering fuels worship that reaches beyond four walls — into hospitals,
-                streets, schools, and hearts that have never heard a song of hope.
-              </p>
+              <h3 className={styles.cardTitle}>{cardTitle}</h3>
+              {cardText && <p className={styles.cardText}>{cardText}</p>}
 
-              <div className={styles.cardDivider} aria-hidden="true" />
-
-              <div className={styles.cardQuickAmounts}>
-                {PRESET_AMOUNTS.map((amt) => (
-                  <span key={amt} className={styles.cardAmount}>${amt}</span>
-                ))}
-              </div>
+              {presetAmounts.length > 0 && (
+                <>
+                  <div className={styles.cardDivider} aria-hidden="true" />
+                  <div className={styles.cardQuickAmounts}>
+                    {presetAmounts.map((preset) => (
+                      <span
+                        key={`${preset.currency}-${preset.amount}`}
+                        className={styles.cardAmount}
+                      >
+                        {formatAmount(preset.amount, preset.currency)}
+                      </span>
+                    ))}
+                  </div>
+                </>
+              )}
 
               <button
                 type="button"
@@ -196,14 +257,13 @@ export default function HomeSupportMinistrySection({ onDonate }: { onDonate?: ()
               </button>
 
               <p className={styles.cardNote}>
-                <LockIcon /> Secure payment — all amounts in USD
+                <LockIcon /> Secure payment — {currencyNote}
               </p>
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* ── Donation modal ── */}
       <AnimatePresence>
         {isOpen && !iframeUrl && (
           <motion.div
@@ -227,7 +287,6 @@ export default function HomeSupportMinistrySection({ onDonate }: { onDonate?: ()
             >
               <div className={styles.modalTopBar} aria-hidden="true" />
 
-              {/* Modal header */}
               <div className={styles.modalHead}>
                 <div>
                   <h3 className={styles.modalTitle}>Support the Ministry</h3>
@@ -245,40 +304,72 @@ export default function HomeSupportMinistrySection({ onDonate }: { onDonate?: ()
 
               <div className={styles.modalSep} aria-hidden="true" />
 
-              {/* Amount */}
               <div className={styles.modalSection}>
-                <span className={styles.fieldLabel}>Choose Amount <em>(USD)</em></span>
+                <span className={styles.fieldLabel}>
+                  Choose Amount <em>({activeCurrency})</em>
+                </span>
                 <div className={styles.amountGrid}>
-                  {PRESET_AMOUNTS.map((amt) => (
+                  {presetAmounts.map((preset) => (
                     <button
-                      key={amt}
+                      key={`${preset.currency}-${preset.amount}`}
                       type="button"
-                      className={`${styles.amountTile} ${selectedAmount === amt && !customAmount ? styles.amountTileActive : ""}`}
-                      onClick={() => handlePresetClick(amt)}
+                      className={`${styles.amountTile} ${isPresetActive(preset) ? styles.amountTileActive : ""}`}
+                      onClick={() => handlePresetClick(preset)}
                     >
-                      <span className={styles.amountTileValue}>${amt}</span>
-                      {selectedAmount === amt && !customAmount && (
+                      <span className={styles.amountTileValue}>
+                        {formatAmount(preset.amount, preset.currency)}
+                      </span>
+                      {isPresetActive(preset) && (
                         <span className={styles.amountCheck} aria-hidden="true">✓</span>
                       )}
                     </button>
                   ))}
                 </div>
-                <div className={`${styles.customRow} ${customAmount ? styles.customRowActive : ""}`}>
-                  <span className={styles.currencySign}>$</span>
+                <div
+                  className={`${styles.customRow} ${
+                    customAmount || !selectedPreset ? styles.customRowActive : ""
+                  }`}
+                >
                   <input
                     className={styles.customInput}
                     value={customAmount}
-                    onChange={(e) => { setCustomAmount(e.target.value); setSelectedAmount(null); }}
+                    onChange={(e) => {
+                      setCustomAmount(e.target.value);
+                      setSelectedPreset(null);
+                    }}
+                    onFocus={() => setSelectedPreset(null)}
                     placeholder="Enter custom amount"
                     inputMode="decimal"
-                    aria-label="Custom donation amount"
+                    aria-label={`Custom donation amount in ${activeCurrency}`}
                   />
+                  <div
+                    className={styles.currencySelector}
+                    role="group"
+                    aria-label="Donation currency"
+                  >
+                    {CURRENCIES.map((currency) => (
+                      <button
+                        key={currency}
+                        type="button"
+                        className={`${styles.currencyOption} ${
+                          activeCurrency === currency ? styles.currencyOptionActive : ""
+                        }`}
+                        onClick={() => {
+                          setActiveCurrency(currency);
+                          setSelectedPreset(null);
+                        }}
+                        aria-pressed={activeCurrency === currency}
+                        aria-label={`Use ${currency}`}
+                      >
+                        {currency}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
 
               <div className={styles.modalSep} aria-hidden="true" />
 
-              {/* Donor info */}
               <div className={styles.modalSection}>
                 <span className={styles.fieldLabel}>Your Details</span>
                 <div className={styles.field}>
@@ -320,7 +411,6 @@ export default function HomeSupportMinistrySection({ onDonate }: { onDonate?: ()
                 </div>
               </div>
 
-              {/* Error */}
               <AnimatePresence>
                 {errorMessage && (
                   <motion.p
@@ -334,7 +424,6 @@ export default function HomeSupportMinistrySection({ onDonate }: { onDonate?: ()
                 )}
               </AnimatePresence>
 
-              {/* Footer actions */}
               <div className={styles.modalFoot}>
                 <button
                   type="button"
@@ -366,7 +455,6 @@ export default function HomeSupportMinistrySection({ onDonate }: { onDonate?: ()
         )}
       </AnimatePresence>
 
-      {/* ── Payment iframe ── */}
       <AnimatePresence>
         {iframeUrl && (
           <motion.div

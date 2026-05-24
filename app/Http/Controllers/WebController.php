@@ -47,6 +47,24 @@ class WebController extends Controller
             'poster' => $siteContent?->about_poster ? Storage::url($siteContent->about_poster) : null,
         ];
 
+        $donation = [
+            'title' => $siteContent?->donation_title,
+            'description' => $siteContent?->donation_description,
+            'subdescription' => $siteContent?->donation_subdescription,
+            'card_title' => $siteContent?->card_title,
+            'card_description' => $siteContent?->card_description,
+            'amounts' => collect($siteContent?->amounts ?? [])
+                ->filter(fn ($item) => isset($item['amount']) && is_numeric($item['amount']) && (float) $item['amount'] > 0)
+                ->map(fn ($item) => [
+                    'amount' => (float) $item['amount'],
+                    'currency' => in_array($item['currency'] ?? '', ['USD', 'RWF'], true)
+                        ? $item['currency']
+                        : 'USD',
+                ])
+                ->values()
+                ->all(),
+        ];
+
         $stream = Streaming::query()
             ->where('visibility', 'PUBLIC')
             ->where('date', '>=', now()->toDateString())
@@ -133,6 +151,7 @@ class WebController extends Controller
             'events',
             'hero',
             'about',
+            'donation',
             'stream',
             'albums',
             'testimonials',
