@@ -57,7 +57,7 @@ class User extends Authenticatable implements FilamentUser
         $adminEmail = config('app.admin_email');
 
         if (blank($adminEmail)) {
-            return app()->environment('local');
+            return app()->environment('production');
         }
 
         return $this->email === $adminEmail;
