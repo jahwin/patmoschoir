@@ -3,6 +3,21 @@ import { motion, AnimatePresence } from "motion/react";
 import styles from "./HomePlaylistStreamingSection.module.scss";
 import type { AlbumData, StreamData } from "../index";
 
+const DEFAULT_ALBUM_COVER = `data:image/svg+xml;utf8,${encodeURIComponent(
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
+    <defs>
+      <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#1d2234" />
+        <stop offset="100%" stop-color="#3b446b" />
+      </linearGradient>
+    </defs>
+    <rect width="600" height="600" fill="url(#g)" />
+    <circle cx="300" cy="300" r="160" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="18" />
+    <circle cx="300" cy="300" r="28" fill="rgba(255,255,255,0.35)" />
+    <text x="300" y="500" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" fill="rgba(255,255,255,0.9)">No Cover Available</text>
+  </svg>`,
+)}`;
+
 const parseDate = (d: string): Date => {
   const datePart = d.slice(0, 10);
   const [y, mo, day] = datePart.split("-").map(Number);
@@ -303,7 +318,7 @@ export default function HomePlaylistStreamingSection({
                 <div className={styles.albumCoverShadow} aria-hidden="true" />
                 <img
                   className={styles.albumCover}
-                  src={selectedAlbum.cover}
+                  src={selectedAlbum.cover || DEFAULT_ALBUM_COVER}
                   alt={`${selectedAlbum.title} album cover`}
                   loading="lazy"
                 />

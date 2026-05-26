@@ -3,12 +3,14 @@ import { Link } from "@inertiajs/react";
 import styles from "./OurStoryClosing.module.scss";
 import imgHero from "../../../../assets/patmos/IMG_2078.JPEG";
 
-export default function OurStoryClosing() {
+interface Props { poster: string | null }
+
+export default function OurStoryClosing({ poster }: Props) {
   return (
     <section className={styles.section}>
       <div
         className={styles.bg}
-        style={{ backgroundImage: `url(${imgHero})` }}
+        style={{ backgroundImage: `url(${poster || imgHero})` }}
         aria-hidden="true"
       />
       <div className={styles.overlay} aria-hidden="true" />

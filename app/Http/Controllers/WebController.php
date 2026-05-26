@@ -98,7 +98,7 @@ class WebController extends Controller
                 'description' => $album->description,
                 'links' => $this->mapPlaylistLinks($album->links),
             ])
-            ->filter(fn (array $album) => filled($album['title']) && filled($album['cover']))
+            ->filter(fn (array $album) => filled($album['title']))
             ->values();
 
         $testimonials = Testimonials::query()
@@ -175,7 +175,25 @@ class WebController extends Controller
             'poster' => $siteContent?->about_poster ? Storage::url($siteContent->about_poster) : null,
         ];
 
-        return Inertia::render('about', compact('about'));
+        $galleries = Gallery::query()
+            ->where('visibility', 'Public')
+            ->orderByDesc('year')
+            ->get()
+            ->map(function (Gallery $gallery) {
+                return [
+                    'id' => $gallery->id,
+                    'title' => $gallery->title,
+                    'image' => $gallery->cover ? Storage::url($gallery->cover) : null,
+                    'images' => collect($gallery->images ?? [])
+                        ->filter()
+                        ->map(fn ($path) => Storage::url($path))
+                        ->values()
+                        ->all(),
+                ];
+            })
+            ->values();
+
+        return Inertia::render('about', compact('about', 'galleries'));
     }
 
     public function events()

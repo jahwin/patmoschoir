@@ -15,11 +15,7 @@
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 7rem;
-
-  @media (max-width: 768px) {
-    gap: 5rem;
-  }
+  gap: 0;
 }
 
 /* ── two-column layout ── */
@@ -27,7 +23,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 5rem;
-  align-items: center;
+  align-items: start;
 
   @media (max-width: 960px) {
     grid-template-columns: 1fr;
@@ -177,6 +173,27 @@
   color: rgba(255, 255, 255, 0.65);
   font-weight: 300;
   margin-bottom: 1.2rem;
+}
+
+/* ── two-column continuation below the poster row ── */
+.fullText {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 4rem;
+  align-items: start;
+  border-top: 1px solid rgba(201, 169, 98, 0.15);
+  margin-top: 3rem;
+  padding-top: 3rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    margin-top: 2rem;
+    padding-top: 2rem;
+  }
+}
+
+.fullTextCol {
+  margin-bottom: 0;
 }
 
 .pullQuote {

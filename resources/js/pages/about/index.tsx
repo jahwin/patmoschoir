@@ -14,11 +14,36 @@ interface Gallery {
   images: string[] | null;
 }
 
-interface AboutProps {
-  galleries: Gallery[];
+export interface StorylineItem {
+  year: string;
+  title: string;
+  description: string;
 }
 
-export default function About({ galleries }: AboutProps) {
+export interface AboutValue {
+  title: string;
+  description: string;
+  icon?: string;
+}
+
+export interface AboutData {
+  title: string | null;
+  text: string | null;
+  image: string | null;
+  subimage: string | null;
+  mission: string | null;
+  vision: string | null;
+  values: AboutValue[];
+  storyline: StorylineItem[];
+  poster: string | null;
+}
+
+interface AboutProps {
+  galleries: Gallery[];
+  about: AboutData;
+}
+
+export default function About({ galleries, about }: AboutProps) {
   return (
     <>
       <Head title="Our Story" />
@@ -27,11 +52,11 @@ export default function About({ galleries }: AboutProps) {
         description="From a wedding song in Kigali to 29 years of ministry — the journey of Patmos Choir."
       >
         <div className={styles.page}>
-          <OurStoryOrigin />
-          <OurStoryTimeline />
-          <OurStoryValues />
+          <OurStoryOrigin about={about} />
+          <OurStoryTimeline storyline={about.storyline} />
+          <OurStoryValues about={about} />
           <OurStoryGallery galleries={galleries} />
-          <OurStoryClosing />
+          <OurStoryClosing poster={about.poster} />
         </div>
       </PublicLayout>
     </>

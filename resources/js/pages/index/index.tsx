@@ -80,7 +80,7 @@ export interface AlbumData {
   id: number;
   year: number;
   title: string;
-  cover: string;
+  cover?: string | null;
   trackCount: number;
   description?: string | null;
   links: Record<string, string>;
