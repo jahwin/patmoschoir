@@ -1,6 +1,7 @@
 <IfModule mod_rewrite.c>
    RewriteEngine On
-   # Force SSL
+   # Force SSL (respect reverse-proxy headers such as Cloudflare/nginx)
+   RewriteCond %{HTTP:X-Forwarded-Proto} !https
    RewriteCond %{HTTPS} !=on
    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
    # Remove public folder form URL
