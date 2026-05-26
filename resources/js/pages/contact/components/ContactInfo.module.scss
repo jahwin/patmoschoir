@@ -27,7 +27,7 @@
   display: flex;
   flex-direction: column;
   gap: 0;
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(var(--rgb-text), 0.07);
 }
 
 .emailRow {
@@ -35,12 +35,12 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.6rem 0.85rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(var(--rgb-text), 0.05);
 
   &:last-child { border-bottom: none; }
 
   &:hover {
-    background: rgba(255, 255, 255, 0.02);
+    background: rgba(var(--rgb-text), 0.02);
   }
 }
 
@@ -49,7 +49,7 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(var(--rgb-text), 0.3);
   width: 90px;
   flex-shrink: 0;
 
@@ -62,7 +62,7 @@
   flex: 1;
   font-size: 0.82rem;
   font-weight: 500;
-  color: $white;
+  color: var(--c-text);
   text-decoration: none;
   min-width: 0;
   white-space: nowrap;
@@ -81,8 +81,8 @@
   align-items: center;
   justify-content: center;
   background: none;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(var(--rgb-text), 0.1);
+  color: rgba(var(--rgb-text), 0.3);
   cursor: pointer;
   transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
 
@@ -111,7 +111,7 @@
   gap: 0.4rem;
   font-size: 0.85rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(var(--rgb-text), 0.65);
 
   svg { color: $gold; flex-shrink: 0; }
 }
@@ -129,8 +129,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(var(--rgb-text), 0.1);
+  color: rgba(var(--rgb-text), 0.5);
   text-decoration: none;
   transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease, transform 0.2s ease;
 

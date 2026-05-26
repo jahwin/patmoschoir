@@ -1,7 +1,7 @@
 @use "../../../../css/variables" as *;
 
 .section {
-  background: $black;
+  background: var(--c-bg);
   padding: clamp(4rem, 9vw, 7rem) 8%;
   position: relative;
   overflow: hidden;
@@ -59,7 +59,7 @@
   font-family: $font-bulgatti;
   font-size: clamp(2.4rem, 5vw, 3.8rem);
   font-weight: 700;
-  color: $white;
+  color: var(--c-text);
   line-height: 1.05;
   letter-spacing: 0.02em;
   margin: 0 0 1.25rem;
@@ -68,7 +68,7 @@
 .description {
   font-size: 0.95rem;
   line-height: 1.85;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(var(--rgb-text), 0.5);
   font-weight: 300;
   margin: 0;
   max-width: 380px;
@@ -97,7 +97,7 @@
   font-family: $font-serif;
   font-size: 0.98rem;
   font-style: italic;
-  color: rgba(255, 255, 255, 0.38);
+  color: rgba(var(--rgb-text), 0.38);
   line-height: 1.7;
 
   cite {
@@ -122,8 +122,8 @@
 /* ─── Right / Form ─── */
 
 .right {
-  background: $deep-gray;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: var(--c-bg-2);
+  border: 1px solid rgba(var(--rgb-text), 0.06);
   padding: 2.75rem;
   position: relative;
 
@@ -170,7 +170,7 @@
   font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(var(--rgb-text), 0.45);
 }
 
 .required {
@@ -183,13 +183,13 @@
   padding: 0.85rem 1rem;
   font-family: $font-sans;
   font-size: 0.9rem;
-  color: $white;
-  background: $gray;
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  color: var(--c-text);
+  background: var(--c-bg-3);
+  border: 1px solid rgba(var(--rgb-text), 0.09);
   transition: border-color 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
 
   &::placeholder {
-    color: rgba(255, 255, 255, 0.2);
+    color: rgba(var(--rgb-text), 0.2);
   }
 
   &:focus {

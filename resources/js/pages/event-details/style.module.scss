@@ -24,8 +24,8 @@
 .modalTicket {
     width: min(860px, calc(100vw - 2rem));
     max-height: 90vh;
-    background-color: #111;
-    border: 1px solid rgba(255, 255, 255, 0.07);
+    background-color: var(--c-bg-2);
+    border: 1px solid rgba(var(--rgb-text), 0.07);
     border-radius: 12px;
     display: flex;
     flex-direction: column;
@@ -34,7 +34,7 @@
 
     .header {
         padding: 1.1rem 1.25rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        border-bottom: 1px solid rgba(var(--rgb-text), 0.07);
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -51,7 +51,7 @@
 
     .footer {
         padding: 1rem 1.25rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.07);
+        border-top: 1px solid rgba(var(--rgb-text), 0.07);
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -62,8 +62,8 @@
 .paymentModal {
     width: 450px;
     height: 90vh;
-    background-color: #111;
-    border: 1px solid rgba(255, 255, 255, 0.07);
+    background-color: var(--c-bg-2);
+    border: 1px solid rgba(var(--rgb-text), 0.07);
     border-radius: 12px;
     display: flex;
     flex-direction: column;
@@ -80,7 +80,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        background: rgba(17, 17, 17, 0.8);
+        background: rgba(var(--rgb-bg-2), 0.8);
         z-index: 1;
     }
 

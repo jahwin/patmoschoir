@@ -12,7 +12,7 @@
 .modalTitle {
     font-size: 1.2rem;
     font-weight: 700;
-    color: #fff;
+    color: var(--c-text);
     margin: 0 0 0.15rem;
     letter-spacing: 0.01em;
     line-height: 1.3;
@@ -20,7 +20,7 @@
 
 .contentDescription {
     font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.4);
+    color: rgba(var(--rgb-text), 0.4);
     margin: 0;
     letter-spacing: 0.01em;
 }
@@ -28,9 +28,9 @@
 // ── Close button ──────────────────────────────────────────
 .closeButton {
     flex-shrink: 0;
-    color: rgba(255, 255, 255, 0.35);
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: rgba(var(--rgb-text), 0.35);
+    background: rgba(var(--rgb-text), 0.05);
+    border: 1px solid rgba(var(--rgb-text), 0.08);
     border-radius: 6px;
     padding: 0.4rem;
     cursor: pointer;
@@ -41,8 +41,8 @@
     align-self: flex-start;
 
     &:hover {
-        color: #fff;
-        background: rgba(255, 255, 255, 0.1);
+        color: var(--c-text);
+        background: rgba(var(--rgb-text), 0.1);
     }
 
     svg { width: 1.1rem; height: 1.1rem; }
@@ -67,14 +67,14 @@
 .formLabel {
     font-size: 0.7rem;
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.45);
+    color: rgba(var(--rgb-text), 0.45);
     text-transform: uppercase;
     letter-spacing: 0.08em;
     margin-bottom: 0.4rem;
 }
 
 .optionalLabel {
-    color: rgba(255, 255, 255, 0.25);
+    color: rgba(var(--rgb-text), 0.25);
     font-weight: 400;
     text-transform: none;
     letter-spacing: 0;
@@ -82,9 +82,9 @@
 
 .inputField {
     padding: 0.5rem 0.75rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #fff;
+    background: rgba(var(--rgb-text), 0.05);
+    border: 1px solid rgba(var(--rgb-text), 0.1);
+    color: var(--c-text);
     border-radius: 6px;
     font-size: 0.875rem;
     outline: none;
@@ -95,7 +95,7 @@
         box-shadow: 0 0 0 2px rgba(201, 169, 98, 0.15);
     }
 
-    &::placeholder { color: rgba(255, 255, 255, 0.2); }
+    &::placeholder { color: rgba(var(--rgb-text), 0.2); }
 }
 
 // ── Ticket card grid ──────────────────────────────────────
@@ -109,8 +109,8 @@
 .ticketCard {
     position: relative;
     overflow: hidden;
-    background: #0a0a0a;
-    border: 1px solid rgba(255, 255, 255, 0.07);
+    background: var(--c-bg-3);
+    border: 1px solid rgba(var(--rgb-text), 0.07);
     border-radius: 8px;
     display: flex;
     flex-direction: column;
@@ -135,7 +135,7 @@
     right: 0.75rem;
     font-size: 4.5rem;
     font-weight: 900;
-    color: rgba(255, 255, 255, 0.04);
+    color: rgba(var(--rgb-text), 0.04);
     line-height: 1;
     pointer-events: none;
     user-select: none;
@@ -149,7 +149,7 @@
     font-weight: 700;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.4);
+    color: rgba(var(--rgb-text), 0.4);
     position: relative;
     z-index: 1;
 }
@@ -172,7 +172,7 @@
 .priceAmount {
     font-size: 2.2rem;
     font-weight: 900;
-    color: #fff;
+    color: var(--c-text);
     line-height: 1;
     letter-spacing: -0.02em;
 }
@@ -181,7 +181,7 @@
     font-size: 0.7rem;
     font-weight: 600;
     letter-spacing: 0.08em;
-    color: rgba(255, 255, 255, 0.35);
+    color: rgba(var(--rgb-text), 0.35);
     text-transform: uppercase;
 }
 
@@ -192,8 +192,8 @@
     width: 100%;
     background: transparent;
     border: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.07);
-    color: rgba(255, 255, 255, 0.55);
+    border-top: 1px solid rgba(var(--rgb-text), 0.07);
+    color: rgba(var(--rgb-text), 0.55);
     font-size: 0.65rem;
     font-weight: 700;
     letter-spacing: 0.14em;
@@ -204,8 +204,8 @@
     z-index: 1;
 
     &:hover:not(:disabled) {
-        background: rgba(255, 255, 255, 0.04);
-        color: #fff;
+        background: rgba(var(--rgb-text), 0.04);
+        color: var(--c-text);
     }
 
     &.buyBtnSelected {
@@ -275,7 +275,7 @@
 .spinner {
     width: 2rem;
     height: 2rem;
-    border: 3px solid rgba(255, 255, 255, 0.08);
+    border: 3px solid rgba(var(--rgb-text), 0.08);
     border-top: 3px solid var(--color-theme-clr);
     border-radius: 50%;
     animation: spin 0.85s linear infinite;

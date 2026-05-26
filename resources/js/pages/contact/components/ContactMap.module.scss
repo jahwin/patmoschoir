@@ -1,7 +1,7 @@
 .contactMap {
-  background-color: #222;
+  background-color: var(--c-bg-4);
   padding: 6rem 0;
-  color: white;
+  color: var(--c-text);
 }
 
 .container {
@@ -22,7 +22,7 @@
 .mapTitle {
   font-size: 2.5rem;
   font-weight: bold;
-  color: white;
+  color: var(--c-text);
   margin-bottom: 1rem;
   letter-spacing: -0.02em;
 
@@ -33,7 +33,7 @@
 
 .mapDescription {
   font-size: 1.125rem;
-  color: #ccc;
+  color: rgba(var(--rgb-text), 0.65);
   line-height: 1.6;
   max-width: 600px;
   margin: 0 auto;
@@ -53,15 +53,15 @@
   align-items: center;
   justify-content: center;
   height: 400px;
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(var(--rgb-text), 0.05);
+  border: 1px solid rgba(var(--rgb-text), 0.1);
   border-radius: 1rem;
   text-align: center;
   transition: all 0.3s ease;
 
   &:hover {
     border-color: var(--color-theme-clr);
-    background-color: rgba(255, 255, 255, 0.08);
+    background-color: rgba(var(--rgb-text), 0.08);
   }
 
   @media (max-width: 768px) {
@@ -89,13 +89,13 @@
 .mapTitle {
   font-size: 1.5rem;
   font-weight: 600;
-  color: white;
+  color: var(--c-text);
   margin-bottom: 0.5rem;
 }
 
 .mapText {
   font-size: 1rem;
-  color: #ccc;
+  color: rgba(var(--rgb-text), 0.65);
   margin-bottom: 2rem;
 }
 
@@ -142,14 +142,14 @@
   align-items: flex-start;
   gap: 1.5rem;
   padding: 2rem;
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(var(--rgb-text), 0.05);
+  border: 1px solid rgba(var(--rgb-text), 0.1);
   border-radius: 1rem;
   transition: all 0.3s ease;
 
   &:hover {
     border-color: var(--color-theme-clr);
-    background-color: rgba(255, 255, 255, 0.08);
+    background-color: rgba(var(--rgb-text), 0.08);
     transform: translateY(-5px);
   }
 
@@ -186,13 +186,13 @@
 .locationTitle {
   font-size: 1.125rem;
   font-weight: 600;
-  color: white;
+  color: var(--c-text);
   margin: 0;
 }
 
 .locationAddress {
   font-size: 0.95rem;
-  color: #ccc;
+  color: rgba(var(--rgb-text), 0.65);
   margin: 0;
   line-height: 1.5;
 }

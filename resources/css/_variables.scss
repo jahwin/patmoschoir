@@ -14,3 +14,32 @@ $font-flex: 'Google Sans Flex', system-ui, sans-serif;
 $nav-height-announce: 36px;
 $nav-height-main: 72px;
 $nav-breakpoint: 1280px;
+
+// ── CSS custom properties (runtime theme) ──────────────────
+:root {
+  // Dark mode defaults
+  --c-bg:      #000000;
+  --c-bg-2:    #111111;
+  --c-bg-3:    #1a1a1a;
+  --c-bg-4:    #222222;
+  --c-text:    #ffffff;
+
+  // RGB channels for rgba() usage
+  --rgb-text:  255, 255, 255;
+  --rgb-bg:    0, 0, 0;
+  --rgb-bg-2:  17, 17, 17;
+  --rgb-bg-3:  26, 26, 26;
+}
+
+[data-theme="light"] {
+  --c-bg:      #f5f1ea;
+  --c-bg-2:    #ece8df;
+  --c-bg-3:    #e3ddd3;
+  --c-bg-4:    #d9d2c5;
+  --c-text:    #1a1612;
+
+  --rgb-text:  26, 22, 18;
+  --rgb-bg:    245, 241, 234;
+  --rgb-bg-2:  236, 232, 223;
+  --rgb-bg-3:  227, 221, 211;
+}

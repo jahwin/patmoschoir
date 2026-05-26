@@ -4,6 +4,7 @@ import { type ReactNode } from 'react';
 import BreadCrumb from '@/components/shared/BreadCrumb';
 import styles from '@/components/shared/Header.module.scss';
 import { JoinMinistryModalProvider, useJoinMinistryModal } from '@/contexts/JoinMinistryModalContext';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 import Navbar from '../shared/Navbar';
 
 interface PublicLayoutProps {
@@ -43,8 +44,10 @@ function PublicLayoutContent({ children, title, subtitle, description, staticHea
 
 export default function PublicLayout(props: PublicLayoutProps) {
   return (
-    <JoinMinistryModalProvider>
-      <PublicLayoutContent {...props} />
-    </JoinMinistryModalProvider>
+    <ThemeProvider>
+      <JoinMinistryModalProvider>
+        <PublicLayoutContent {...props} />
+      </JoinMinistryModalProvider>
+    </ThemeProvider>
   );
 }

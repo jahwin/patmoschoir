@@ -1,7 +1,7 @@
 .galleryFilter {
-  background-color: #222;
+  background-color: var(--c-bg-4);
   padding: 3rem 0;
-  color: white;
+  color: var(--c-text);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -22,7 +22,7 @@
 .filterTitle {
   font-size: 1.5rem;
   font-weight: bold;
-  color: white;
+  color: var(--c-text);
   margin-bottom: 2rem;
   letter-spacing: -0.01em;
 
@@ -45,10 +45,10 @@
 
 .filterButton {
   padding: 0.75rem 1.5rem;
-  background-color: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: rgba(var(--rgb-text), 0.1);
+  border: 1px solid rgba(var(--rgb-text), 0.2);
   border-radius: 2rem;
-  color: white;
+  color: var(--c-text);
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
@@ -57,7 +57,7 @@
   letter-spacing: 0.05em;
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(var(--rgb-text), 0.2);
     border-color: var(--color-theme-clr);
     transform: translateY(-2px);
   }

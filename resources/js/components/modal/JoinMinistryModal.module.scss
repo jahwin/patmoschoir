@@ -1,7 +1,7 @@
 .modalContent {
   width: 100%;
   max-width: 500px;
-  background-color: #fff;
+  background-color: var(--c-bg);
   border-radius: 10px;
   display: flex;
   flex-direction: column;
@@ -10,7 +10,7 @@
   overflow-y: auto;
   margin: auto;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  
+
   @media (max-width: 640px) {
     max-width: calc(100% - 2rem);
     margin: 1rem auto;
@@ -18,7 +18,7 @@
 
   .header {
     padding: 1.5rem;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid rgba(var(--rgb-text), 0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -38,12 +38,12 @@
 .modalTitle {
   font-size: 1.5rem;
   font-weight: bold;
-  color: black;
+  color: var(--c-text);
   margin: 0;
 }
 
 .closeButton {
-  color: rgb(107, 114, 128);
+  color: rgba(var(--rgb-text), 0.45);
   transition: color 0.2s ease;
   background: none;
   border: none;
@@ -64,7 +64,7 @@
 }
 
 .description {
-  color: rgb(75, 85, 99);
+  color: rgba(var(--rgb-text), 0.6);
   margin-bottom: 0.5rem;
   font-size: 0.875rem;
   line-height: 1.5;
@@ -86,7 +86,7 @@
   display: block;
   font-size: 0.875rem;
   font-weight: 500;
-  color: rgb(55, 65, 81);
+  color: rgba(var(--rgb-text), 0.7);
 }
 
 .requiredLabel {
@@ -97,7 +97,8 @@
   width: 100%;
   padding: 0.75rem;
   border: 1px solid rgba(238, 151, 11, 0.3);
-  color: black;
+  color: var(--c-text);
+  background: var(--c-bg-2);
   border-radius: 0.375rem;
   transition: all 0.2s ease;
   outline: none;
@@ -109,7 +110,7 @@
   }
 
   &::placeholder {
-    color: rgb(156, 163, 175);
+    color: rgba(var(--rgb-text), 0.35);
   }
 
   &:disabled {
@@ -146,23 +147,23 @@
   gap: 1rem;
   margin-top: 0.5rem;
   padding-top: 1rem;
-  border-top: 1px solid #e0e0e0;
+  border-top: 1px solid rgba(var(--rgb-text), 0.1);
 }
 
 .cancelButton {
   flex: 1;
   padding: 0.75rem 1.5rem;
-  border: 1px solid rgb(229, 231, 235);
-  background-color: white;
-  color: rgb(55, 65, 81);
+  border: 1px solid rgba(var(--rgb-text), 0.15);
+  background-color: rgba(var(--rgb-text), 0.05);
+  color: rgba(var(--rgb-text), 0.7);
   border-radius: 0.375rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
 
   &:hover:not(:disabled) {
-    background-color: rgb(249, 250, 251);
-    border-color: rgb(209, 213, 219);
+    background-color: rgba(var(--rgb-text), 0.1);
+    border-color: rgba(var(--rgb-text), 0.25);
   }
 
   &:disabled {
@@ -202,8 +203,8 @@
 .spinner {
   width: 1rem;
   height: 1rem;
-  border: 2px solid rgba(0, 0, 0, 0.2);
-  border-top: 2px solid black;
+  border: 2px solid rgba(var(--rgb-text), 0.15);
+  border-top: 2px solid var(--c-text);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }

@@ -2,6 +2,7 @@ import { motion } from "motion/react";
 import Styles from "./Navbar.module.scss";
 import { Link, router, usePage } from "@inertiajs/react";
 import { useEffect, useRef, useState } from "react";
+import { useTheme } from "@/contexts/ThemeContext";
 
 /** Set to true when translations are ready */
 const SHOW_TRANSLATIONS = false;
@@ -39,7 +40,39 @@ interface NavbarProps {
   setJoinMinistryOpen: (open: boolean) => void;
 }
 
+function ThemeToggle({ className }: { className?: string }) {
+  const { theme, toggleTheme } = useTheme();
+  return (
+    <button
+      type="button"
+      className={`${Styles['theme-toggle']} ${className ?? ''}`}
+      onClick={toggleTheme}
+      aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+      title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+    >
+      {theme === 'dark' ? (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/>
+          <line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/>
+          <line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+      ) : (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      )}
+    </button>
+  );
+}
+
 export default function Navbar({ setJoinMinistryOpen }: NavbarProps) {
+  const { theme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const closeMobileMenu = () => {
@@ -124,7 +157,11 @@ export default function Navbar({ setJoinMinistryOpen }: NavbarProps) {
     >
       <header className={Styles['nav-main']}>
         <Link href="/" className={Styles['nav-logo']} onClick={closeMobileMenu}>
-          <img src="/logo-w.png" alt="Patmos Choir" className={Styles['nav-logo-img']} />
+          <img
+            src={theme === 'light' ? '/logo-b.png' : '/logo-w.png'}
+            alt="Patmos Choir"
+            className={Styles['nav-logo-img']}
+          />
         </Link>
 
         <nav className={Styles['nav-links']} aria-label="Main navigation">
@@ -154,6 +191,7 @@ export default function Navbar({ setJoinMinistryOpen }: NavbarProps) {
 
         <div className={Styles['nav-right']}>
           <LangSwitcher />
+          <ThemeToggle />
           <a href="#" className={`${Styles['nav-cta']} btn`} onClick={(e) => { e.preventDefault(); closeMobileMenu(); setJoinMinistryOpen(true); }}>Join Us</a>
         </div>
 
@@ -207,6 +245,7 @@ export default function Navbar({ setJoinMinistryOpen }: NavbarProps) {
           ))}
         </nav>
         <LangSwitcher className={Styles['lang-switcher-mobile']} />
+        <ThemeToggle className={Styles['theme-toggle-mobile']} />
         <a href="#" className={`${Styles['nav-cta']} btn ${Styles['nav-mobile-cta']}`} onClick={(e) => { e.preventDefault(); closeMobileMenu(); setJoinMinistryOpen(true); }}>Join Us</a>
       </motion.div>
     </motion.div>

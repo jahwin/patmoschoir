@@ -1,9 +1,9 @@
 @use "../../../../css/variables" as *;
 
 .galleryGrid {
-  background-color: #222;
+  background-color: var(--c-bg-4);
   padding: 4rem 0;
-  color: white;
+  color: var(--c-text);
 }
 
 .container {
@@ -103,7 +103,7 @@
 .projectTitle {
   font-size: 1.05rem;
   font-weight: 500;
-  color: white;
+  color: var(--c-text);
   line-height: 1.2;
   text-transform: none !important;
 
@@ -181,7 +181,7 @@
   backdrop-filter: blur(4px);
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 50%;
-  color: white;
+  color: var(--c-text);
   transition: all 0.3s ease;
 
   &:hover {

@@ -1,7 +1,7 @@
 @use "../../../css/variables" as *;
 
 .section {
-  background: $black;
+  background: var(--c-bg);
   padding: 8rem 8% 6rem;
 
   @media (max-width: 768px) {
@@ -36,7 +36,7 @@
   font-family: $font-bulgatti;
   font-size: clamp(2.2rem, 5vw, 3.5rem);
   font-weight: 700;
-  color: $white;
+  color: var(--c-text);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   line-height: 1.0;
@@ -46,7 +46,7 @@
 .subtitle {
   font-size: 0.9rem;
   line-height: 1.75;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(var(--rgb-text), 0.45);
   font-weight: 300;
 }
 

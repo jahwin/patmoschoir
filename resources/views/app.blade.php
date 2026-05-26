@@ -16,6 +16,10 @@
                         document.documentElement.classList.add('dark');
                     }
                 }
+
+                // Apply saved site theme immediately to prevent flash
+                const savedTheme = localStorage.getItem('site-theme') || 'dark';
+                document.documentElement.setAttribute('data-theme', savedTheme);
             })();
         </script>
 
