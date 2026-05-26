@@ -129,7 +129,7 @@ export default function TicketModal({
                                     <div
                                         key={index}
                                         className={`${modalStyles.ticketCard} ${isSelected ? modalStyles.cardSelected : ''}`}
-                                        onClick={() => setSelectedTicket(ticketId)}
+                                        onClick={() => handleBuyNow(ticket)}
                                     >
                                         {/* Watermark */}
                                         <span className={modalStyles.watermark} aria-hidden="true">
@@ -154,14 +154,14 @@ export default function TicketModal({
                                         {/* Buy button */}
                                         <button
                                             type="button"
-                                            className={`${modalStyles.buyBtn} ${isSelected ? modalStyles.buyBtnSelected : ''}`}
-                                            disabled={paymentLoading}
+                                            className={modalStyles.buyBtn}
+                                            disabled={paymentLoading && isSelected}
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 handleBuyNow(ticket);
                                             }}
                                         >
-                                            {paymentLoading && isSelected ? 'Loading…' : isSelected ? 'Continue →' : 'Buy Now'}
+                                            {paymentLoading && isSelected ? 'Loading…' : 'Buy Now'}
                                         </button>
                                     </div>
                                 );

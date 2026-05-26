@@ -163,10 +163,6 @@ function hasDonation(donation?: DonationData): boolean {
   );
 }
 
-function hasMusic(stream?: StreamData | null, albums?: AlbumData[]): boolean {
-  return !!(stream || (albums && albums.length > 0));
-}
-
 function hasTestimonials(testimonials?: TestimonialData[]): boolean {
   return !!(testimonials && testimonials.length > 0);
 }
@@ -207,9 +203,7 @@ export default function Home() {
 
       <HomeEventsSection />
 
-      {hasMusic(stream, albums) && (
-        <HomePlaylistStreamingSection stream={stream} albums={albums} />
-      )}
+      <HomePlaylistStreamingSection stream={stream} albums={albums} />
 
       {hasDonation(donation) && <HomeSupportMinistrySection donation={donation!} />}
 
