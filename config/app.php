@@ -126,4 +126,8 @@ return [
     'api_base_url' => env('WATCH_API_BASE_URL', 'https://api-watch.wecodefy.com/'),
     'api_key' => env('WATCH_API_KEY'),
 
+    'admin_email' => env('ADMIN_EMAIL'),
+    'admin_name' => env('ADMIN_NAME', 'Admin'),
+    'admin_password' => env('ADMIN_PASSWORD'),
+
 ];
