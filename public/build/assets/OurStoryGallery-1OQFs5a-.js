@@ -1,0 +1,1 @@
+import{j as i}from"./app-DLlyXdQT.js";/* empty css            */function a({galleries:o}){const r=[];if(o&&o.length>0)for(const t of o){if(t.image&&r.push({src:t.image,alt:t.title}),t.images)for(const s of t.images)r.push({src:s,alt:t.title});if(r.length>=6)break}return i.jsx(i.Fragment,{})}export{a as default};

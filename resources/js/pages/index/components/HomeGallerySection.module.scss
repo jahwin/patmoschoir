@@ -164,6 +164,9 @@
   opacity: 0;
   transform: translateY(6px);
   transition: opacity 0.3s ease, transform 0.3s ease;
+  /* Always dark bg — force white text regardless of theme */
+  --c-text: #ffffff;
+  --rgb-text: 255, 255, 255;
 
   .albumCard:hover & {
     opacity: 1;
@@ -247,9 +250,9 @@
   right: 0.5rem;
   font-size: 0.62rem;
   font-weight: 700;
-  color: var(--c-text);
+  color: #ffffff;
   background: rgba(0, 0, 0, 0.55);
-  border: 1px solid rgba(var(--rgb-text), 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   padding: 0.2rem 0.45rem;
   backdrop-filter: blur(4px);
   pointer-events: none;

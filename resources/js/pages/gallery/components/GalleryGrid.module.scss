@@ -87,6 +87,9 @@
   padding: 0 1rem 1rem 1rem;
   opacity: 0;
   transition: opacity 0.3s ease;
+  /* Always dark bg — force white text regardless of theme */
+  --c-text: #ffffff;
+  --rgb-text: 255, 255, 255;
 
   .gridItem:hover & {
     opacity: 1;
