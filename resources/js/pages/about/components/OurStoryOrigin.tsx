@@ -120,7 +120,7 @@ export default function OurStoryOrigin() {
         </div>
 
         {/* ── reverse: text left / image right ── */}
-        <div className={`${styles.layout} ${styles.layoutReverse}`}>
+        {/* <div className={`${styles.layout} ${styles.layoutReverse}`}>
           <div className={styles.content}>
             <motion.span
               className={styles.eyebrow}
@@ -178,7 +178,7 @@ export default function OurStoryOrigin() {
           >
             <img src={img7} alt="Patmos Choir together in ministry" loading="lazy" />
           </motion.div>
-        </div>
+        </div> */}
 
       </div>
     </section>

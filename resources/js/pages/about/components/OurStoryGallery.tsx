@@ -41,34 +41,35 @@ export default function OurStoryGallery({ galleries }: OurStoryGalleryProps) {
       : FALLBACK_IMAGES.map((src, i) => ({ src, alt: `Patmos Choir ${i + 1}` }));
 
   return (
-    <section className={styles.section}>
-      <div className={styles.inner}>
-        <motion.div
-          className={styles.header}
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.55 }}
-        >
-          <span className={styles.eyebrow}>Moments in Ministry</span>
-          <h2 className={styles.title}>Through the Years</h2>
-        </motion.div>
+    <></>
+    // <section className={styles.section}>
+    //   <div className={styles.inner}>
+    //     <motion.div
+    //       className={styles.header}
+    //       initial={{ opacity: 0, y: 20 }}
+    //       whileInView={{ opacity: 1, y: 0 }}
+    //       viewport={{ once: true }}
+    //       transition={{ duration: 0.55 }}
+    //     >
+    //       <span className={styles.eyebrow}>Moments in Ministry</span>
+    //       <h2 className={styles.title}>Through the Years</h2>
+    //     </motion.div>
 
-        <div className={styles.grid}>
-          {displayPhotos.map((photo, i) => (
-            <motion.div
-              key={i}
-              className={`${styles.cell} ${i === 0 ? styles.cellWide : ""}`}
-              initial={{ opacity: 0, scale: 0.97 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, margin: "-30px" }}
-              transition={{ duration: 0.55, delay: i * 0.07 }}
-            >
-              <img src={photo.src} alt={photo.alt} loading="lazy" />
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
+    //     <div className={styles.grid}>
+    //       {displayPhotos.map((photo, i) => (
+    //         <motion.div
+    //           key={i}
+    //           className={`${styles.cell} ${i === 0 ? styles.cellWide : ""}`}
+    //           initial={{ opacity: 0, scale: 0.97 }}
+    //           whileInView={{ opacity: 1, scale: 1 }}
+    //           viewport={{ once: true, margin: "-30px" }}
+    //           transition={{ duration: 0.55, delay: i * 0.07 }}
+    //         >
+    //           <img src={photo.src} alt={photo.alt} loading="lazy" />
+    //         </motion.div>
+    //       ))}
+    //     </div>
+    //   </div>
+    // </section>
   );
 }
