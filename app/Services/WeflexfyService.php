@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
@@ -23,17 +24,28 @@ class WeflexfyService
             ];
         }
 
-        $response = Http::withHeaders([
-            'access_key' => $accessKey,
-            'Accept' => 'application/json',
-        ])->post($url, $payload);
+        try {
+            $response = Http::timeout(15)
+                ->withHeaders([
+                    'access_key' => $accessKey,
+                    'Accept'     => 'application/json',
+                ])
+                ->post($url, $payload);
 
-        return [
-            'ok' => $response->successful(),
-            'status' => $response->status(),
-            'data' => $response->json(),
-            'raw' => $response->body(),
-        ];
+            return [
+                'ok'     => $response->successful(),
+                'status' => $response->status(),
+                'data'   => $response->json(),
+                'raw'    => $response->body(),
+            ];
+        } catch (ConnectionException $e) {
+            return [
+                'ok'     => false,
+                'status' => 503,
+                'data'   => ['error' => 'Payment gateway unreachable'],
+                'raw'    => $e->getMessage(),
+            ];
+        }
     }
 
     public function buildReference(): string

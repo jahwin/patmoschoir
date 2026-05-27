@@ -77,7 +77,10 @@ export default function HomeSupportMinistrySection({ donation, onDonate }: HomeS
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [iframeUrl, setIframeUrl] = useState("");
+  const [iframeLoaded, setIframeLoaded] = useState(false);
   const [autoClosing, setAutoClosing] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [countdown, setCountdown] = useState(5);
 
   const amountValue = useMemo(() => {
     if (customAmount.trim()) return Number(customAmount);
@@ -108,7 +111,10 @@ export default function HomeSupportMinistrySection({ donation, onDonate }: HomeS
       if (type !== "PAYMENT_STATUS") return;
       if (status === "success") {
         setAutoClosing(true);
-        setTimeout(handleClose, 1000);
+        setIframeUrl("");
+        setIsOpen(false);
+        setShowSuccess(true);
+        setCountdown(5);
       } else if (status === "failed" || status === "close") {
         handleClose();
       }
@@ -116,6 +122,18 @@ export default function HomeSupportMinistrySection({ donation, onDonate }: HomeS
     window.addEventListener("message", handleMessage);
     return () => window.removeEventListener("message", handleMessage);
   }, [iframeUrl]);
+
+  // Countdown + auto-close for success modal
+  useEffect(() => {
+    if (!showSuccess) return;
+    if (countdown <= 0) {
+      setShowSuccess(false);
+      resetModal();
+      return;
+    }
+    const timer = setTimeout(() => setCountdown((c) => c - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [showSuccess, countdown]);
 
   const resetModal = () => {
     setErrorMessage(""); setIframeUrl(""); setSubmitting(false);
@@ -171,6 +189,7 @@ export default function HomeSupportMinistrySection({ donation, onDonate }: HomeS
       const data = await res.json();
       if (data?.iframe_url) {
         onDonate?.();
+        setIframeLoaded(false);
         setIframeUrl(data.iframe_url);
       } else {
         throw new Error("Payment gateway did not return a payment link.");
@@ -466,12 +485,94 @@ export default function HomeSupportMinistrySection({ donation, onDonate }: HomeS
             {autoClosing && (
               <p className={styles.iframeSuccess}>Payment successful — closing…</p>
             )}
-            <iframe
+
+            {/* Spinner shown until iframe content loads */}
+            <AnimatePresence>
+              {!iframeLoaded && (
+                <motion.div
+                  className={styles.iframeLoader}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <span className={styles.iframeSpinner} aria-hidden="true" />
+                  <p className={styles.iframeLoaderText}>Loading payment…</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <motion.iframe
               title="Donate to Patmos Choir Ministry"
               src={iframeUrl}
               className={styles.iframe}
               allow="payment"
+              onLoad={() => setIframeLoaded(true)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: iframeLoaded ? 1 : 0 }}
+              transition={{ duration: 0.35 }}
             />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── SUCCESS MODAL ── */}
+      <AnimatePresence>
+        {showSuccess && (
+          <motion.div
+            className={styles.successOverlay}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            onClick={() => { setShowSuccess(false); resetModal(); }}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Donation successful"
+          >
+            <motion.div
+              className={styles.successModal}
+              initial={{ opacity: 0, scale: 0.88, y: 24 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.92, y: 12 }}
+              transition={{ duration: 0.32, ease: "easeOut" }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className={styles.successIcon} aria-hidden="true">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                  <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+              </div>
+
+              <h3 className={styles.successTitle}>Thank You!</h3>
+              <p className={styles.successSubtitle}>Your donation has been received.</p>
+              <p className={styles.successMessage}>
+                May God bless you abundantly for your generous gift to the Patmos Choir Ministry.
+                Your support helps us reach more lives.
+              </p>
+
+              <div className={styles.successProgress}>
+                <motion.div
+                  className={styles.successProgressBar}
+                  initial={{ width: "100%" }}
+                  animate={{ width: "0%" }}
+                  transition={{ duration: 5, ease: "linear" }}
+                />
+              </div>
+
+              <p className={styles.successCountdown}>
+                Closing in {countdown}s
+              </p>
+
+              <button
+                type="button"
+                className={styles.successClose}
+                onClick={() => { setShowSuccess(false); resetModal(); }}
+              >
+                Close
+              </button>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

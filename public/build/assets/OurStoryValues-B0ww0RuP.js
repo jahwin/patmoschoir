@@ -1,1 +1,0 @@
-import{j as r}from"./app-DLlyXdQT.js";import t from"./HomeVisionMissionSection-DG-jlqt-.js";/* empty css            */import"./proxy-5sqC3guI.js";function n({about:o}){return r.jsx(t,{about:o})}export{n as default};

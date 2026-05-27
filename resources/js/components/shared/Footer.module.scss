@@ -72,6 +72,20 @@
   font-weight: 400;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.28);
+  color: rgba(255, 255, 255, 0.5);
   margin: 0;
+
+  a {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover .brand {
+      text-decoration: underline;
+    }
+  }
+}
+
+.brand {
+  color: $white;
+  font-weight: 600;
 }

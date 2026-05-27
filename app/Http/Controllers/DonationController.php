@@ -24,27 +24,33 @@ class DonationController extends Controller
         $currency = $validated['currency'] ?? config('weflexfy.default_currency', 'USD');
 
         $donation = Donation::create([
-            'name' => $validated['full_name'],
-            'email' => $validated['email'] ?? null,
-            'phone' => $validated['phone'] ?? null,
-            'amount' => $validated['amount'],
-            'currency' => $currency,
+            'name'      => $validated['full_name'],
+            'email'     => $validated['email'] ?? null,
+            'phone'     => $validated['phone'] ?? null,
+            'amount'    => $validated['amount'],
+            'currency'  => $currency,
+            'reference' => $reference,
+            'status'    => 'pending',
         ]);
 
+        $webhookUrl = route('payments.webhook');
+
         $payload = [
-            'amount' => $donation->amount,
-            'currency' => $donation->currency,
+            'amount'      => (float) $donation->amount,
+            'currency'    => $donation->currency,
             'billCountry' => config('weflexfy.bill_country', 'RW'),
-            'reference' => $reference,
-            'description' => 'Donation to Ministry',
-            'transfers' => [
+            'reference'   => $reference,
+            'description' => 'Donation to Patmos Choir Ministry',
+            'webhookUrl'  => $webhookUrl,
+            'callbackUrl' => $webhookUrl,
+            'transfers'   => [
                 [
                     'recipientNumber' => config('weflexfy.recipient_number'),
-                    'percentage' => 100,
+                    'percentage'      => 100,
                 ],
             ],
             'customer' => [
-                'name' => $donation->name,
+                'name'  => $donation->name,
                 'email' => $donation->email,
                 'phone' => $donation->phone,
             ],
@@ -54,15 +60,17 @@ class DonationController extends Controller
 
         if (!$response['ok'] || !is_array($response['data'])) {
             Log::warning('Weflexfy donation initiation failed', [
-                'reference' => $reference,
+                'reference'   => $reference,
                 'donation_id' => $donation->id,
-                'status' => $response['status'],
-                'body' => $response['raw'],
+                'status'      => $response['status'],
+                'body'        => $response['raw'],
             ]);
 
-            return response()->json([
-                'message' => 'Unable to initiate donation. Please try again.',
-            ], 422);
+            $message = $response['status'] === 503
+                ? 'Payment gateway is currently unreachable. Please try again shortly.'
+                : 'Unable to initiate donation. Please try again.';
+
+            return response()->json(['message' => $message], 422);
         }
 
         $apiData = $response['data']['data'] ?? $response['data'] ?? [];

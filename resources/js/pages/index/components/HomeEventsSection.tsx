@@ -162,6 +162,10 @@ export default function HomeEventsSection() {
   };
 
   useEffect(() => {
+    // Only listen when our payment modal is actually open — prevents
+    // donation iframe messages from accidentally triggering the ticket modal.
+    if (!showPaymentModal) return;
+
     const handler = (e: MessageEvent) => {
       if (e.data?.type !== "PAYMENT_STATUS") return;
       switch (e.data.status) {
@@ -182,7 +186,7 @@ export default function HomeEventsSection() {
     };
     window.addEventListener("message", handler);
     return () => window.removeEventListener("message", handler);
-  }, []);
+  }, [showPaymentModal]);
 
   // ── Ticket button logic per event ──
   const renderTicketAction = (event: LocalEvent) => {

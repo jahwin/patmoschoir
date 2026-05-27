@@ -118,33 +118,33 @@ export default function Home() {
 
 
   useEffect(() => {
-    window.addEventListener(
-      "message",
-      (event) => {
-        if (event.data && event.data.type === 'PAYMENT_STATUS') {
-          const status = event.data.status;
-          switch (status) {
-            case 'init':
-              setPaymentLoading(false);
-              break;
-            case 'success':
-              setPaymentLoading(false);
-              break;
-            case "failed":
-              setPaymentLoading(false);
-              setShowPaymentModal(true);
-              break;
-            case "close":
-              setShowModal(true);
-              setPaymentLoading(false);
-              setShowPaymentModal(false);
-              break;
-          }
-        }
-      },
-      false
-    );
-  }, []);
+    // Only listen when our payment modal is actually open — prevents
+    // donation iframe messages from accidentally triggering the ticket modal.
+    if (!showPaymentModal) return;
+
+    const handler = (event: MessageEvent) => {
+      if (!event.data || event.data.type !== 'PAYMENT_STATUS') return;
+      const status = event.data.status;
+      switch (status) {
+        case 'init':
+        case 'success':
+          setPaymentLoading(false);
+          break;
+        case "failed":
+          setPaymentLoading(false);
+          setShowPaymentModal(true);
+          break;
+        case "close":
+          setShowModal(true);
+          setPaymentLoading(false);
+          setShowPaymentModal(false);
+          break;
+      }
+    };
+
+    window.addEventListener("message", handler);
+    return () => window.removeEventListener("message", handler);
+  }, [showPaymentModal]);
 
 
   return (

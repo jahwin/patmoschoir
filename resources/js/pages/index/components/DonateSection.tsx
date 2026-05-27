@@ -18,8 +18,11 @@ export default function DonateSection({ className = "" }: DonateSectionProps) {
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [iframeUrl, setIframeUrl] = useState('');
+  const [iframeLoaded, setIframeLoaded] = useState(false);
   const [statusMessage, setStatusMessage] = useState('');
   const [autoClosing, setAutoClosing] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [countdown, setCountdown] = useState(5);
 
   const amountValue = useMemo(() => {
     if (customAmount.trim()) {
@@ -57,31 +60,29 @@ export default function DonateSection({ className = "" }: DonateSectionProps) {
 
 
     const handleMessage = (event: MessageEvent) => {
-      console.log(event);
-      const response = event.data;
-      const responseType = response.type;
-      const responceStatus = response.status;
-      switch (responseType) {
-        case 'PAYMENT_STATUS':
-          if (responceStatus === 'success') {
-            setAutoClosing(true);
-            window.setTimeout(() => {
-              handleClose();
-            }, 1000);
-          } else if (responceStatus === 'failed') {
-            handleClose();
-          } else if (responceStatus === 'close') {
-            handleClose();
-          }
-          break;
+      const { type, status } = event.data ?? {};
+      if (type !== 'PAYMENT_STATUS') return;
+      if (status === 'success') {
+        setIframeUrl('');
+        setIsOpen(false);
+        setShowSuccess(true);
+        setCountdown(5);
+      } else if (status === 'failed' || status === 'close') {
+        handleClose();
       }
     };
 
     window.addEventListener('message', handleMessage);
-    return () => {
-      window.removeEventListener('message', handleMessage);
-    };
+    return () => window.removeEventListener('message', handleMessage);
   }, [iframeUrl]);
+
+  // Countdown + auto-close for success modal
+  useEffect(() => {
+    if (!showSuccess) return;
+    if (countdown <= 0) { setShowSuccess(false); resetModal(); return; }
+    const t = setTimeout(() => setCountdown((c) => c - 1), 1000);
+    return () => clearTimeout(t);
+  }, [showSuccess, countdown]);
 
   const resetModal = () => {
     setErrorMessage('');
@@ -150,6 +151,7 @@ export default function DonateSection({ className = "" }: DonateSectionProps) {
 
       const data = await response.json();
       if (data?.iframe_url) {
+        setIframeLoaded(false);
         setIframeUrl(data.iframe_url);
       } else {
         throw new Error('Payment gateway did not return a payment link.');
@@ -291,12 +293,58 @@ export default function DonateSection({ className = "" }: DonateSectionProps) {
 
       {iframeUrl && (
         <div className={styles.iframeWrapper}>
+          {!iframeLoaded && (
+            <div className={styles.iframeLoader}>
+              <span className={styles.iframeSpinner} aria-hidden="true" />
+              <p className={styles.iframeLoaderText}>Loading payment…</p>
+            </div>
+          )}
           <iframe
             title="Donate to our ministry"
             src={iframeUrl}
             className={styles.iframe}
+            style={{ opacity: iframeLoaded ? 1 : 0, transition: 'opacity 0.35s' }}
             allow="payment"
+            onLoad={() => setIframeLoaded(true)}
           />
+        </div>
+      )}
+
+      {showSuccess && (
+        <div
+          className={styles.successOverlay}
+          onClick={() => { setShowSuccess(false); resetModal(); }}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className={styles.successModal} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.successIcon} aria-hidden="true">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+            </div>
+            <h3 className={styles.successTitle}>Thank You!</h3>
+            <p className={styles.successSubtitle}>Your donation has been received.</p>
+            <p className={styles.successMessage}>
+              May God bless you abundantly for your generous gift to the Patmos Choir Ministry.
+              Your support helps us reach more lives.
+            </p>
+            <div className={styles.successProgress}>
+              <div
+                className={styles.successProgressBar}
+                style={{ animationDuration: '5s' }}
+              />
+            </div>
+            <p className={styles.successCountdown}>Closing in {countdown}s</p>
+            <button
+              type="button"
+              className={styles.successClose}
+              onClick={() => { setShowSuccess(false); resetModal(); }}
+            >
+              Close
+            </button>
+          </div>
         </div>
       )}
     </section>

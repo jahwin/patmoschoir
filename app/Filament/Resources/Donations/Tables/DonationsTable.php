@@ -8,6 +8,7 @@ use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Filament\Tables\Columns\BadgeColumn;
 
 class DonationsTable
 {
@@ -48,6 +49,22 @@ class DonationsTable
                     })
                     ->sortable(),
 
+                TextColumn::make('status')
+                    ->label('Status')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'success' => 'success',
+                        'failed'  => 'danger',
+                        default   => 'warning',
+                    })
+                    ->sortable(),
+
+                TextColumn::make('paid_at')
+                    ->label('Paid At')
+                    ->dateTime()
+                    ->sortable()
+                    ->placeholder('—'),
+
                 TextColumn::make('created_at')
                     ->label('Submitted')
                     ->dateTime()
@@ -59,6 +76,14 @@ class DonationsTable
                     ->options([
                         'USD' => 'USD',
                         'RWF' => 'RWF',
+                    ]),
+
+                SelectFilter::make('status')
+                    ->label('Status')
+                    ->options([
+                        'pending' => 'Pending',
+                        'success' => 'Success',
+                        'failed'  => 'Failed',
                     ]),
             ])
             ->recordActions([

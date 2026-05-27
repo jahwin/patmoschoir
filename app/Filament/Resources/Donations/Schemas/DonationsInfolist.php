@@ -39,6 +39,30 @@ class DonationsInfolist
                         default => 'info',
                     }),
 
+                TextEntry::make('status')
+                    ->label('Status')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'success' => 'success',
+                        'failed'  => 'danger',
+                        default   => 'warning',
+                    }),
+
+                TextEntry::make('reference')
+                    ->label('Reference')
+                    ->copyable()
+                    ->placeholder('—'),
+
+                TextEntry::make('provider_transaction_id')
+                    ->label('Transaction ID')
+                    ->copyable()
+                    ->placeholder('—'),
+
+                TextEntry::make('paid_at')
+                    ->label('Paid At')
+                    ->dateTime()
+                    ->placeholder('—'),
+
                 TextEntry::make('created_at')
                     ->label('Submitted At')
                     ->dateTime(),

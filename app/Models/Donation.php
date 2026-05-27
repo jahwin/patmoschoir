@@ -12,9 +12,16 @@ class Donation extends Model
         'phone',
         'amount',
         'currency',
+        'reference',
+        'status',
+        'provider_transaction_id',
+        'provider_payload',
+        'paid_at',
     ];
 
     protected $casts = [
-        'amount' => 'decimal:2',
+        'amount'           => 'decimal:2',
+        'provider_payload' => 'array',
+        'paid_at'          => 'datetime',
     ];
 }

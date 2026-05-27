@@ -46,7 +46,10 @@ export default function Footer() {
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.4 }}
         >
-          &copy; {new Date().getFullYear()} Patmos Choir. All rights reserved.
+          &copy; {new Date().getFullYear()} Patmos Choir. All rights reserved.{" "}
+          <a href="https://wecodefy.org" target="_blank" rel="noopener noreferrer">
+            Powered by <span className={Styles.brand}>Wecodefy</span>
+          </a>
         </motion.p>
       </div>
     </motion.footer>
