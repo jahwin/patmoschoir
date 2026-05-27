@@ -11,6 +11,11 @@ class DonationsInfolist
     {
         return $schema
             ->components([
+                TextEntry::make('donation_number')
+                    ->label('Donation #')
+                    ->formatStateUsing(fn ($state) => $state ? '#'.$state : '—')
+                    ->placeholder('—'),
+
                 TextEntry::make('name')
                     ->label('Name'),
 

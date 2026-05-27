@@ -72,6 +72,12 @@ class PaymentWebhookController extends Controller
             if ($donation->status !== 'success') {
                 $donation->status  = 'success';
                 $donation->paid_at = now();
+
+                try {
+                    $donation->donation_number = (Donation::max('donation_number') ?? 0) + 1;
+                } catch (\Throwable $e) {
+                    Log::warning('Could not assign donation number', ['donation_id' => $donation->id, 'error' => $e->getMessage()]);
+                }
             }
         } elseif (in_array($status, ['FAILED', 'CANCELLED', 'CANCELED', 'EXPIRED'], true)) {
             $donation->status = 'failed';
