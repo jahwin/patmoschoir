@@ -27,6 +27,8 @@ class SiteContent extends Model
         'vision',
         'values',
         'storyline',
+        'storyline_eyebrow',
+        'storyline_title',
         'about_poster',
 
         // Contact

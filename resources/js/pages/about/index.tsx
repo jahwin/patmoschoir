@@ -35,6 +35,8 @@ export interface AboutData {
   vision: string | null;
   values: AboutValue[];
   storyline: StorylineItem[];
+  storyline_eyebrow: string | null;
+  storyline_title: string | null;
   poster: string | null;
 }
 
@@ -53,7 +55,11 @@ export default function About({ galleries, about }: AboutProps) {
       >
         <div className={styles.page}>
           <OurStoryOrigin about={about} />
-          <OurStoryTimeline storyline={about.storyline} />
+          <OurStoryTimeline
+            storyline={about.storyline}
+            storyline_eyebrow={about.storyline_eyebrow}
+            storyline_title={about.storyline_title}
+          />
           <OurStoryValues about={about} />
           <OurStoryGallery galleries={galleries} />
           <OurStoryClosing poster={about.poster} />

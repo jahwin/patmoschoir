@@ -44,6 +44,8 @@ class WebController extends Controller
             'vision' => $siteContent?->vision,
             'values' => $siteContent?->values ?? [],
             'storyline' => $siteContent?->storyline ?? [],
+            'storyline_eyebrow' => $siteContent?->storyline_eyebrow,
+            'storyline_title' => $siteContent?->storyline_title,
             'poster' => $siteContent?->about_poster ? Storage::url($siteContent->about_poster) : null,
         ];
 
@@ -172,6 +174,8 @@ class WebController extends Controller
             'vision' => $siteContent?->vision,
             'values' => $siteContent?->values ?? [],
             'storyline' => $siteContent?->storyline ?? [],
+            'storyline_eyebrow' => $siteContent?->storyline_eyebrow,
+            'storyline_title' => $siteContent?->storyline_title,
             'poster' => $siteContent?->about_poster ? Storage::url($siteContent->about_poster) : null,
         ];
 

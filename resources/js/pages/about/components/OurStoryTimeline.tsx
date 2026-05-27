@@ -2,21 +2,17 @@ import { motion } from "motion/react";
 import styles from "./OurStoryTimeline.module.scss";
 import { StorylineItem } from "../index";
 
-const FALLBACK_EVENTS = [
-  { year: "1996", title: "The First Song", body: "Former schoolmates from DRC reunite in Kigali and sing together at a friend's wedding. The room goes still. Something holy is present." },
-  { year: "1997", title: "A Choir Takes Shape", body: "More voices join. The group begins rehearsing regularly, believing they are more than friends who sing — they are a choir with a calling." },
-  { year: "1998", title: "The Name: Patmos", body: "A member suggests the name Patmos — the island of exile and revelation in Scripture. The name is received with unanimity and kept to this day." },
-  { year: "Early 2000s", title: "Ministry Expands", body: "Patmos begins ministering beyond churches: crusades, schools, community gatherings. Their reach grows across Kigali and surrounding areas." },
-  { year: "2010s", title: "A New Generation", body: "Children of the founding members begin to join. The choir becomes multi-generational, carrying the original spirit into new voices." },
-  { year: "Today", title: "29 Years of Faithfulness", body: "Patmos Choir continues to go wherever God calls — churches, crusades, hospitals, homes of the grieving, and the bedsides of those too weak to worship elsewhere." },
-];
+interface Props {
+  storyline: StorylineItem[];
+  storyline_eyebrow: string | null;
+  storyline_title: string | null;
+}
 
-interface Props { storyline: StorylineItem[] }
+export default function OurStoryTimeline({ storyline, storyline_eyebrow, storyline_title }: Props) {
+  if (storyline.length === 0) return null;
 
-export default function OurStoryTimeline({ storyline }: Props) {
-  const events = storyline.length > 0
-    ? storyline.map(s => ({ year: s.year, title: s.title, body: s.description }))
-    : FALLBACK_EVENTS;
+  const events = storyline.map(s => ({ year: s.year, title: s.title, body: s.description }));
+
   return (
     <section className={styles.section}>
       <div className={styles.inner}>
@@ -27,8 +23,8 @@ export default function OurStoryTimeline({ storyline }: Props) {
           viewport={{ once: true }}
           transition={{ duration: 0.55 }}
         >
-          <span className={styles.eyebrow}>The Journey</span>
-          <h2 className={styles.title}>29 Years in the Making</h2>
+          {storyline_eyebrow && <span className={styles.eyebrow}>{storyline_eyebrow}</span>}
+          {storyline_title && <h2 className={styles.title}>{storyline_title}</h2>}
         </motion.div>
 
         <div className={styles.timeline}>

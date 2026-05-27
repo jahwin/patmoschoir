@@ -157,6 +157,18 @@ class SiteContentsForm
                                     ->collapsible()
                                     ->columnSpanFull(),
 
+                                TextInput::make('storyline_eyebrow')
+                                    ->label('Timeline Eyebrow Label')
+                                    ->placeholder('e.g., The Journey')
+                                    ->maxLength(100)
+                                    ->columnSpanFull(),
+
+                                TextInput::make('storyline_title')
+                                    ->label('Timeline Section Title')
+                                    ->placeholder('e.g., 29 Years in the Making')
+                                    ->maxLength(255)
+                                    ->columnSpanFull(),
+
                                 Repeater::make('storyline')
                                     ->label('Storyline')
                                     ->schema([
