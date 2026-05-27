@@ -47,6 +47,10 @@
   width: 100%;
   height: 250px;
   overflow: hidden;
+
+  @media (max-width: 480px) {
+    height: 200px;
+  }
 }
 
 .postImage {
@@ -68,6 +72,10 @@
   gap: 1rem;
   flex: 1;
   justify-content: space-between;
+
+  @media (max-width: 480px) {
+    padding: 1.25rem;
+  }
 }
 
 .postContent {
@@ -126,6 +134,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .postActions {

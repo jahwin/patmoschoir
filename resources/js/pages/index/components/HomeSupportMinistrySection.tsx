@@ -275,9 +275,9 @@ export default function HomeSupportMinistrySection({ donation, onDonate }: HomeS
                 Donate Now
               </button>
 
-              <p className={styles.cardNote}>
+              {/* <p className={styles.cardNote}>
                 <LockIcon /> Secure payment — {currencyNote}
-              </p>
+              </p> */}
             </motion.div>
           </div>
         </div>

@@ -10,6 +10,14 @@
   text-align: center;
   overflow: hidden;
 
+  @media (max-width: 768px) {
+    padding: 3rem 6%;
+  }
+
+  @media (max-width: 480px) {
+    padding: 2.5rem 4%;
+  }
+
   &::before {
     content: '';
     position: absolute;
@@ -74,6 +82,11 @@
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.5);
   margin: 0;
+
+  @media (max-width: 480px) {
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
+  }
 
   a {
     color: inherit;

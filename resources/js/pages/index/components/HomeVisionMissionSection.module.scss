@@ -21,6 +21,10 @@
   @media (max-width: 768px) {
     padding: 4rem 6%;
   }
+
+  @media (max-width: 480px) {
+    padding: 3rem 4%;
+  }
 }
 
 .inner {
@@ -31,6 +35,10 @@
 .header {
   text-align: center;
   margin-bottom: 4rem;
+
+  @media (max-width: 480px) {
+    margin-bottom: 2.5rem;
+  }
 }
 
 .eyebrow {
@@ -192,6 +200,10 @@
   @media (max-width: 640px) {
     flex-direction: column;
     gap: 1rem;
+  }
+
+  @media (max-width: 480px) {
+    margin-top: 2.5rem;
   }
 }
 

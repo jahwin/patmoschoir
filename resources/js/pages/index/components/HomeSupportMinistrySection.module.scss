@@ -8,6 +8,10 @@
   padding: clamp(5rem, 10vw, 8rem) 8%;
   position: relative;
   overflow: hidden;
+
+  @media (max-width: 480px) {
+    padding: 3rem 4%;
+  }
 }
 
 .bgGlow {

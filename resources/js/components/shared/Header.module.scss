@@ -15,6 +15,10 @@
   &.static {
     position: relative;
   }
+
+  @media (max-width: 480px) {
+    padding: 1rem 0;
+  }
 }
 
 .socialSidebar {
@@ -27,6 +31,9 @@
   gap: 1rem;
   z-index: 101;
 
+  @media (max-width: 768px) {
+    display: none;
+  }
 }
 
 .socialLink {
@@ -75,6 +82,11 @@
   width: 230px;
   gap: 1rem;
   text-decoration: none;
+
+  @media (max-width: 480px) {
+    width: auto;
+    gap: 0.6rem;
+  }
 }
 
 .logoIcon {
@@ -104,6 +116,10 @@
   color: white;
   line-height: 1;
   letter-spacing: 0.05em;
+
+  @media (max-width: 480px) {
+    font-size: 1.2rem;
+  }
 }
 
 .logoSub {

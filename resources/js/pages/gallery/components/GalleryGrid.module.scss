@@ -4,6 +4,15 @@
   background-color: var(--c-bg-4);
   padding: 4rem 0;
   color: var(--c-text);
+  overflow-x: hidden;
+
+  @media (max-width: 768px) {
+    padding: 2.5rem 0;
+  }
+
+  @media (max-width: 480px) {
+    padding: 2rem 0;
+  }
 }
 
 .container {

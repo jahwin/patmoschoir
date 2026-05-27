@@ -2,6 +2,14 @@
   background-color: var(--c-bg-4);
   padding: 6rem 0;
   color: var(--c-text);
+
+  @media (max-width: 768px) {
+    padding: 4rem 0;
+  }
+
+  @media (max-width: 480px) {
+    padding: 3rem 0;
+  }
 }
 
 .container {

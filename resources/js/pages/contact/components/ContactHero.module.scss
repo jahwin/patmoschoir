@@ -5,6 +5,14 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+
+  @media (max-width: 768px) {
+    min-height: 50vh;
+  }
+
+  @media (max-width: 480px) {
+    min-height: 40vh;
+  }
 }
 
 .backgroundImage {
@@ -34,6 +42,10 @@
   align-items: center;
   justify-content: center;
   padding: 6rem 2rem 2rem;
+
+  @media (max-width: 480px) {
+    padding: 4rem 1rem 1.5rem;
+  }
 }
 
 .container {

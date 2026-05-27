@@ -179,16 +179,45 @@
   //   min-width: 260px;
   //   max-width: 280px;
   // }
-  
+
   .imageContainer {
     height: 160px;
   }
-  
+
   .content {
     padding: 14px;
   }
-  
+
   .title {
     font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .imageContainer {
+    height: 140px;
+  }
+
+  .content {
+    padding: 12px;
+  }
+
+  .title {
+    font-size: 14px;
+  }
+
+  .description {
+    font-size: 13px;
+  }
+
+  .buttonsContainer {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .viewEventButton,
+  .shareButton {
+    width: 100%;
+    padding: 0.55rem 1rem !important;
   }
 }
