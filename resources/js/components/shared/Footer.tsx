@@ -1,10 +1,17 @@
 import { motion } from "motion/react";
+import { usePage } from "@inertiajs/react";
 import Styles from "./Footer.module.scss";
 
 export default function Footer() {
+  const { siteContent } = usePage().props as any;
+  const bgStyle = siteContent?.home_footer_background_image
+    ? { backgroundImage: `url(${siteContent.home_footer_background_image})` }
+    : undefined;
+
   return (
     <motion.footer
       className={Styles.footer}
+      style={bgStyle}
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}

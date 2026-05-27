@@ -1,4 +1,4 @@
-import { Head } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 import PublicLayout from '@/components/layouts/public-layout';
 import OurStoryOrigin from './components/OurStoryOrigin';
 import OurStoryTimeline from './components/OurStoryTimeline';
@@ -46,12 +46,14 @@ interface AboutProps {
 }
 
 export default function About({ galleries, about }: AboutProps) {
+  const { siteContent } = usePage().props as any;
   return (
     <>
       <Head title="Our Story" />
       <PublicLayout
         title="Our Story"
         description="From a wedding song in Kigali to 29 years of ministry — the journey of Patmos Choir."
+        backgroundImage={siteContent?.home_about_background_image ?? undefined}
       >
         <div className={styles.page}>
           <OurStoryOrigin about={about} />
@@ -62,7 +64,7 @@ export default function About({ galleries, about }: AboutProps) {
           />
           <OurStoryValues about={about} />
           <OurStoryGallery galleries={galleries} />
-          <OurStoryClosing poster={about.poster} />
+          {/* <OurStoryClosing poster={about.poster} /> */}
         </div>
       </PublicLayout>
     </>

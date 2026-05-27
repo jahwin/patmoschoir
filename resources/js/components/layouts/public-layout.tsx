@@ -19,7 +19,7 @@ interface PublicLayoutProps {
   backgroundImage?: string;
 }
 
-function PublicLayoutContent({ children, title, subtitle, description, staticHeader = false, tags = [], backgroundImage = '', ...props }: PublicLayoutProps) {
+function PublicLayoutContent({ children, title, subtitle, description, staticHeader = false, tags = [], backgroundImage, ...props }: PublicLayoutProps) {
   const { openModal } = useJoinMinistryModal();
 
   return (

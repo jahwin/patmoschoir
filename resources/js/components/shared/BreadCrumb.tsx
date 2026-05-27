@@ -1,7 +1,5 @@
 import { motion } from "motion/react";
-import { usePage } from "@inertiajs/react";
 import styles from "./BreadCrumb.module.scss";
-import heroImg from "../../../assets/patmos/1.JPG";
 
 interface BreadCrumbProps {
   className?: string;
@@ -23,14 +21,13 @@ export default function BreadCrumb({
   description,
   backgroundImage,
 }: BreadCrumbProps) {
-  const { siteContent } = usePage().props as any;
-  const bg = backgroundImage || siteContent?.subimage || heroImg;
+  const bg = backgroundImage || null;
 
   return (
     <section className={`${styles.hero} ${className}`}>
       <div
         className={styles.heroBg}
-        style={{ backgroundImage: `url(${bg})` }}
+        style={bg ? { backgroundImage: `url(${bg})` } : undefined}
         aria-hidden="true"
       />
       <div className={styles.heroOverlay} aria-hidden="true" />

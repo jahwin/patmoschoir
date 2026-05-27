@@ -62,6 +62,18 @@ class HandleInertiaRequests extends Middleware
             $siteContent->home_about_background_image = Storage::url($siteContent->home_about_background_image);
         }
 
+        if ($siteContent && $siteContent->home_events_background_image) {
+            $siteContent->home_events_background_image = Storage::url($siteContent->home_events_background_image);
+        }
+
+        if ($siteContent && $siteContent->home_gallery_background_image) {
+            $siteContent->home_gallery_background_image = Storage::url($siteContent->home_gallery_background_image);
+        }
+
+        if ($siteContent && $siteContent->home_footer_background_image) {
+            $siteContent->home_footer_background_image = Storage::url($siteContent->home_footer_background_image);
+        }
+
         if ($siteContent && $siteContent->home_music_background_image) {
             $siteContent->home_music_background_image = Storage::url($siteContent->home_music_background_image);
         }
