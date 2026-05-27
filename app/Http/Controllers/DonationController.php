@@ -73,14 +73,15 @@ class DonationController extends Controller
             return response()->json(['message' => $message], 422);
         }
 
-        $apiData = $response['data']['data'] ?? $response['data'] ?? [];
-        $iframeUrl = $apiData['iframeUrl'] ?? $apiData['iframe_url'] ?? null;
+        $apiData     = $response['data']['data'] ?? $response['data'] ?? [];
+        $iframeUrl   = $apiData['iframeUrl']    ?? $apiData['iframe_url']    ?? null;
+        $requestToken = $apiData['requestToken'] ?? $apiData['request_token'] ?? null;
 
         if (!$iframeUrl) {
             Log::warning('Weflexfy response missing iframe URL', [
-                'reference' => $reference,
+                'reference'   => $reference,
                 'donation_id' => $donation->id,
-                'payload' => $response['data'],
+                'payload'     => $response['data'],
             ]);
 
             return response()->json([
@@ -88,10 +89,17 @@ class DonationController extends Controller
             ], 422);
         }
 
+        // Save Weflexfy's requestToken — used to match the webhook JWT
+        if ($requestToken) {
+            $donation->request_token = $requestToken;
+            $donation->save();
+        }
+
         return response()->json([
-            'iframe_url' => $iframeUrl,
-            'donation_id' => $donation->id,
-            'reference' => $reference,
+            'iframe_url'    => $iframeUrl,
+            'donation_id'   => $donation->id,
+            'reference'     => $reference,
+            'request_token' => $requestToken,
         ]);
     }
 }

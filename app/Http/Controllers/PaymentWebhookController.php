@@ -13,69 +13,82 @@ class PaymentWebhookController extends Controller
 {
     public function handle(Request $request): JsonResponse
     {
-        $token = $request->header('Token');
+        $payload = $request->all();
+
+        // Weflexfy sends the JWT in the request body as `token`, not a header
+        $token = $payload['token'] ?? null;
 
         if (!$token) {
+            Log::warning('Weflexfy webhook: missing token in body', ['payload' => $payload]);
             return response()->json(['message' => 'Missing token.'], 401);
         }
 
+        // Decode the JWT — all useful data is inside it
         try {
-            JWT::decode($token, new Key(config('weflexfy.secret_key'), 'HS256'));
+            $decoded = (array) JWT::decode($token, new Key(config('weflexfy.secret_key'), 'HS256'));
         } catch (\Throwable $e) {
-            Log::warning('Invalid Weflexfy webhook token', [
-                'error' => $e->getMessage(),
-            ]);
+            Log::warning('Weflexfy webhook: invalid JWT', ['error' => $e->getMessage()]);
             return response()->json(['message' => 'Invalid token.'], 401);
         }
 
-        $payload = $request->all();
+        $requestType = $payload['requestType'] ?? null;
 
-        $reference = $payload['reference'] ?? $payload['reference_id'] ?? $payload['referenceId'] ?? null;
-        $transactionId = $payload['transactionId'] ?? $payload['transaction_id'] ?? $payload['payment_id'] ?? null;
+        Log::info('Weflexfy webhook received', [
+            'requestType' => $requestType,
+            'decoded'     => $decoded,
+        ]);
 
-        if (!$reference && !$transactionId) {
-            Log::warning('Weflexfy webhook missing reference', [
-                'payload' => $payload,
-            ]);
-            return response()->json(['message' => 'Missing reference.'], 422);
+        // Only process payment webhooks (ignore transfer settlement webhooks)
+        if ($requestType !== 'payment') {
+            return response()->json(['message' => 'Webhook acknowledged.']);
         }
 
-        $donation = Donation::query()
-            ->when($reference, fn ($query) => $query->where('reference', $reference))
-            ->when(!$reference && $transactionId, fn ($query) => $query->where('provider_transaction_id', $transactionId))
-            ->first();
+        // JWT payload contains: requestToken, paymentRef, status, amount
+        $requestToken = $decoded['requestToken'] ?? null;
+        $paymentRef   = $decoded['paymentRef']   ?? null;
+        $status       = isset($decoded['status']) ? strtoupper($decoded['status']) : null;
+
+        // Find donation — try requestToken first, then fall back to paymentRef (our reference)
+        $donation = null;
+
+        if ($requestToken) {
+            $donation = Donation::where('request_token', $requestToken)->first();
+        }
+
+        if (!$donation && $paymentRef) {
+            $donation = Donation::where('reference', $paymentRef)->first();
+        }
 
         if (!$donation) {
-            Log::warning('Weflexfy webhook donation not found', [
-                'reference' => $reference,
-                'transaction_id' => $transactionId,
+            Log::warning('Weflexfy webhook: donation not found', [
+                'requestToken' => $requestToken,
+                'paymentRef'   => $paymentRef,
             ]);
             return response()->json(['message' => 'Donation not found.'], 404);
         }
 
-        $statusValue = $payload['status'] ?? $payload['payment_status'] ?? $payload['state'] ?? null;
-        $statusValue = is_string($statusValue) ? strtolower($statusValue) : null;
-
-        $successStates = ['success', 'successful', 'paid', 'completed'];
-        $failedStates = ['failed', 'cancelled', 'canceled', 'expired'];
-
-        if (in_array($statusValue, $successStates, true)) {
+        // Map Weflexfy status → our status
+        if ($status === 'SUCCESS') {
             if ($donation->status !== 'success') {
-                $donation->status = 'success';
+                $donation->status  = 'success';
                 $donation->paid_at = now();
             }
-        } elseif (in_array($statusValue, $failedStates, true)) {
+        } elseif (in_array($status, ['FAILED', 'CANCELLED', 'CANCELED', 'EXPIRED'], true)) {
             $donation->status = 'failed';
-        } else {
-            $donation->status = $donation->status === 'success' ? 'success' : 'pending';
         }
 
-        if ($transactionId) {
-            $donation->provider_transaction_id = $transactionId;
+        // Store Weflexfy's requestToken if we didn't have it yet
+        if ($requestToken && !$donation->request_token) {
+            $donation->request_token = $requestToken;
         }
 
         $donation->provider_payload = $payload;
         $donation->save();
+
+        Log::info('Weflexfy webhook: donation updated', [
+            'donation_id' => $donation->id,
+            'status'      => $donation->status,
+        ]);
 
         return response()->json(['message' => 'Webhook processed.']);
     }

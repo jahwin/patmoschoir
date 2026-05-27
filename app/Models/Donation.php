@@ -13,6 +13,7 @@ class Donation extends Model
         'amount',
         'currency',
         'reference',
+        'request_token',
         'status',
         'provider_transaction_id',
         'provider_payload',
