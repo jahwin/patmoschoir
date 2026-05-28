@@ -2,9 +2,6 @@
 
 namespace App\Filament\Resources\Donations\Tables;
 
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -32,10 +29,6 @@ class DonationsTable
                     ->copyable()
                     ->placeholder('—'),
 
-                TextColumn::make('phone')
-                    ->label('Phone')
-                    ->searchable()
-                    ->placeholder('—'),
 
                 TextColumn::make('amount')
                     ->label('Amount')
@@ -93,20 +86,6 @@ class DonationsTable
             ])
             ->recordActions([
                 ViewAction::make(),
-                DeleteAction::make()
-                    ->label('Delete Forever')
-                    ->modalHeading('Delete Donation Forever')
-                    ->modalDescription('This will permanently delete the donation record and cannot be undone.')
-                    ->modalSubmitActionLabel('Yes, Delete Forever'),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make()
-                        ->label('Delete Forever')
-                        ->modalHeading('Delete Selected Donations Forever')
-                        ->modalDescription('This will permanently delete all selected donation records and cannot be undone.')
-                        ->modalSubmitActionLabel('Yes, Delete Forever'),
-                ]),
             ])
             ->defaultSort('created_at', 'desc');
     }

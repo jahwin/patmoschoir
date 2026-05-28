@@ -24,10 +24,6 @@ class DonationsInfolist
                     ->copyable()
                     ->placeholder('—'),
 
-                TextEntry::make('phone')
-                    ->label('Phone')
-                    ->copyable()
-                    ->placeholder('—'),
 
                 TextEntry::make('amount')
                     ->label('Amount')
