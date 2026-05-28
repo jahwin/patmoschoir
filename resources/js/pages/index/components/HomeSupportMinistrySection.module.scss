@@ -538,14 +538,31 @@
   }
 }
 
-/* ── Error ── */
+/* ── Input error state ── */
+.inputHasError {
+  border-color: rgba(248, 113, 113, 0.6) !important;
+  box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.08) !important;
+}
+
+.fieldError {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: #f87171;
+  margin-top: 0.2rem;
+  letter-spacing: 0.01em;
+}
+
+/* ── API / general error (near submit button) ── */
 .error {
   margin: 0 2rem;
-  padding: 0.75rem 1rem;
+  padding: 0.65rem 0.9rem;
   background: rgba(248, 113, 113, 0.08);
-  border: 1px solid rgba(248, 113, 113, 0.25);
+  border: 1px solid rgba(248, 113, 113, 0.2);
   border-left: 3px solid #f87171;
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   color: #fca5a5;
   font-weight: 500;
   overflow: hidden;

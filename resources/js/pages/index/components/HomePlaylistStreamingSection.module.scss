@@ -421,12 +421,18 @@
 /* Year tabs */
 .yearTabs {
   display: flex;
+  flex-wrap: nowrap;
   gap: 0;
   border: 1px solid rgba(var(--rgb-text), 0.08);
   overflow-x: auto;
   scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 
   &::-webkit-scrollbar { display: none; }
+
+  @media (max-width: 700px) {
+    width: 100%;
+  }
 }
 
 .yearTab {
@@ -440,6 +446,7 @@
   letter-spacing: 0.08em;
   cursor: pointer;
   white-space: nowrap;
+  flex-shrink: 0;
   transition: color 0.2s ease, background 0.2s ease;
 
   &:last-child {

@@ -75,7 +75,8 @@ export default function HomeSupportMinistrySection({ donation, onDonate }: HomeS
   );
   const [customAmount, setCustomAmount] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<{ name?: string; amount?: string; email?: string }>({});
+  const [apiError, setApiError] = useState("");
   const [iframeUrl, setIframeUrl] = useState("");
   const [iframeLoaded, setIframeLoaded] = useState(false);
   const [autoClosing, setAutoClosing] = useState(false);
@@ -136,7 +137,7 @@ export default function HomeSupportMinistrySection({ donation, onDonate }: HomeS
   }, [showSuccess, countdown]);
 
   const resetModal = () => {
-    setErrorMessage(""); setIframeUrl(""); setSubmitting(false);
+    setFieldErrors({}); setApiError(""); setIframeUrl(""); setSubmitting(false);
     setAutoClosing(false); setFullName(""); setEmail(""); setPhone("");
     const preset = presetAmounts[1] ?? presetAmounts[0] ?? null;
     setSelectedPreset(preset);
@@ -150,6 +151,7 @@ export default function HomeSupportMinistrySection({ donation, onDonate }: HomeS
     setSelectedPreset(preset);
     setActiveCurrency(preset.currency);
     setCustomAmount("");
+    if (fieldErrors.amount) setFieldErrors((prev) => ({ ...prev, amount: undefined }));
   };
 
   const isPresetActive = (preset: DonationAmount) =>
@@ -163,11 +165,18 @@ export default function HomeSupportMinistrySection({ donation, onDonate }: HomeS
   };
 
   const handleSubmit = async () => {
-    setErrorMessage("");
-    if (!fullName.trim()) { setErrorMessage("Full name is required."); return; }
-    if (!amountValue || Number.isNaN(amountValue) || amountValue <= 0) {
-      setErrorMessage("Please enter a valid donation amount."); return;
+    const errors: { name?: string; amount?: string; email?: string } = {};
+    if (!fullName.trim()) errors.name = "Full name is required.";
+    if (!amountValue || Number.isNaN(amountValue) || amountValue <= 0)
+      errors.amount = "Please enter a valid donation amount.";
+    if (email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()))
+      errors.email = "Please enter a valid email address.";
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      return;
     }
+    setFieldErrors({});
+    setApiError("");
     setSubmitting(true);
     try {
       const res = await fetch("/donations/initiate", {
@@ -182,11 +191,13 @@ export default function HomeSupportMinistrySection({ donation, onDonate }: HomeS
           currency: activeCurrency,
         }),
       });
+      const contentType = res.headers.get("content-type") ?? "";
+      const isJson = contentType.includes("application/json");
       if (!res.ok) {
-        const data = await res.json().catch(() => null);
+        const data = isJson ? await res.json().catch(() => null) : null;
         throw new Error(data?.message || "Unable to start the donation.");
       }
-      const data = await res.json();
+      const data = isJson ? await res.json() : null;
       if (data?.iframe_url) {
         onDonate?.();
         setIframeLoaded(false);
@@ -195,7 +206,7 @@ export default function HomeSupportMinistrySection({ donation, onDonate }: HomeS
         throw new Error("Payment gateway did not return a payment link.");
       }
     } catch (err) {
-      setErrorMessage(err instanceof Error ? err.message : "Unable to start the donation.");
+      setApiError(err instanceof Error ? err.message : "Unable to start the donation.");
     } finally {
       setSubmitting(false);
     }
@@ -350,16 +361,18 @@ export default function HomeSupportMinistrySection({ donation, onDonate }: HomeS
                   }`}
                 >
                   <input
-                    className={styles.customInput}
+                    className={`${styles.customInput} ${fieldErrors.amount ? styles.inputHasError : ""}`}
                     value={customAmount}
                     onChange={(e) => {
                       setCustomAmount(e.target.value);
                       setSelectedPreset(null);
+                      if (fieldErrors.amount) setFieldErrors((prev) => ({ ...prev, amount: undefined }));
                     }}
                     onFocus={() => setSelectedPreset(null)}
                     placeholder="Enter custom amount"
                     inputMode="decimal"
                     aria-label={`Custom donation amount in ${activeCurrency}`}
+                    aria-invalid={!!fieldErrors.amount}
                   />
                   <div
                     className={styles.currencySelector}
@@ -385,6 +398,20 @@ export default function HomeSupportMinistrySection({ donation, onDonate }: HomeS
                     ))}
                   </div>
                 </div>
+                <AnimatePresence>
+                  {fieldErrors.amount && (
+                    <motion.p
+                      className={styles.fieldError}
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.18 }}
+                    >
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                      {fieldErrors.amount}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
               </div>
 
               <div className={styles.modalSep} aria-hidden="true" />
@@ -395,25 +422,61 @@ export default function HomeSupportMinistrySection({ donation, onDonate }: HomeS
                   <label className={styles.label} htmlFor="donate-name">Full Name <span aria-hidden="true">*</span></label>
                   <input
                     id="donate-name"
-                    className={styles.input}
+                    className={`${styles.input} ${fieldErrors.name ? styles.inputHasError : ""}`}
                     value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
+                    onChange={(e) => {
+                      setFullName(e.target.value);
+                      if (fieldErrors.name) setFieldErrors((prev) => ({ ...prev, name: undefined }));
+                    }}
                     placeholder="Your full name"
                     autoComplete="name"
+                    aria-invalid={!!fieldErrors.name}
                   />
+                  <AnimatePresence>
+                    {fieldErrors.name && (
+                      <motion.p
+                        className={styles.fieldError}
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.18 }}
+                      >
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                        {fieldErrors.name}
+                      </motion.p>
+                    )}
+                  </AnimatePresence>
                 </div>
                 <div className={styles.fieldGroup}>
                   <div className={styles.field}>
                     <label className={styles.label} htmlFor="donate-email">Email <span className={styles.optional}>(optional)</span></label>
                     <input
                       id="donate-email"
-                      className={styles.input}
+                      className={`${styles.input} ${fieldErrors.email ? styles.inputHasError : ""}`}
                       type="email"
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                        if (fieldErrors.email) setFieldErrors((prev) => ({ ...prev, email: undefined }));
+                      }}
                       placeholder="your@email.com"
                       autoComplete="email"
+                      aria-invalid={!!fieldErrors.email}
                     />
+                    <AnimatePresence>
+                      {fieldErrors.email && (
+                        <motion.p
+                          className={styles.fieldError}
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.18 }}
+                        >
+                          <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                          {fieldErrors.email}
+                        </motion.p>
+                      )}
+                    </AnimatePresence>
                   </div>
                   <div className={styles.field}>
                     <label className={styles.label} htmlFor="donate-phone">Phone <span className={styles.optional}>(optional)</span></label>
@@ -431,14 +494,14 @@ export default function HomeSupportMinistrySection({ donation, onDonate }: HomeS
               </div>
 
               <AnimatePresence>
-                {errorMessage && (
+                {apiError && (
                   <motion.p
                     className={styles.error}
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: "auto" }}
                     exit={{ opacity: 0, height: 0 }}
                   >
-                    {errorMessage}
+                    {apiError}
                   </motion.p>
                 )}
               </AnimatePresence>
