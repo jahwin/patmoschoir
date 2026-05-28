@@ -31,9 +31,9 @@ class GalleriesTable
                     ->label('Year')
                     ->sortable(),
 
-                TextColumn::make('images')
+                TextColumn::make('photos')
                     ->label('Photos')
-                    ->formatStateUsing(fn ($state) => is_array($state) ? count($state) : 0)
+                    ->getStateUsing(fn ($record) => count($record->images ?? []))
                     ->suffix(' photos'),
 
                 TextColumn::make('slug')
