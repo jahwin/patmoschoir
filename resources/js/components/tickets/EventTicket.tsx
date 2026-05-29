@@ -91,49 +91,51 @@ export default function EventTicket({ ticket, brandLabel = "PATMOS", onViewTicke
                 )}
             </div>
 
-            <div className={styles.ticketContent}>
-                <div className={styles.ticketType}>
-                    {ticket.eventVenue} <span>({ticket.seatType})</span>
-                </div>
-                <div className={styles.ticketEventTitle}>{ticket.eventTitle}</div>
-                <div className={styles.ticketDetails}>
-                    <div className={styles.ticketDetailsItem}>
-                        <div className={styles.ticketDetailsItemHeader}>DATE</div>
-                        <div className={styles.ticketDetailsItemBody}>
-                            {formatDateTime(ticket.eventStartTime, "date")}
+            <div className={styles.ticketBody}>
+                <div className={styles.ticketContent}>
+                    <div className={styles.ticketType}>
+                        {ticket.eventVenue} <span>({ticket.seatType})</span>
+                    </div>
+                    <div className={styles.ticketEventTitle}>{ticket.eventTitle}</div>
+                    <div className={styles.ticketDetails}>
+                        <div className={styles.ticketDetailsItem}>
+                            <div className={styles.ticketDetailsItemHeader}>DATE</div>
+                            <div className={styles.ticketDetailsItemBody}>
+                                {formatDateTime(ticket.eventStartTime, "date")}
+                            </div>
+                        </div>
+                        <div className={styles.ticketDetailsItem}>
+                            <div className={styles.ticketDetailsItemHeader}>TIME</div>
+                            <div className={styles.ticketDetailsItemBody}>
+                                {formatDateTime(ticket.eventStartTime, "time")}
+                            </div>
                         </div>
                     </div>
-                    <div className={styles.ticketDetailsItem}>
-                        <div className={styles.ticketDetailsItemHeader}>TIME</div>
-                        <div className={styles.ticketDetailsItemBody}>
-                            {formatDateTime(ticket.eventStartTime, "time")}
-                        </div>
+                    <div className={styles.ticketOption}>
+                        <button type="button" className={styles.share} onClick={handleShare}>
+                            SHARE
+                        </button>
+                        <button
+                            type="button"
+                            className={styles.view}
+                            onClick={() => onViewTicket(ticket.ticketToken)}
+                        >
+                            VIEW TICKET
+                        </button>
                     </div>
                 </div>
-                <div className={styles.ticketOption}>
-                    <button type="button" className={styles.share} onClick={handleShare}>
-                        SHARE
-                    </button>
-                    <button
-                        type="button"
-                        className={styles.view}
-                        onClick={() => onViewTicket(ticket.ticketToken)}
-                    >
-                        VIEW TICKET
-                    </button>
+
+                <div className={styles.ticketDivider} aria-hidden>
+                    <div className={styles.dotedLine} />
                 </div>
-            </div>
 
-            <div className={styles.ticketDivider} aria-hidden>
-                <div className={styles.firstCircle} />
-                <div className={styles.dotedLine} />
-                <div className={styles.secondCircle} />
-            </div>
-
-            <div className={styles.ticketOptions}>
-                <div className={styles.ticketOptionsContainer}>
-                    <span className={styles.ticketNumber}>{ticketCode(ticket.ticketToken)}</span>
-                    <QrCodePreview value={ticket.ticketToken} size={130} />
+                <div className={styles.ticketOptions}>
+                    <div className={styles.ticketOptionsContainer}>
+                        <span className={styles.ticketNumber}>{ticketCode(ticket.ticketToken)}</span>
+                        <div className={styles.ticketStubQr}>
+                            <QrCodePreview value={ticket.ticketToken} size={130} />
+                        </div>
+                    </div>
                 </div>
             </div>
         </article>
