@@ -1,0 +1,208 @@
+.ticketItem {
+    background-color: #1a1612;
+    border-radius: 8px;
+    display: flex;
+    overflow: hidden;
+    border: 1px solid rgba(201, 169, 98, 0.25);
+
+    @media (max-width: 700px) {
+        flex-direction: column;
+    }
+}
+
+.ticketBrand {
+    display: flex;
+    width: 130px;
+    flex-shrink: 0;
+    cursor: pointer;
+    position: relative;
+    background: #252525;
+
+    @media (max-width: 700px) {
+        width: 100%;
+        height: max-content;
+    }
+
+    .mobileQr {
+        display: none;
+        object-fit: contain;
+        background-color: #fff;
+        padding: 4px;
+
+        @media (max-width: 700px) {
+            display: block;
+            position: absolute;
+            left: 8px;
+            top: 8px;
+            z-index: 1;
+            border-radius: 4px;
+        }
+    }
+
+    img {
+        width: 100%;
+        min-height: 140px;
+        object-fit: cover;
+
+        @media (max-width: 700px) {
+            height: 140px;
+        }
+    }
+}
+
+.coverFallback {
+    width: 100%;
+    min-height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #c9a962;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    font-size: 0.75rem;
+}
+
+.ticketContent {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+    padding: 12px 14px;
+    justify-content: space-between;
+
+    .ticketType {
+        font-size: 0.7rem;
+        margin-bottom: 8px;
+        color: #b8b0a0;
+
+        span {
+            color: #fff;
+            font-weight: 700;
+        }
+    }
+
+    .ticketEventTitle {
+        font-size: 0.95rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: #fff;
+        margin-bottom: 10px;
+        line-height: 1.3;
+    }
+
+    .ticketDetails {
+        display: flex;
+        gap: 24px;
+        margin-bottom: 10px;
+
+        .ticketDetailsItemHeader {
+            font-size: 0.65rem;
+            color: #9a9288;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .ticketDetailsItemBody {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #fff;
+        }
+    }
+
+    .ticketOption {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+
+        button {
+            padding: 6px 12px;
+            border-radius: 5px;
+            border: none;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+
+            &:hover {
+                transform: scale(1.03);
+            }
+        }
+
+        .share {
+            background-color: #c9a962;
+            color: #1a1612;
+        }
+
+        .view {
+            border: 1px solid #c9a962;
+            background-color: transparent;
+            color: #c9a962;
+        }
+    }
+}
+
+.ticketDivider {
+    width: 36px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+
+    @media (max-width: 700px) {
+        display: none;
+    }
+
+    .firstCircle,
+    .secondCircle {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background-color: var(--c-bg, #f5f1ea);
+        position: relative;
+    }
+
+    .firstCircle {
+        top: -9px;
+    }
+
+    .secondCircle {
+        bottom: -9px;
+    }
+
+    .dotedLine {
+        flex: 1;
+        width: 0;
+        border-left: 2px dashed rgba(201, 169, 98, 0.45);
+    }
+}
+
+.ticketOptions {
+    width: 160px;
+    padding: 16px 12px 12px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @media (max-width: 700px) {
+        display: none;
+    }
+}
+
+.ticketOptionsContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.ticketNumber {
+    font-size: 0.7rem;
+    padding: 4px 8px;
+    border: 1px dashed #c9a962;
+    border-radius: 4px;
+    color: #c9a962;
+    font-weight: 600;
+}

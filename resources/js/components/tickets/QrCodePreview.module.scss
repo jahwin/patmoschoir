@@ -1,0 +1,18 @@
+.widget {
+    display: flex;
+    width: 100%;
+    height: 100%;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+}
+
+.placeholder {
+    min-width: 80px;
+    min-height: 80px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+}

@@ -41,7 +41,7 @@ export default function TicketVerification() {
         } catch { /* no-op */ }
         const parts = currentUrl.split("?")[0].split("/").filter(Boolean);
         const last = parts[parts.length - 1];
-        if (last && last !== "ticket-verification") return last;
+        if (last && last !== "ticket-verification" && last !== "tickets") return last;
         return "";
     }, [page, currentUrl]);
     const [contactInfo, setContactInfo] = useState("");

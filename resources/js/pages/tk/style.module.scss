@@ -1,0 +1,89 @@
+.page {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem 1rem;
+    background: linear-gradient(
+        180deg,
+        rgba(201, 169, 98, 0.12) 0%,
+        var(--c-bg, #f5f1ea) 40%
+    );
+}
+
+.logoLink {
+    margin-bottom: 1.5rem;
+    width: 120px;
+    height: 120px;
+    background-color: #1a1612;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(201, 169, 98, 0.4);
+    text-decoration: none;
+
+    img {
+        width: 78%;
+        height: 78%;
+        object-fit: contain;
+    }
+}
+
+.logoFallback {
+    color: #c9a962;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-align: center;
+    padding: 0.5rem;
+}
+
+.qrContainer {
+    text-align: center;
+    background: #fff;
+    padding: 2rem 1.75rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    max-width: 420px;
+    width: 100%;
+    border: 1px solid rgba(201, 169, 98, 0.2);
+
+    h1 {
+        margin: 0 0 1.5rem;
+        color: #1a1612;
+        font-size: 1.35rem;
+        font-weight: 700;
+        font-family: var(--font-primary, inherit);
+    }
+}
+
+.qrCode {
+    display: flex;
+    justify-content: center;
+    margin: 1rem 0;
+}
+
+.instruction {
+    color: #6b7280;
+    font-size: 0.95rem;
+    margin: 0 0 1.5rem;
+}
+
+.goHome {
+    display: inline-block;
+    background: rgba(139, 123, 78, 0.9);
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: 1px solid #8b7b4e;
+    padding: 8px 22px;
+    border-radius: 6px;
+    transition: background 0.2s ease, transform 0.2s ease;
+
+    &:hover {
+        background: #8b7b4e;
+        transform: translateY(-1px);
+    }
+}

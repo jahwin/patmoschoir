@@ -33,6 +33,13 @@ Route::post('/api/payment/webhook', [PaymentWebhookController::class, 'handle'])
     ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class])
     ->name('payments.webhook');
 ROute::get('/privacy-policy', [WebController::class, 'privacyPolicy'])->name('privacy-policy');
+Route::get('/tk', [WebController::class, 'viewTicket'])->name('view-ticket');
+Route::get('/tickets/{id}', [WebController::class, 'ticketVerification'])
+    ->where('id', '[0-9]+')
+    ->name('tickets.show');
+Route::get('/ticket-verification/{id?}', [WebController::class, 'ticketVerification'])
+    ->where('id', '[0-9]+')
+    ->name('ticket-verification');
 // ROute::get('/terms-and-conditions', [WebController::class, 'termsAndConditions'])->name('terms-and-conditions');
 // ROute::get('/payment-terms', [WebController::class, 'paymentTerms'])->name('payment-terms');
 

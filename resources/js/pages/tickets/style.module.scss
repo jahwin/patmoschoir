@@ -1,0 +1,201 @@
+.mytickets {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100dvh;
+    padding: 1.5rem 1rem 3rem;
+    background: linear-gradient(
+        180deg,
+        rgba(201, 169, 98, 0.12) 0%,
+        var(--c-bg, #f5f1ea) 35%
+    );
+}
+
+.logoLink {
+    margin: 0 0 1.5rem;
+    width: 120px;
+    height: 120px;
+    background-color: #1a1612;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(201, 169, 98, 0.4);
+    text-decoration: none;
+
+    img {
+        width: 78%;
+        height: 78%;
+        object-fit: contain;
+    }
+}
+
+.logoFallback {
+    color: #c9a962;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-align: center;
+    padding: 0.5rem;
+}
+
+.verifyPhone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    max-width: 400px;
+
+    h2 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--c-text, #1a1612);
+        margin: 0;
+        font-family: var(--font-primary, inherit);
+    }
+
+    p {
+        font-size: 0.9rem;
+        color: var(--c-text, #1a1612);
+        opacity: 0.85;
+        text-align: center;
+        margin: 0;
+    }
+
+    input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid rgba(139, 123, 78, 0.45);
+        border-radius: 8px;
+        font-size: 0.9rem;
+        background: #fff;
+        color: #1a1612;
+
+        &:focus {
+            outline: 2px solid rgba(201, 169, 98, 0.5);
+            outline-offset: 1px;
+        }
+
+        &:disabled {
+            opacity: 0.6;
+        }
+    }
+
+    .error {
+        color: #dc2626;
+        font-size: 0.85rem;
+        text-align: center;
+        width: 100%;
+    }
+}
+
+.submitBtn {
+    width: 100%;
+    margin-top: 0.25rem;
+}
+
+.ticketsContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    width: 100%;
+    max-width: 960px;
+}
+
+.ticketsHeader h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #8b7b4e;
+    margin: 0;
+    font-family: var(--font-primary, inherit);
+    letter-spacing: 0.04em;
+}
+
+.goBack {
+    background: rgba(139, 123, 78, 0.85);
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: 1px solid #8b7b4e;
+    padding: 6px 20px;
+    border-radius: 6px;
+    transition: background 0.2s ease;
+
+    &:hover {
+        background: #8b7b4e;
+    }
+}
+
+.ticketsGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+    width: 100%;
+
+    @media (max-width: 720px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.noTickets {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-top: 1rem;
+    max-width: 400px;
+
+    h1 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #8b7b4e;
+        margin: 0 0 1rem;
+    }
+
+    .icon {
+        width: 72px;
+        height: 72px;
+        color: #8b7b4e;
+        margin: 2rem 0 1rem;
+    }
+
+    h2 {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #8b7b4e;
+        margin: 0;
+    }
+
+    .links {
+        display: flex;
+        gap: 10px;
+        margin-top: 1.25rem;
+        flex-wrap: wrap;
+        justify-content: center;
+
+        a,
+        button {
+            font-size: 0.8rem;
+            font-weight: 600;
+            border-radius: 6px;
+            padding: 6px 20px;
+            text-decoration: none;
+            cursor: pointer;
+            border: 1px solid #8b7b4e;
+        }
+
+        .tryAgain {
+            background: #8b7b4e;
+            color: #fff;
+        }
+
+        .goBackBtn {
+            background: transparent;
+            color: #8b7b4e;
+        }
+    }
+}

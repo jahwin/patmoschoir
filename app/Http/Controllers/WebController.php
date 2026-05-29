@@ -398,6 +398,26 @@ class WebController extends Controller
         return Inertia::render('privacy_policy');
     }
 
+    public function ticketVerification(?string $id = null)
+    {
+        return Inertia::render('tickets', [
+            'transactionId' => $id,
+        ]);
+    }
+
+    public function viewTicket(Request $request)
+    {
+        $ticketToken = $request->query('q');
+
+        if (! is_string($ticketToken) || $ticketToken === '') {
+            return redirect('/');
+        }
+
+        return Inertia::render('tk', [
+            'ticketToken' => $ticketToken,
+        ]);
+    }
+
     // public function termsAndConditions()
     // {
     //     return Inertia::render('terms_conditions');
