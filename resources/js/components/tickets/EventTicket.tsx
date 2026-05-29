@@ -81,9 +81,6 @@ export default function EventTicket({ ticket, brandLabel = "PATMOS", onViewTicke
                 tabIndex={0}
                 title="View ticket"
             >
-                <div className={styles.mobileQr}>
-                    <QrCodePreview value={ticket.ticketToken} size={72} />
-                </div>
                 {ticket.eventCoverImage ? (
                     <img src={coverUrl(ticket.eventCoverImage)} alt="" draggable={false} />
                 ) : (

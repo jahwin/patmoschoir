@@ -1,11 +1,10 @@
 .ticketItem {
-    container-type: inline-size;
-    container-name: ticket;
     position: relative;
     display: flex;
     width: 100%;
     max-width: 100%;
     min-width: 0;
+    height: auto;
     background-color: #1a1612;
     border-radius: 10px;
     overflow: hidden;
@@ -49,7 +48,7 @@
 
 .ticketBody {
     display: flex;
-    flex: 1;
+    flex: 1 1 auto;
     min-width: 0;
     align-items: stretch;
 }
@@ -57,11 +56,11 @@
 .ticketContent {
     display: flex;
     flex-direction: column;
-    flex: 1;
+    flex: 1 1 auto;
     min-width: 0;
     padding: 14px 16px;
-    justify-content: space-between;
     gap: 10px;
+    color: #fff;
 
     .ticketType {
         font-size: 0.72rem;
@@ -76,7 +75,7 @@
     }
 
     .ticketEventTitle {
-        font-size: clamp(0.85rem, 2.5cqi, 1rem);
+        font-size: 0.95rem;
         font-weight: 600;
         text-transform: uppercase;
         color: #fff;
@@ -87,7 +86,7 @@
     .ticketDetails {
         display: flex;
         flex-wrap: wrap;
-        gap: 16px 28px;
+        gap: 12px 24px;
 
         .ticketDetailsItemHeader {
             font-size: 0.65rem;
@@ -100,7 +99,6 @@
             font-size: 0.78rem;
             font-weight: 600;
             color: #fff;
-            white-space: nowrap;
         }
     }
 
@@ -112,14 +110,13 @@
         margin-top: 4px;
 
         button {
-            padding: 7px 14px;
+            padding: 8px 14px;
             border-radius: 5px;
             border: none;
             font-size: 0.7rem;
             font-weight: 600;
             cursor: pointer;
             transition: transform 0.2s ease, opacity 0.2s ease;
-            white-space: nowrap;
 
             &:hover {
                 transform: scale(1.02);
@@ -151,7 +148,6 @@
         bottom: 18px;
         left: 50%;
         transform: translateX(-50%);
-        width: 0;
         border-left: 2px dashed rgba(201, 169, 98, 0.38);
     }
 
@@ -166,8 +162,6 @@
         background: var(--c-bg, #f5f1ea);
         transform: translateX(-50%);
         z-index: 2;
-        border: none;
-        box-shadow: none;
     }
 
     &::before {
@@ -217,12 +211,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    line-height: 0;
 }
 
-/* Narrow ticket card: stack sections on very small cards only */
-@container ticket (max-width: 520px) {
+/* Phone: stacked ticket, full-width sections, no empty flex growth */
+@media (max-width: 575px) {
     .ticketItem {
         flex-direction: column;
+        height: auto;
     }
 
     .ticketBrand {
@@ -230,31 +226,33 @@
         width: 100%;
         min-height: 0;
         max-height: 200px;
-
-        .mobileQr {
-            display: block;
-            position: absolute;
-            left: 10px;
-            top: 10px;
-            z-index: 1;
-            padding: 4px;
-            background: #fff;
-            border-radius: 6px;
-            line-height: 0;
-        }
+        aspect-ratio: 16 / 9;
 
         img {
-            min-height: 180px;
+            min-height: 0;
+            height: 100%;
             max-height: 200px;
         }
 
         .coverFallback {
-            min-height: 180px;
+            min-height: 0;
+            height: 100%;
+            aspect-ratio: 16 / 9;
         }
     }
 
     .ticketBody {
+        flex: none;
+        width: 100%;
         flex-direction: column;
+        align-items: stretch;
+    }
+
+    .ticketContent {
+        flex: none;
+        width: 100%;
+        padding: 16px;
+        box-sizing: border-box;
     }
 
     .ticketDivider {
@@ -266,20 +264,31 @@
         width: 100%;
         min-width: 0;
         padding: 16px;
+        box-sizing: border-box;
         border-top: 2px dashed rgba(201, 169, 98, 0.28);
     }
 
     .ticketOptionsContainer {
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
+        flex-direction: column;
         max-width: 100%;
-        gap: 20px;
+        gap: 12px;
     }
 
     .ticketStubQr {
-        flex-shrink: 0;
-        width: 120px;
-        max-width: 120px;
+        width: min(200px, 70vw);
+        max-width: 200px;
+        margin: 0 auto;
+    }
+}
+
+/* Narrow tablet / small single-column: horizontal but allow stub to shrink */
+@media (min-width: 576px) and (max-width: 975px) {
+    .ticketOptions {
+        flex: 0 0 150px;
+        min-width: 120px;
+    }
+
+    .ticketBrand {
+        flex: 0 0 120px;
     }
 }
